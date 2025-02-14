@@ -1,7 +1,5 @@
 {
   "carpet.category.SDU-carpet": "SDU-carpet",
-  "carpet.rule.skipCropLightCheck.name": "Skip Crop Light Check",
-  "carpet.rule.skipCropLightCheck.desc": "If enable, crop blocks will not check the light.",
   "carpet.rule.armorStandIgnoreShulkerDamage.name": "ShulkerBullet can't hurt ArmorStand",
   "carpet.rule.armorStandIgnoreShulkerDamage.desc": "If enable, MobProjectile will not hurt ArmorStand.",
   "carpet.rule.leadBandBeeDisable.name": "ShulkerBullet can't hurt ArmorStand",
@@ -21,5 +19,13 @@
   "carpet.rule.disableNetherPortal.name": "Disable Nether Portal",
   "carpet.rule.disableNetherPortal.desc": "If enable,Entity can not teleport through a nether portal",
   "carpet.rule.netherPortalCooldown.name": "NetherPortalCooldown",
-  "carpet.rule.netherPortalCooldown.desc": "If this option is changed, the cooldown of the NetherPortal the player will be set to this option"
+  "carpet.rule.netherPortalCooldown.desc": "If this option is changed, the cooldown of the NetherPortal the player will be set to this option",
+  "carpet.rule.fireworkParticleNumber.desc": "小型烟花的爆炸粒子数",
+  "carpet.rule.fireworkParticleNumber.name": "小型烟花的爆炸粒子数",
+  "carpet.rule.fireworkRange.desc": "小型烟花的爆炸范围",
+  "carpet.rule.fireworkRange.name": "小型烟花的爆炸范围",
+  "carpet.rule.bigfireworkParticleNumber.desc": "大型烟花的爆炸粒子数",
+  "carpet.rule.bigfireworkParticleNumber.name": "大型烟花的爆炸粒子数",
+  "carpet.rule.bigfireworkRange.desc": "大型烟花的爆炸范围",
+  "carpet.rule.bigfireworkRange.name": "大型烟花的爆炸范围"
 }

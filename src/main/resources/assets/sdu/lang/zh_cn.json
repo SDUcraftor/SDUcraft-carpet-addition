@@ -1,7 +1,5 @@
 {
   "carpet.category.SDU-carpet": "SDU-carpet",
-  "carpet.rule.skipCropLightCheck.desc": "如果启用此选项，作物方块将不检查光照。",
-  "carpet.rule.skipCropLightCheck.name": "作物跳过光照检测",
   "carpet.rule.armorStandIgnoreShulkerDamage.name": "禁止潜影贝导弹伤害盔甲架",
   "carpet.rule.armorStandIgnoreShulkerDamage.desc": "如果启用此选项，潜影贝导弹将不会对盔甲架造成伤害",
   "carpet.rule.leadBandBeeDisable.name": "禁止栓绳栓蜜蜂(暂不可用)",
@@ -21,5 +19,13 @@
   "carpet.rule.disableNetherPortal.name": "禁用地狱门",
   "carpet.rule.disableNetherPortal.desc": "如果启用此选项，实体将不能通过地狱门传送",
   "carpet.rule.netherPortalCooldown.name": "地狱门冷却时间",
-  "carpet.rule.netherPortalCooldown.desc": "如果改变此选项,玩家以外实体通过地狱门的冷却时间将被设置为此选项值"
+  "carpet.rule.netherPortalCooldown.desc": "如果改变此选项,玩家以外实体通过地狱门的冷却时间将被设置为此选项值",
+  "carpet.rule.fireworkParticleNumber.desc": "小型烟花的爆炸粒子数",
+  "carpet.rule.fireworkParticleNumber.name": "小型烟花的爆炸粒子数",
+  "carpet.rule.fireworkRange.desc": "小型烟花的爆炸范围",
+  "carpet.rule.fireworkRange.name": "小型烟花的爆炸范围",
+  "carpet.rule.bigfireworkParticleNumber.desc": "大型烟花的爆炸粒子数",
+  "carpet.rule.bigfireworkParticleNumber.name": "大型烟花的爆炸粒子数",
+  "carpet.rule.bigfireworkRange.desc": "大型烟花的爆炸范围",
+  "carpet.rule.bigfireworkRange.name": "大型烟花的爆炸范围"
 }

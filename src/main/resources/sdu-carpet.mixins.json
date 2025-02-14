@@ -11,12 +11,13 @@
     "rule.itemPickupDelay.PlayerMixin",
     "rule.netherPortalCooldown.entityMixin",
     "rule.pearlLoadChunk.thrownEnderPearlMixin",
-    "rule.skipCropLightCheck.CropBlockMixin",
     "rule.tickRateChangedMessage.MinecraftServerMixin",
     "rule.tickRateChangedMessage.ServerTickRateManagerMixin",
     "rule.tntTeleportThroughNetherPortal.primedTntMixin"
   ],
   "client": [
+    "rule.firework.fireworkParticlesMixin",
+    "rule.firework.ParticleEngineMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -11,9 +11,6 @@ public class SDUcraftCarpetSettings {
     public static final String sdu= "SDU";
 
     @Rule(categories = {sdu})
-    public static boolean skipCropLightCheck = false;
-
-    @Rule(categories = {sdu})
     public static boolean armorStandIgnoreShulkerDamage = false;
 
     @Rule(categories = {sdu})
@@ -55,6 +52,38 @@ public class SDUcraftCarpetSettings {
             categories = {sdu}
     )
     public static int netherPortalCooldown = 300;
+
+    @Rule(
+            validators = Validators.NonNegativeNumber.class,
+            options = {"2"},
+            strict = false,
+            categories = {"firework"}
+    )
+    public static int fireworkParticleNumber = 2;
+
+    @Rule(
+            validators = Validators.NonNegativeNumber.class,
+            options = {"0.25"},
+            strict = false,
+            categories = {"firework"}
+    )
+    public static double fireworkRange = 0.25;
+
+    @Rule(
+            validators = Validators.NonNegativeNumber.class,
+            options = {"4"},
+            strict = false,
+            categories = {"firework"}
+    )
+    public static int bigfireworkParticleNumber = 4;
+
+    @Rule(
+            validators = Validators.NonNegativeNumber.class,
+            options = {"0.5"},
+            strict = false,
+            categories = {"firework"}
+    )
+    public static double bigfireworkRange = 0.5;
 
     private static class NotifyPlayers extends Validator<Boolean> {
         @Override
