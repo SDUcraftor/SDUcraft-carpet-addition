@@ -8,9 +8,15 @@ import java.util.Comparator;
 public class RegistTicket {
     public static final TicketType<ChunkPos> FAKE_PEACE_TICKET_TYPE =TicketType.create("fakepeace", Comparator.comparingLong(ChunkPos::toLong),100);
     public static final TicketType<ChunkPos> ENDER_PEARL = TicketType.create("ender_pearl", Comparator.comparingLong(ChunkPos::toLong), 40);
+    public static final TicketType<ChunkPos> End_GATEWAY_TICKET_TYPE = TicketType.create("end_gateway", Comparator.comparingLong(ChunkPos::toLong), 100);
 
-    public static void addfakepeaceticket(ServerLevel level,ChunkPos pos) {
+    public static void addFakepeaceTicket(ServerLevel level, ChunkPos pos) {
         level.getChunkSource().addRegionTicket(FAKE_PEACE_TICKET_TYPE,pos,3,pos);
+        level.resetEmptyTime();
+    }
+
+    public static void addEndGatewayTicket(ServerLevel level,ChunkPos pos) {
+        level.getChunkSource().addRegionTicket(End_GATEWAY_TICKET_TYPE,pos,3,pos);
         level.resetEmptyTime();
     }
 }

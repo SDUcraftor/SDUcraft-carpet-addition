@@ -26,6 +26,6 @@
   "carpet.rule.fireworkRange.name": "小型烟花的爆炸范围",
   "carpet.rule.bigfireworkParticleNumber.desc": "大型烟花的爆炸粒子数",
   "carpet.rule.bigfireworkParticleNumber.name": "大型烟花的爆炸粒子数",
-  "carpet.rule.bigfireworkRange.desc": "大型烟花的爆炸范围",
-  "carpet.rule.bigfireworkRange.name": "大型烟花的爆炸范围"
+  "carpet.rule.endGatewayTicket.name": "末地折跃门加载",
+  "carpet.rule.endGatewayTicket.desc": "折跃门传送时，添加3*3强加载区域"
 }

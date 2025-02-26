@@ -85,6 +85,9 @@ public class SDUcraftCarpetSettings {
     )
     public static double bigfireworkRange = 0.5;
 
+    @Rule(categories = {sdu})
+    public static boolean endGatewayTicket = false;
+
     private static class NotifyPlayers extends Validator<Boolean> {
         @Override
         public Boolean validate(CommandSourceStack source, CarpetRule<Boolean> changingRule, Boolean newValue, String userInput) {

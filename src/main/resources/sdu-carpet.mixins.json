@@ -8,6 +8,7 @@
     "rule.brittleDeepSlate.BlockBehaviorMixin",
     "rule.disableNetherPortal.entityMIxin",
     "rule.easyFakePeace.MinecraftServerMixin",
+    "rule.endGatewayTicket.TheEndGatewayBlockEntityMixin",
     "rule.itemPickupDelay.PlayerMixin",
     "rule.netherPortalCooldown.entityMixin",
     "rule.pearlLoadChunk.thrownEnderPearlMixin",

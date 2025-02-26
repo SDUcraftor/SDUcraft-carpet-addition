@@ -7,7 +7,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.config.rule.easyfakePeaceConfig;
-import static top.sducraft.helpers.rule.chunkLoadHelper.RegistTicket.addfakepeaceticket;
+import static top.sducraft.helpers.rule.chunkLoadHelper.RegistTicket.addFakepeaceTicket;
 
 public class fakePeaceHelper {
     private static int tickCounter = 0;
@@ -41,7 +41,7 @@ public class fakePeaceHelper {
         if (targetDimension != null) {
             BlockPos pos = easyfakePeaceConfig.getFakePeaceCoordinates(dimensionKey);
             if(pos != null) {
-                addfakepeaceticket(targetDimension,new ChunkPos(pos));
+                addFakepeaceTicket(targetDimension,new ChunkPos(pos));
             }
         }
     }

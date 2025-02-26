@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.config.rule.easyfakePeaceConfig;
 import static top.sducraft.config.rule.easyfakePeaceConfig.getFakePeaceStates;
-import static top.sducraft.helpers.rule.chunkLoadHelper.RegistTicket.addfakepeaceticket;
+import static top.sducraft.helpers.rule.chunkLoadHelper.RegistTicket.addFakepeaceTicket;
 
 public class easyFakePeaceCommandHelper {
 
@@ -40,12 +40,12 @@ public class easyFakePeaceCommandHelper {
             }
         }
         BlockPos pos = easyfakePeaceConfig.getFakePeaceCoordinates(dimensionKey);
-        if (pos == null&&source !=null) {
-            source.sendFailure(Component.literal("末地伪和平还没人做啊啊啊啊！"));
+        if (pos == null) {
+            source.sendFailure(Component.literal(dimensionName+"伪和平还没人做啊啊啊啊"));
             return 1;
         }
         if (targetDimension != null) {
-            addfakepeaceticket(targetDimension,new ChunkPos(pos));
+            addFakepeaceTicket(targetDimension,new ChunkPos(pos));
         }
         if (source!=null) {
             BlockState blockState = targetDimension.getBlockState(pos);

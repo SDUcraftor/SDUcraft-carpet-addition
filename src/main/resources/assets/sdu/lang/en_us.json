@@ -27,5 +27,7 @@
   "carpet.rule.bigfireworkParticleNumber.desc": "大型烟花的爆炸粒子数",
   "carpet.rule.bigfireworkParticleNumber.name": "大型烟花的爆炸粒子数",
   "carpet.rule.bigfireworkRange.desc": "大型烟花的爆炸范围",
-  "carpet.rule.bigfireworkRange.name": "大型烟花的爆炸范围"
+  "carpet.rule.bigfireworkRange.name": "大型烟花的爆炸范围",
+  "carpet.rule.endGatewayTicket.name": "EndGateway Load",
+  "carpet.rule.endGatewayTicket.desc": "If enable,When the gateway is teleported,add a 3x3 loading area"
 }
