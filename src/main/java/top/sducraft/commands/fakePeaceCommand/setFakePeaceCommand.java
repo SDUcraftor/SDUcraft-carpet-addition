@@ -14,7 +14,7 @@ public class setFakePeaceCommand {
                 .requires(c -> SDUcraftCarpetSettings.easyFakePeace)
                 .then(Commands.argument("dimension", DimensionArgument.dimension())
                 .then(Commands.argument("pos", BlockPosArgument.blockPos())
-                    .executes(context -> setFakePeaceCoordinates(DimensionArgument.getDimension(context, "dimension").toString(),BlockPosArgument.getBlockPos(context,"pos").getX(),BlockPosArgument.getBlockPos(context,"pos").getY(),BlockPosArgument.getBlockPos(context,"pos").getZ())
+                    .executes(context -> setFakePeaceCoordinates(DimensionArgument.getDimension(context, "dimension").dimension().toString(),BlockPosArgument.getBlockPos(context,"pos").getX(),BlockPosArgument.getBlockPos(context,"pos").getY(),BlockPosArgument.getBlockPos(context,"pos").getZ())
                                ))));
     }
 

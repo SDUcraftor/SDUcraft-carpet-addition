@@ -16,6 +16,8 @@ import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.config.rule.easyfakePeaceConfig;
+
+import static net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock.getConnectedDirection;
 import static top.sducraft.config.rule.easyfakePeaceConfig.getFakePeaceStates;
 import static top.sducraft.helpers.rule.chunkLoadHelper.RegistTicket.addFakepeaceTicket;
 
@@ -52,6 +54,7 @@ public class easyFakePeaceCommandHelper {
             if (blockState.getBlock() instanceof LeverBlock) {
                 targetDimension.setBlock(pos, blockState.setValue(LeverBlock.POWERED, state), 3);
                 targetDimension.updateNeighborsAt(pos, blockState.getBlock());
+                targetDimension.updateNeighborsAt(pos.relative(getConnectedDirection(blockState).getOpposite()),blockState.getBlock());
                 easyfakePeaceConfig.setFakePeaceState(dimensionKey, state);
                 PlayerList playerList = source.getServer().getPlayerList();
                 for (ServerPlayer player : playerList.getPlayers()) {

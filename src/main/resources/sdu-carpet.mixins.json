@@ -6,12 +6,14 @@
   "mixins": [
     "rule.armorStandIgnoreShulkerDamage.ArmorStandMixin",
     "rule.brittleDeepSlate.BlockBehaviorMixin",
+    "rule.chickenJockeyGenerationOdds.ZombieMixin",
     "rule.disableNetherPortal.entityMIxin",
     "rule.easyFakePeace.MinecraftServerMixin",
     "rule.endGatewayTicket.TheEndGatewayBlockEntityMixin",
     "rule.itemPickupDelay.PlayerMixin",
     "rule.netherPortalCooldown.entityMixin",
     "rule.pearlLoadChunk.thrownEnderPearlMixin",
+    "rule.projectileRaycastLength.ProjectileUtilMixin",
     "rule.tickRateChangedMessage.MinecraftServerMixin",
     "rule.tickRateChangedMessage.ServerTickRateManagerMixin",
     "rule.tntTeleportThroughNetherPortal.primedTntMixin"

@@ -88,6 +88,30 @@ public class SDUcraftCarpetSettings {
     @Rule(categories = {sdu})
     public static boolean endGatewayTicket = false;
 
+    @Rule(
+            validators = Validators.NonNegativeNumber.class,
+            options = {"0,0.05,1"},
+            strict = false,
+            categories = {sdu}
+    )
+    public static double babyZombieOdds = 0.05;
+
+    @Rule(
+            validators = Validators.NonNegativeNumber.class,
+            options = {"0,0.05,1"},
+            strict = false,
+            categories = {sdu}
+    )
+    public static double chickenJockeyGenerationOdds = 0.05;
+
+    @Rule(
+            validators = Validators.NonNegativeNumber.class,
+            options = {"0","100","200","400"},
+            strict = false,
+            categories = {sdu}
+    )
+    public static int projectileRaycastLength = 0;
+
     private static class NotifyPlayers extends Validator<Boolean> {
         @Override
         public Boolean validate(CommandSourceStack source, CarpetRule<Boolean> changingRule, Boolean newValue, String userInput) {

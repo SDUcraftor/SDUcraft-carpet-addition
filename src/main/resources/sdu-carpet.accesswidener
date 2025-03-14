@@ -3,3 +3,4 @@ accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
 accessible field net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity exitPortal Lnet/minecraft/core/BlockPos;
 accessible field net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity exactTeleport Z
 accessible method net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity findExitPosition (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;
+accessible method net/minecraft/world/level/block/FaceAttachedHorizontalDirectionalBlock getConnectedDirection (Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/core/Direction;
