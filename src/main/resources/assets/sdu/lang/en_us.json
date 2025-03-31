@@ -35,5 +35,8 @@
   "carpet.rule.chickenJockeyGenerationOdds.name": "Chicken Jockey Spawn Chance",
   "carpet.rule.chickenJockeyGenerationOdds.desc": "In vanilla, baby zombies have a 5% chance to spawn as chicken jockeys on nearby chickens (fails if no chicken nearby), and an additional 4.75% (0.95×0.05) chance to spawn with a chicken. If changed, this will disable jockey spawning on existing chickens and directly use the configured chance for chicken-accompanied spawning. Note: Actual probability = Baby Zombie Chance × Chicken Jockey Chance",
   "carpet.rule.projectileRaycastLength.name": "Projectile raycast length maximums",
-  "carpet.rule.projectileRaycastLength.desc": "Projectile raycast length maximums "
+  "carpet.rule.projectileRaycastLength.desc": "Projectile raycast length maximums ",
+  "carpet.rule.pearlTicketoptimization.name": "Projectile raycast length maximums",
+  "carpet.rule.pearlTicketoptimization.desc": "Projectile raycast length maximums ",
+  "carpet.command.resetTick": "The game speed has been reset"
 }

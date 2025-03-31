@@ -13,6 +13,7 @@ import top.sducraft.SDUcraftCarpetSettings;
 //修改丢出物品时的拾取延迟
 @Mixin(Player.class)
 public abstract class PlayerMixin extends Entity implements TraceableEntity {
+
     public PlayerMixin(EntityType<?> entityType, Level level) {super(entityType, level);}
 
     @ModifyArg(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",at= @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;setPickUpDelay(I)V"))

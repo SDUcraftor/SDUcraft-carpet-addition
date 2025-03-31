@@ -112,6 +112,11 @@ public class SDUcraftCarpetSettings {
     )
     public static int projectileRaycastLength = 0;
 
+    @Rule(
+            categories = {sdu}
+    )
+    public static boolean pearlTicketoptimization = false;
+
     private static class NotifyPlayers extends Validator<Boolean> {
         @Override
         public Boolean validate(CommandSourceStack source, CarpetRule<Boolean> changingRule, Boolean newValue, String userInput) {

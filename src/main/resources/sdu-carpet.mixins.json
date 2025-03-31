@@ -12,7 +12,7 @@
     "rule.endGatewayTicket.TheEndGatewayBlockEntityMixin",
     "rule.itemPickupDelay.PlayerMixin",
     "rule.netherPortalCooldown.entityMixin",
-    "rule.pearlLoadChunk.thrownEnderPearlMixin",
+    "rule.pearlTicketoptimization.ThrownEnderpearlMixin",
     "rule.projectileRaycastLength.ProjectileUtilMixin",
     "rule.tickRateChangedMessage.MinecraftServerMixin",
     "rule.tickRateChangedMessage.ServerTickRateManagerMixin",

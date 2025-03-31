@@ -18,6 +18,7 @@ import top.sducraft.helpers.commands.tickRateChangeMessage.tickRateChangeMessage
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
+
     @Shadow
     public abstract ServerTickRateManager tickRateManager();
 

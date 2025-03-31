@@ -35,5 +35,8 @@
   "carpet.rule.chickenJockeyGenerationOdds.name": "鸡骑士生成概率",
   "carpet.rule.chickenJockeyGenerationOdds.desc": "原版中小僵尸有5%的概率会在附近的鸡上生成成为鸡骑士（如果附近没有鸡则生成失败），还有4.75%(0.95X0.05)的概率附带一只鸡生成成为鸡骑士,如果更改此选项，将禁用僵尸在鸡上生成鸡骑士，直接按概率生成附带鸡的鸡骑士，注意，实际生成概率=小僵尸生成概率X鸡骑士生成概率",
   "carpet.rule.projectileRaycastLength.name": "投掷物raycast长度上限",
-  "carpet.rule.projectileRaycastLength.desc": "当投掷物碰撞检测的raycast超过此选项值时，将其替换为选项值"
+  "carpet.rule.projectileRaycastLength.desc": "当投掷物碰撞检测的raycast超过此选项值时，将其替换为选项值",
+  "carpet.rule.pearlTicketoptimization.name": "珍珠加载优化",
+  "carpet.rule.pearlTicketoptimization.desc": "使用更优秀的珍珠加载逻辑(来自toytag)",
+  "carpet.command.resetTick": "已重置游戏速度"
 }
