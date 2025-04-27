@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import top.sducraft.config.rule.machineStatusCommandConfig;
+import static carpet.utils.Translations.tr;
 import static top.sducraft.config.rule.machineStatusCommandConfig.permMachineList;
 import static top.sducraft.config.rule.machineStatusCommandConfig.tempMachineList;
 import static top.sducraft.util.massageComponentCreate.createCommandClickComponent;
@@ -54,19 +55,19 @@ public class machineStatusCommand implements IEasyCommand {
         boolean bl1 = tempMachineList.isEmpty();
         boolean bl2 = permMachineList.isEmpty();
         if (bl1 && bl2){
-            player.displayClientMessage(Component.translatable("sducarpet.easycommand.machinestatus1"),false);
+            player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.machinestatus1")),false);
             return 0;
         }
         else {
-            player.displayClientMessage(Component.translatable("sducarpet.easycommand.machinestatus4").append(Component.translatable("sducarpet.easycommand.machinestatus5").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN))).append(Component.translatable("sducarpet.easycommand.machinestatus6")).append(Component.translatable("sducarpet.easycommand.machinestatus7").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))).append(Component.translatable("sducarpet.easycommand.machinestatus8")), false);
+            player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.machinestatus4")).append(Component.literal(tr("sducarpet.easycommand.machinestatus5")).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN))).append(Component.literal(tr("sducarpet.easycommand.machinestatus6"))).append(Component.literal(tr("sducarpet.easycommand.machinestatus7")).withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))).append(Component.literal(tr("sducarpet.easycommand.machinestatus8"))), false);
             if (!bl1) {
-                player.displayClientMessage(Component.translatable("sducarpet.easycommand.machinestatus2"), false);
+                player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.machinestatus2")), false);
                 for (machineStatusCommandConfig.Machine machine : tempMachineList) {
                     player.displayClientMessage(Component.literal(machine.name).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)).append(Component.literal("  " + machine.dimension + " (" + machine.pos.toShortString() + ")").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE))), false);
                 }
             }
             if (!bl2) {
-                player.displayClientMessage(Component.translatable("sducarpet.easycommand.machinestatus3"), false);
+                player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.machinestatus3")), false);
                 for (machineStatusCommandConfig.Machine machine : permMachineList) {
                     BlockState blockState = getDimension(player.getServer(), machine.dimension).getBlockState(machine.pos);
                     if ((blockState.getBlock() instanceof LeverBlock && blockState.getValue(LeverBlock.POWERED)) || (blockState.getBlock() instanceof RedstoneLampBlock && blockState.getValue(RedstoneLampBlock.LIT))) {

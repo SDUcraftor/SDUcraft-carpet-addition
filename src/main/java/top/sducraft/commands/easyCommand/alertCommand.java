@@ -12,6 +12,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import top.sducraft.helpers.commands.easyCommand.alertEasyCommand;
 import top.sducraft.SDUcraftCarpetSettings;
+
+import static carpet.utils.Translations.tr;
 import static top.sducraft.config.rule.alertConfig.*;
 
 public class alertCommand {
@@ -26,11 +28,11 @@ public class alertCommand {
                         .executes(context ->{
                             if(addAlert(StringArgumentType.getString(context,"name"),DimensionArgument.getDimension(context,"dimension").dimension().location().getPath(),BlockPosArgument.getBlockPos(context,"pos"),StringArgumentType.getString(context,"text"),false))
                             {
-                                context.getSource().sendSuccess(() -> Component.translatable("sducarpet.easycommand.alertcommand1").append(StringArgumentType.getString(context, "name")), false);
+                                context.getSource().sendSuccess(() -> Component.literal(tr("sducarpet.easycommand.alertcommand1")).append(StringArgumentType.getString(context, "name")), false);
                              return 1;
                             }
                             else {
-                                context.getSource().sendFailure(Component.translatable("sducarpet.easycommand.alertcommand6").append(StringArgumentType.getString(context,"name")));
+                                context.getSource().sendFailure(Component.literal(tr("sducarpet.easycommand.alertcommand6")).append(StringArgumentType.getString(context,"name")));
                                 return 0;
                             }
                         }))))))
@@ -46,11 +48,11 @@ public class alertCommand {
                         })
                         .executes(context -> {
                             if(delAlert(StringArgumentType.getString(context,"name"),context.getSource().getPlayer())){
-                                context.getSource().sendSuccess(()-> Component.translatable("sducarpet.easycommand.alertcommand2").append(StringArgumentType.getString(context,"name")),false);
+                                context.getSource().sendSuccess(()-> Component.literal(tr("sducarpet.easycommand.alertcommand2")).append(StringArgumentType.getString(context,"name")),false);
                                 return 1;
                             }
                             else{
-                                context.getSource().sendFailure(Component.translatable("sducarpet.easycommand.alertcommand3").append(StringArgumentType.getString(context,"name")));
+                                context.getSource().sendFailure(Component.literal(tr("sducarpet.easycommand.alertcommand3")).append(StringArgumentType.getString(context,"name")));
                                 return 0;
                             }
                             })))
@@ -66,15 +68,15 @@ public class alertCommand {
                         .executes(context -> {
                             if(setAlert(StringArgumentType.getString(context,"name"),BoolArgumentType.getBool(context,"status"))){
                                 if(BoolArgumentType.getBool(context,"status")){
-                                    context.getSource().sendSuccess(()->Component.translatable("sducarpet.easycommand.alertcommand3").append(Component.literal(StringArgumentType.getString(context,"name")).withStyle(Style.EMPTY.withColor(ChatFormatting.RED))),false);
+                                    context.getSource().sendSuccess(()->Component.literal(tr("sducarpet.easycommand.alertcommand3")).append(Component.literal(StringArgumentType.getString(context,"name")).withStyle(Style.EMPTY.withColor(ChatFormatting.RED))),false);
                                 }
                                 else {
-                                    context.getSource().sendSuccess(()->Component.translatable("sducarpet.easycommand.alertcommand4").append(Component.literal(StringArgumentType.getString(context,"name")).withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))),false);
+                                    context.getSource().sendSuccess(()->Component.literal(tr("sducarpet.easycommand.alertcommand4")).append(Component.literal(StringArgumentType.getString(context,"name")).withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))),false);
                                 }
                                 return 1;
                             }
                             else {
-                                    context.getSource().sendFailure(Component.translatable("sducarpet.easycommand.alertcommand5").append("\""+StringArgumentType.getString(context,"name")+ "\""));
+                                    context.getSource().sendFailure(Component.literal(tr("sducarpet.easycommand.alertcommand5")).append("\""+StringArgumentType.getString(context,"name")+ "\""));
                                     return 0;
                             }
                         }))))

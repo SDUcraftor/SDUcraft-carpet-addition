@@ -4,7 +4,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -14,11 +13,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.config.rule.alertConfig;
+import static carpet.utils.Translations.tr;
 import static top.sducraft.config.rule.alertConfig.alertList;
 import static top.sducraft.util.massageComponentCreate.createCommandClickComponent;
 import static top.sducraft.util.massageComponentCreate.getDimensionColor;
@@ -47,18 +46,18 @@ public class alertEasyCommand implements IEasyCommand{
         Component component = Component.literal("\n[alert指令介绍]\n").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
 //                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://mcdreforged.com/zh-CN/plugin/gamemode"))
 //                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("点击查看!!spec命令使用文档"))))
-                .append(Component.translatable("sducarpet.easycommand.alertcommand8"))
-                .append(Component.translatable("sducarpet.easycommand.alertcommand9").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
+                .append(Component.literal(tr("sducarpet.easycommand.alertcommand8")))
+                .append(Component.literal(tr("sducarpet.easycommand.alertcommand9")).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
         player.displayClientMessage(component, false);
         showAlertList(player);
     }
 
     public static void showAlertList(ServerPlayer player) {
         if (alertList.isEmpty()) {
-            player.displayClientMessage(Component.translatable("sducarpet.easycommand.alertcommand7"), false);
+            player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.alertcommand7")), false);
             return;
         }
-        Component header = Component.translatable("sducarpet.easycommand.alertcommand10");
+        Component header = Component.literal(tr("sducarpet.easycommand.alertcommand10"));
         Component body = Component.empty();
         for (alertConfig.alert alert : alertList) {
             Component info = Component.literal("\n" + alert.name + "  ")
@@ -78,7 +77,6 @@ public class alertEasyCommand implements IEasyCommand{
         Component trueButton;
         Component falseButton;
         if (state) {
-            // 当前是 true：true 不可点，false 可点击关闭
             trueButton = Component.literal("[true] ")
                     .withStyle(Style.EMPTY
                             .withBold(true)
@@ -94,12 +92,11 @@ public class alertEasyCommand implements IEasyCommand{
                             ))
                             .withHoverEvent(new HoverEvent(
                                     HoverEvent.Action.SHOW_TEXT,
-                                    Component.literal("点击关闭警告：").append(name)
+                                    Component.literal(tr("alertcommand12")).append(name)
                             ))
                             .withColor(ChatFormatting.GRAY)
                     );
         } else {
-            // 当前是 false：false 不可点，true 可点击开启
             trueButton = Component.literal("[true] ")
                     .withStyle(Style.EMPTY
                             .withClickEvent(new ClickEvent(
@@ -108,7 +105,7 @@ public class alertEasyCommand implements IEasyCommand{
                             ))
                             .withHoverEvent(new HoverEvent(
                                     HoverEvent.Action.SHOW_TEXT,
-                                    Component.literal("点击开启警告：").append(name)
+                                    Component.literal("alertcommand13").append(name)
                             ))
                             .withColor(ChatFormatting.GRAY)
                     );
@@ -135,9 +132,9 @@ public class alertEasyCommand implements IEasyCommand{
                     for (alertConfig.alert alert : alertList) {
                         if (alert.status) {
                             if (player.serverLevel().dimension().location().getPath().equals(alert.dimension) && Math.abs(player.getX() - alert.pos.getX()) <= 250 && Math.abs(player.getZ() - alert.pos.getZ()) <= 250) {
-                                  ClientboundSetTitleTextPacket titleTextPacket = new ClientboundSetTitleTextPacket(Component.translatable("sducarpet.easycommand.fakepeacewarn1").withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                                  ClientboundSetTitleTextPacket titleTextPacket = new ClientboundSetTitleTextPacket(Component.literal(tr("sducarpet.easycommand.fakepeacewarn1")).withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                                   player.connection.send(titleTextPacket);
-                                  player.sendSystemMessage(Component.literal(alert.text+" ").append(Component.translatable("sducarpet.easycommand.alertcommand11").withColor(0xFF5555)).append(Component.literal("("+alert.pos.toShortString()+")")).append(Component.literal(alert.dimension).withColor(getDimensionColor(alert.dimension))), true);
+                                  player.sendSystemMessage(Component.literal(alert.text+" ").append(Component.literal(tr("sducarpet.easycommand.alertcommand11")).withColor(0xFF5555)).append(Component.literal("("+alert.pos.toShortString()+")")).append(Component.literal(alert.dimension).withColor(getDimensionColor(alert.dimension))), true);
                                   drawDirectionArrow(player, alert.pos);
                             }
                         }
@@ -152,7 +149,6 @@ public class alertEasyCommand implements IEasyCommand{
         double dx = player.getX() - (targetPos.getX() + 0.5);
         double dz = player.getZ() - (targetPos.getZ() + 0.5);
         double dist = Math.hypot(dx, dz);
-        if (dist < 1) return;
         double dirX = dx / dist;
         double dirZ = dz / dist;
         double startBack   = -41.0;

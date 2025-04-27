@@ -18,6 +18,7 @@ import top.sducraft.config.rule.easyfakePeaceConfig;
 
 import javax.swing.*;
 
+import static carpet.utils.Translations.tr;
 import static top.sducraft.helpers.rule.chunkLoadHelper.RegistTicket.addFakepeaceTicket;
 import static top.sducraft.util.massageComponentCreate.getDimensionColor;
 
@@ -80,9 +81,9 @@ public class fakePeaceHelper {
                     String dimensionKey = getTargetDimension(server, player.serverLevel()).dimension().toString();
                     BlockPos pos = easyfakePeaceConfig.getFakePeaceCoordinates(dimensionKey);
                     if (pos != null && (Math.abs(player.getX() - pos.getX()) <= 300 && Math.abs(player.getZ() - pos.getZ()) <= 300)) {
-                        ClientboundSetTitleTextPacket titleTextPacket = new ClientboundSetTitleTextPacket(Component.translatable("sducarpet.easycommand.fakepeacewarn1").withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                        ClientboundSetTitleTextPacket titleTextPacket = new ClientboundSetTitleTextPacket(Component.literal(tr("sducarpet.easycommand.fakepeacewarn1")).withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                         player.connection.send(titleTextPacket);
-                        player.sendSystemMessage(Component.translatable("sducarpet.easycommand.fakepeacewarn2")
+                        player.sendSystemMessage(Component.literal(tr("sducarpet.easycommand.fakepeacewarn2"))
                                 .append(Component.literal("(" + pos.toShortString() + ")").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)))
                                 .append(Component.literal("@"+player.serverLevel().dimension().location().getPath()).withColor(getDimensionColor(player.serverLevel().dimension().location().getPath()))),true);
                     }

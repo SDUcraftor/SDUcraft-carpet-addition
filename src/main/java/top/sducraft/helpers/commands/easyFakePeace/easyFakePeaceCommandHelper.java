@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.config.rule.easyfakePeaceConfig;
 
+import static carpet.utils.Translations.tr;
 import static net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock.getConnectedDirection;
 import static top.sducraft.config.rule.easyfakePeaceConfig.getFakePeaceStates;
 import static top.sducraft.helpers.rule.chunkLoadHelper.RegistTicket.addFakepeaceTicket;
@@ -80,10 +81,10 @@ public class easyFakePeaceCommandHelper {
 
     public static void showFakePeaceStatus(ServerPlayer player) {
         if(SDUcraftCarpetSettings.easyFakePeace) {
-            player.displayClientMessage(Component.translatable("sducarpet.easycommand.fakepeacestatus").withStyle(ChatFormatting.BOLD), false);
-            player.displayClientMessage(createStateText("主世界", "minecraft:overworld", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:overworld]")), false);
-            player.displayClientMessage(createStateText("地  狱", "minecraft:the_nether", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:the_nether]")), false);
-            player.displayClientMessage(createStateText("末  地", "minecraft:the_end", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:the_end]")), false);
+            player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.fakepeacestatus")).withStyle(ChatFormatting.BOLD), false);
+            player.displayClientMessage(createStateText("overworld", "minecraft:overworld", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:overworld]")), false);
+            player.displayClientMessage(createStateText("the_nether", "minecraft:the_nether", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:the_nether]")), false);
+            player.displayClientMessage(createStateText("the_end", "minecraft:the_end", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:the_end]")), false);
         }
     }
 

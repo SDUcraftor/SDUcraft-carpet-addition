@@ -46,6 +46,9 @@
   "sducarpet.easycommand.alertcommand5": "Can not found",
   "sducarpet.easycommand.alertcommand6": "Alert already exists",
   "sducarpet.easycommand.fakepeacestatus": "fakepeace status :",
+  "sducarpet.easycommand.fakepeacestatus1": "overworld",
+  "sducarpet.easycommand.fakepeacestatus2": "the nether",
+  "sducarpet.easycommand.fakepeacestatus3": "the end",
   "sducarpet.easycommand.fakepeacewarn1": "WARN⚠⚠⚠",
   "sducarpet.easycommand.fakepeacewarn2": "You are too close to the fakepeaceit may cause great lag to the server, please leave immediately",
   "sducarpet.easycommand.machinestatus1": "There are no machines in the list",
@@ -60,5 +63,7 @@
   "sducarpet.easycommand.alertcommand8": " /alert list View all alerts\n /alert add <name> <dimension> <blockPos> <text> Add alerts\n /alert rel <name> Remove alert \n/alert set <name> <true/false> Turn on/off alert\n",
   "sducarpet.easycommand.alertcommand9": "注意事项:只有op能添加/删除警告\n温馨提示:使用/alert list 会提供快捷的设置面板",
   "sducarpet.easycommand.alertcommand10": "当前警告列表:",
-  "sducarpet.easycommand.alertcommand11": "请沿箭头方向离开"
+  "sducarpet.easycommand.alertcommand11": "请沿箭头方向离开",
+  "sducarpet.easycommand.alertcommand12": "点击关闭警告",
+  "sducarpet.easycommand.alertcommand13": "点击开启警告"
 }
