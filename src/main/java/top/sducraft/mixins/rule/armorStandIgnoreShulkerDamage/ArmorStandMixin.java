@@ -19,7 +19,6 @@ public abstract class ArmorStandMixin extends LivingEntity{
     protected ArmorStandMixin(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);
     }
-    //如果伤害来源为SHULKER_BULLET,防止此伤害
     @Inject(method = "hurt", at = @At(value = "HEAD"), cancellable = true)
     private void ShulkerBulletKillArmorStand(DamageSource damageSource, float f, CallbackInfoReturnable<Boolean> cir){
      if (SDUcraftCarpetSettings.armorStandIgnoreShulkerDamage){

@@ -90,7 +90,7 @@ public class SDUcraftCarpetSettings {
 
     @Rule(
             validators = Validators.NonNegativeNumber.class,
-            options = {"0,0.05,1"},
+            options = {"0","0.05","1"},
             strict = false,
             categories = {sdu}
     )
@@ -98,7 +98,7 @@ public class SDUcraftCarpetSettings {
 
     @Rule(
             validators = Validators.NonNegativeNumber.class,
-            options = {"0,0.05,1"},
+            options = {"0","0.05","1"},
             strict = false,
             categories = {sdu}
     )

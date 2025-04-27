@@ -16,7 +16,7 @@ public abstract class entityMIxin
 {
     @Shadow protected boolean isInsidePortal;
 
-    @Inject(method = "handleNetherPortal",at=@At("HEAD"), cancellable = true)
+    @Inject(method = "handleNetherPortal",at=@At("HEAD"))
     protected void handleNetherPortal(CallbackInfo ci) {
         if(SDUcraftCarpetSettings.disableNetherPortal) {
             this.isInsidePortal = false;

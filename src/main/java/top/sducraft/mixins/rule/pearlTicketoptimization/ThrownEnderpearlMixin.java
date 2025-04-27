@@ -58,7 +58,6 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
             Vec3 currPos = this.position().add(Vec3.ZERO);
 
             if (((Math.abs(currVelocity.length()) >= 10)||!sync) &&SDUcraftCarpetSettings.pearlTicketoptimization) {
-//          同步珍珠位置
                 if (sync) {
                     realPos = this.position().add(Vec3.ZERO);
                     realVelocity = this.getDeltaMovement().add(Vec3.ZERO);
@@ -73,8 +72,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
 
                 ServerChunkCache serverChunkSource = ((ServerLevel) level).getChunkSource();
                 LevelChunk levelChunk = serverChunkSource.getChunkNow(nextChunk.x, nextChunk.z);
-
-                if(levelChunk!=null&&(!sync || !isEntityTickingChunk(levelChunk))) {
+                if(!sync || !isEntityTickingChunk(levelChunk)) {
                     int highestY;
                     try {
                         CompoundTag currcompoundTag = serverChunkSource.chunkMap.read(new ChunkPos(currChunk.x, currChunk.z)).get().orElse(null);

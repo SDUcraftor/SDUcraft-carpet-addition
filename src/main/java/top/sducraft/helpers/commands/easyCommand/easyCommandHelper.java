@@ -12,7 +12,8 @@ public class easyCommandHelper {
             new fakepeaceEasyCommand(),
             new mirrorManageEasyCommand(),
             new spectatorEasyCommand(),
-            new tickRateManagerEasyCommand()
+            new tickRateManagerEasyCommand(),
+            new alertEasyCommand()
     );
 
     public static void showEasyCommandInterface(ServerPlayer player) {

@@ -44,4 +44,16 @@ public class massageComponentCreate {
         }
         return suggestclickcomponent;
     }
+
+    public static int getDimensionColor(String dimension) {
+            if (dimension.equals("overworld")) {
+                return 0x006400;
+            }
+            else if (dimension.equals("the_nether")) {
+                return 0x8B0000;
+            }
+            else {
+                return 0x800080;
+            }
+    }
 }

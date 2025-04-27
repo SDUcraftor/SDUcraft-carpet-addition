@@ -80,7 +80,7 @@ public class easyFakePeaceCommandHelper {
 
     public static void showFakePeaceStatus(ServerPlayer player) {
         if(SDUcraftCarpetSettings.easyFakePeace) {
-            player.displayClientMessage(Component.literal("当前伪和平状态为：").withStyle(ChatFormatting.BOLD), false);
+            player.displayClientMessage(Component.translatable("sducarpet.easycommand.fakepeacestatus").withStyle(ChatFormatting.BOLD), false);
             player.displayClientMessage(createStateText("主世界", "minecraft:overworld", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:overworld]")), false);
             player.displayClientMessage(createStateText("地  狱", "minecraft:the_nether", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:the_nether]")), false);
             player.displayClientMessage(createStateText("末  地", "minecraft:the_end", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:the_end]")), false);

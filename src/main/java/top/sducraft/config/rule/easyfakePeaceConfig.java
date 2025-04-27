@@ -33,7 +33,7 @@ public class easyfakePeaceConfig {
     // 初始化时加载配置
     public static void init(MinecraftServer server) {
         File worldDir = server.getWorldPath(LevelResource.ROOT).toFile();
-        File configDir = new File(worldDir, "config");
+        File configDir = new File(worldDir, "config/carpet-sducraft-addition");
         if (!configDir.exists()) {
             configDir.mkdirs();
         }

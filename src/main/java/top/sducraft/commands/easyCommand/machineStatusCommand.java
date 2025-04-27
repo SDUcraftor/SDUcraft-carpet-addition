@@ -40,7 +40,7 @@ public class machineStatusCommand {
                             return 1;
                         }
                         ))))))
-                .then(Commands.literal("remove")
+                .then(Commands.literal("del")
                 .then(Commands.argument("type", StringArgumentType.string())
                                 .suggests((context, builder) ->{
                                         builder.suggest("temp");

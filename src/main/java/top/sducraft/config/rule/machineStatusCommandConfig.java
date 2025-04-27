@@ -26,7 +26,7 @@ public class machineStatusCommandConfig {
         public String name;
         public String dimension;
 
-        public Machine(BlockPos pos, String name, String dimension) {
+        public Machine(String name, BlockPos pos, String dimension) {
             this.pos = pos;
             this.name = name;
             this.dimension = dimension;
@@ -35,7 +35,7 @@ public class machineStatusCommandConfig {
 
     public static void init(MinecraftServer server) {
         File worldDir = server.getWorldPath(LevelResource.ROOT).toFile();
-        File configDir = new File(worldDir, "config");
+        File configDir = new File(worldDir, "config/carpet-sducraft-addition");
         if (!configDir.exists()) {
             configDir.mkdirs();
         }
@@ -67,12 +67,12 @@ public class machineStatusCommandConfig {
     }
 
     public static void addPermMachine(String name,BlockPos pos,String dimension) {
-        permMachineList.add(new Machine(pos, name,dimension));
+        permMachineList.add(new Machine(name,pos, dimension));
         saveConfig();
     }
 
     public static void addTempMachine(String name,BlockPos pos,String dimension) {
-        tempMachineList.add(new Machine(pos, name,dimension));
+        tempMachineList.add(new Machine( name,pos,dimension));
     }
 
     public static void delPermMachine(String name, ServerPlayer player) {
