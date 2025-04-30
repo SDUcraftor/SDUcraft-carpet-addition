@@ -15,7 +15,7 @@
     "rule.pearlTicketoptimization.ThrownEnderpearlMixin",
     "rule.projectileRaycastLength.ProjectileUtilMixin",
     "rule.tickRateChangedMessage.MinecraftServerMixin",
-    "rule.tickRateChangedMessage.ServerTickRateManagerMixin",
+    "rule.tickRateChangedMessage.ServerTickRateManagerMixin"
   ],
   "client": [
     "rule.firework.fireworkParticlesMixin",
