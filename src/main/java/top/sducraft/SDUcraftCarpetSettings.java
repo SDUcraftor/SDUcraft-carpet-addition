@@ -40,9 +40,6 @@ public class SDUcraftCarpetSettings {
     public static int itempickupDelay = 40;
 
     @Rule(categories = {sdu})
-    public static boolean tntTeleportThroughNetherPortal =false;
-
-    @Rule(categories = {sdu})
     public static boolean disableNetherPortal = false;
 
     @Rule(

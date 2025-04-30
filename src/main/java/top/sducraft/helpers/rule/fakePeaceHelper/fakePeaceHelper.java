@@ -24,7 +24,6 @@ import static top.sducraft.util.massageComponentCreate.getDimensionColor;
 
 public class fakePeaceHelper {
     private static int tickCounter = 0;
-    private static int tickCounter1 = 0;
 
     public static void loadChunkOnInitialize(MinecraftServer server) {
         if(SDUcraftCarpetSettings.easyFakePeace) {
@@ -71,31 +70,9 @@ public class fakePeaceHelper {
         }
     }
 
-    public static void warnPlayer (MinecraftServer server){
-        if (SDUcraftCarpetSettings.easyFakePeace) {
-            tickCounter1++;
-            if (tickCounter1 >= 50) {
-                tickCounter1 = 0;
-                PlayerList playerList = server.getPlayerList();
-                for (ServerPlayer player : playerList.getPlayers()) {
-                    String dimensionKey = getTargetDimension(server, player.serverLevel()).dimension().toString();
-                    BlockPos pos = easyfakePeaceConfig.getFakePeaceCoordinates(dimensionKey);
-                    if (pos != null && (Math.abs(player.getX() - pos.getX()) <= 300 && Math.abs(player.getZ() - pos.getZ()) <= 300)) {
-                        ClientboundSetTitleTextPacket titleTextPacket = new ClientboundSetTitleTextPacket(Component.literal(tr("sducarpet.easycommand.fakepeacewarn1")).withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                        player.connection.send(titleTextPacket);
-                        player.sendSystemMessage(Component.literal(tr("sducarpet.easycommand.fakepeacewarn2"))
-                                .append(Component.literal("(" + pos.toShortString() + ")").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)))
-                                .append(Component.literal("@"+player.serverLevel().dimension().location().getPath()).withColor(getDimensionColor(player.serverLevel().dimension().location().getPath()))),true);
-                    }
-                }
-            }
-        }
-    }
-
     public static void onServerTick(MinecraftServer server) {
-        warnPlayer(server);
         tickCounter++;
-        if (tickCounter >= 1000) {
+        if (tickCounter >= 2000) {
             tickCounter = 0;
             loadChunkOnInitialize(server);
         }

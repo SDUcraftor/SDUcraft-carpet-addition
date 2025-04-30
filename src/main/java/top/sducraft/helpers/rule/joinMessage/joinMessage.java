@@ -26,9 +26,8 @@ public abstract class joinMessage {
                         .append(createSuggestClickComponent(" /easycommand ","/easycommand",null))
                         .append(Component.literal("""
                                 来获取良好的游戏内指令体验
-                                
-                                喜报,machine命令已完成，输入/machine status 即可查看当前服务器内机器状态
-                                更多信息请使用/easycommand mashine查看
+                               
+                                在镜像/创造服中粘贴投影请先安装litemoretica
                                 """))
                         ,false);
                 sendTickRateChangeMessage(player);

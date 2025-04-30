@@ -10,79 +10,79 @@ import net.minecraft.commands.arguments.DimensionArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import top.sducraft.helpers.commands.easyCommand.alertEasyCommand;
 import top.sducraft.SDUcraftCarpetSettings;
-
+import top.sducraft.helpers.commands.easyCommand.warningEasyCommand;
 import static carpet.utils.Translations.tr;
-import static top.sducraft.config.rule.alertConfig.*;
+import static top.sducraft.config.rule.warningConfig.*;
 
-public class alertCommand {
+public class warningCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("alert")
-                .requires(c -> SDUcraftCarpetSettings.easyCommand & c.hasPermission(2))
+        dispatcher.register(Commands.literal("warning")
+                .requires(c -> SDUcraftCarpetSettings.easyCommand)
                 .then(Commands.literal("add")
+                .requires(commandSourceStack -> commandSourceStack.hasPermission(2))
                 .then(Commands.argument("name", StringArgumentType.string())
                 .then(Commands.argument("dimension",DimensionArgument.dimension())
                 .then(Commands.argument("pos", BlockPosArgument.blockPos())
                 .then(Commands.argument("text",StringArgumentType.string())
                         .executes(context ->{
-                            if(addAlert(StringArgumentType.getString(context,"name"),DimensionArgument.getDimension(context,"dimension").dimension().location().getPath(),BlockPosArgument.getBlockPos(context,"pos"),StringArgumentType.getString(context,"text"),false))
+                            if(addWarning(StringArgumentType.getString(context,"name"),DimensionArgument.getDimension(context,"dimension").dimension().location().getPath(),BlockPosArgument.getBlockPos(context,"pos"),StringArgumentType.getString(context,"text"),false))
                             {
-                                context.getSource().sendSuccess(() -> Component.literal(tr("sducarpet.easycommand.alertcommand1")).append(StringArgumentType.getString(context, "name")), false);
+                                context.getSource().sendSuccess(() -> Component.literal(tr("sducarpet.easycommand.warningcommand1")).append(StringArgumentType.getString(context, "name")), false);
                              return 1;
                             }
                             else {
-                                context.getSource().sendFailure(Component.literal(tr("sducarpet.easycommand.alertcommand6")).append(StringArgumentType.getString(context,"name")));
+                                context.getSource().sendFailure(Component.literal(tr("sducarpet.easycommand.warningcommand6")).append(StringArgumentType.getString(context,"name")));
                                 return 0;
                             }
                         }))))))
                 .then(Commands.literal("del")
-                .requires(c -> SDUcraftCarpetSettings.easyCommand & c.hasPermission(2))
+                .requires(commandSourceStack -> commandSourceStack.hasPermission(2))
                 .then(Commands.argument("name", StringArgumentType.string())
                         .suggests((context, builder) ->{
-                            builder.suggest("all")
-;                            for (alert alert : alertList){
-                                builder.suggest("\""+alert.name+"\"");
+                            builder.suggest("all");
+                            for (warning warning : warningList){
+                                builder.suggest("\""+warning.name+"\"");
                             }
                             return builder.buildFuture();
                         })
                         .executes(context -> {
-                            if(delAlert(StringArgumentType.getString(context,"name"),context.getSource().getPlayer())){
-                                context.getSource().sendSuccess(()-> Component.literal(tr("sducarpet.easycommand.alertcommand2")).append(StringArgumentType.getString(context,"name")),false);
+                            if(delWarning(StringArgumentType.getString(context,"name"),context.getSource().getPlayer())){
+                                context.getSource().sendSuccess(()-> Component.literal(tr("sducarpet.easycommand.warningcommand2")).append(StringArgumentType.getString(context,"name")),false);
                                 return 1;
                             }
                             else{
-                                context.getSource().sendFailure(Component.literal(tr("sducarpet.easycommand.alertcommand3")).append(StringArgumentType.getString(context,"name")));
+                                context.getSource().sendFailure(Component.literal(tr("sducarpet.easycommand.warningcommand3")).append(StringArgumentType.getString(context,"name")));
                                 return 0;
                             }
                             })))
                 .then(Commands.literal("set")
                 .then(Commands.argument("name", StringArgumentType.string())
                         .suggests((context, builder) ->{
-                            for (alert alert : alertList){
-                                builder.suggest("\""+alert.name+"\"");
+                            for (warning warning : warningList){
+                                builder.suggest("\""+warning.name+"\"");
                             }
                             return builder.buildFuture();
                         })
                         .then(Commands.argument("status", BoolArgumentType.bool())
                         .executes(context -> {
-                            if(setAlert(StringArgumentType.getString(context,"name"),BoolArgumentType.getBool(context,"status"))){
+                            if(setWarning(StringArgumentType.getString(context,"name"),BoolArgumentType.getBool(context,"status"))){
                                 if(BoolArgumentType.getBool(context,"status")){
-                                    context.getSource().sendSuccess(()->Component.literal(tr("sducarpet.easycommand.alertcommand3")).append(Component.literal(StringArgumentType.getString(context,"name")).withStyle(Style.EMPTY.withColor(ChatFormatting.RED))),false);
+                                    context.getSource().sendSuccess(()->Component.literal(tr("sducarpet.easycommand.warningcommand3")).append(Component.literal(StringArgumentType.getString(context,"name")).withStyle(Style.EMPTY.withColor(ChatFormatting.RED))),false);
                                 }
                                 else {
-                                    context.getSource().sendSuccess(()->Component.literal(tr("sducarpet.easycommand.alertcommand4")).append(Component.literal(StringArgumentType.getString(context,"name")).withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))),false);
+                                    context.getSource().sendSuccess(()->Component.literal(tr("sducarpet.easycommand.warningcommand4")).append(Component.literal(StringArgumentType.getString(context,"name")).withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))),false);
                                 }
                                 return 1;
                             }
                             else {
-                                    context.getSource().sendFailure(Component.literal(tr("sducarpet.easycommand.alertcommand5")).append("\""+StringArgumentType.getString(context,"name")+ "\""));
+                                    context.getSource().sendFailure(Component.literal(tr("sducarpet.easycommand.warningcommand5")).append("\""+StringArgumentType.getString(context,"name")+ "\""));
                                     return 0;
                             }
                         }))))
                         .then(Commands.literal("list")
                                 .executes(context -> {
-                                    alertEasyCommand.showAlertList(context.getSource().getPlayer());
+                                    warningEasyCommand.showWarningList(context.getSource().getPlayer());
                                     return 1;
                                 })));
     }

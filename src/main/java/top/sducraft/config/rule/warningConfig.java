@@ -19,18 +19,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class alertConfig {
+public class warningConfig {
     public static File configFile;
-    public static List<alert> alertList = new ArrayList<>();
+    public static List<warning> warningList = new ArrayList<>();
 
-    public static class alert {
+    public static class warning {
         public BlockPos pos;
         public String name;
         public String dimension;
         public String text;
         public boolean status;
 
-        public alert(String name,BlockPos pos,String dimension,String text, boolean status) {
+        public warning(String name,BlockPos pos,String dimension,String text, boolean status) {
             this.pos = pos;
             this.name = name;
             this.dimension = dimension;
@@ -45,7 +45,7 @@ public class alertConfig {
         if (!configDir.exists()) {
             configDir.mkdirs();
         }
-        configFile = new File(configDir, "alert.json");
+        configFile = new File(configDir, "warning.json");
         loadConfig();
     }
 
@@ -53,8 +53,8 @@ public class alertConfig {
         try {
             if (configFile.exists()) {
                 FileReader reader = new FileReader(configFile);
-                Type type = new TypeToken<List<alert>>() {}.getType();
-                alertList = new Gson().fromJson(reader, type);
+                Type type = new TypeToken<List<warning>>() {}.getType();
+                warningList = new Gson().fromJson(reader, type);
                 reader.close();
             }
         } catch (Exception e) {
@@ -65,30 +65,30 @@ public class alertConfig {
     public static void saveConfig() {
         try {
             FileWriter writer = new FileWriter(configFile);
-            new GsonBuilder().setPrettyPrinting().create().toJson(alertList, writer);
+            new GsonBuilder().setPrettyPrinting().create().toJson(warningList, writer);
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static boolean addAlert(String name,String dimension, BlockPos pos, String text, Boolean status) {
-        for (alert alert : alertList) {
-            if (Objects.equals(alert.name, name)){
+    public static boolean addWarning(String name,String dimension, BlockPos pos, String text, Boolean status) {
+        for (warning warning : warningList) {
+            if (Objects.equals(warning.name, name)){
                 return false;
             }
         }
-        alertList.add(new alert(name,pos,dimension,text, Boolean.TRUE.equals(status)));
+        warningList.add(new warning(name,pos,dimension,text, Boolean.TRUE.equals(status)));
         saveConfig();
         return true;
     }
 
-    public static boolean delAlert(String name, ServerPlayer player) {
+    public static boolean delWarning(String name, ServerPlayer player) {
         if (Objects.equals(name, "all")) {
-            alertList.clear();
+            warningList.clear();
             saveConfig();
             return true;
-        } else if (alertList.removeIf(alert -> alert.name.equals(name))) {
+        } else if (warningList.removeIf(warning -> warning.name.equals(name))) {
             saveConfig();
             return true;
         } else {
@@ -96,11 +96,11 @@ public class alertConfig {
         }
     }
 
-    public static boolean setAlert(String name, boolean status) {
+    public static boolean setWarning(String name, boolean status) {
         boolean isUpdated = false;
-        for (alert alert : alertList) {
-            if (alert.name.equals(name)) {
-                alert.status = status;
+        for (warning warning : warningList) {
+            if (warning.name.equals(name)) {
+                warning.status = status;
                 isUpdated = true;
             }
         }

@@ -16,64 +16,58 @@ import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import top.sducraft.SDUcraftCarpetSettings;
-import top.sducraft.config.rule.alertConfig;
+import top.sducraft.config.rule.warningConfig;
 import static carpet.utils.Translations.tr;
-import static top.sducraft.config.rule.alertConfig.alertList;
+import static top.sducraft.config.rule.warningConfig.warningList;
 import static top.sducraft.util.massageComponentCreate.createCommandClickComponent;
 import static top.sducraft.util.massageComponentCreate.getDimensionColor;
 
-public class alertEasyCommand implements IEasyCommand{
+public class warningEasyCommand implements IEasyCommand{
     private static int tickcount = 0 ;
-
-    private static final ParticleOptions LINE_PARTICLE =
-            new DustParticleOptions(new Vector3f(0.2f, 1.0f, 0.2f), 1.0f); // 绿色粒子，大小 1.0
-    private static final ParticleOptions ARROW_PARTICLE =
-            new DustParticleOptions(new Vector3f(1.0f, 0.5f, 0.0f), 1.0f); // 橙色粒子，大小 1.5
-
 
     @Override
     public String getCommandName() {
-        return "alert";
+        return "warning";
     }
 
     @Override
     public Component clickButton() {
-        return createCommandClickComponent("[警告系统]", "/easycommand alert","点击进入警告配置界面");
+        return createCommandClickComponent("[警告系统]", "/easycommand warning","点击进入警告配置界面");
     }
 
     @Override
     public void showEasyCommandInterface(ServerPlayer player) {
-        Component component = Component.literal("\n[alert指令介绍]\n").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
+        Component component = Component.literal("\n[warning指令介绍]\n").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
 //                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://mcdreforged.com/zh-CN/plugin/gamemode"))
 //                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("点击查看!!spec命令使用文档"))))
-                .append(Component.literal(tr("sducarpet.easycommand.alertcommand8")))
-                .append(Component.literal(tr("sducarpet.easycommand.alertcommand9")).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
+                .append(Component.literal(tr("sducarpet.easycommand.warningcommand8")))
+                .append(Component.literal(tr("sducarpet.easycommand.warningcommand9")).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
         player.displayClientMessage(component, false);
-        showAlertList(player);
+        showWarningList(player);
     }
 
-    public static void showAlertList(ServerPlayer player) {
-        if (alertList.isEmpty()) {
-            player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.alertcommand7")), false);
+    public static void showWarningList(ServerPlayer player) {
+        if (warningList.isEmpty()) {
+            player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.warningcommand7")), false);
             return;
         }
-        Component header = Component.literal(tr("sducarpet.easycommand.alertcommand10"));
+        Component header = Component.literal(tr("sducarpet.easycommand.warningcommand10"));
         Component body = Component.empty();
-        for (alertConfig.alert alert : alertList) {
-            Component info = Component.literal("\n" + alert.name + "  ")
-                    .append(Component.literal("(" + alert.pos.toShortString() + ") "))
-                    .append(Component.literal("@" + alert.dimension)
-                            .withColor(getDimensionColor(alert.dimension)))
-                    .append(Component.literal(" \"" + alert.text + "\"  "));
-            Component buttons = createAlertStateText(alert);
+        for (warningConfig.warning warning : warningList) {
+            Component info = Component.literal("\n" + warning.name + "  ")
+                    .append(Component.literal("(" + warning.pos.toShortString() + ") "))
+                    .append(Component.literal("@" + warning.dimension)
+                            .withColor(getDimensionColor(warning.dimension)))
+                    .append(Component.literal(" \"" + warning.text + "\"  "));
+            Component buttons = createWarningStateText(warning);
             body =Component.empty().append(body).append(info).append(buttons);
         }
         player.displayClientMessage(Component.empty().append(header).append(body), false);
     }
 
-    private static Component createAlertStateText(alertConfig.alert alert) {
-        boolean state = alert.status;
-        String name = alert.name;
+    private static Component createWarningStateText(warningConfig.warning warning) {
+        boolean state = warning.status;
+        String name = warning.name;
         Component trueButton;
         Component falseButton;
         if (state) {
@@ -88,11 +82,11 @@ public class alertEasyCommand implements IEasyCommand{
                     .withStyle(Style.EMPTY
                             .withClickEvent(new ClickEvent(
                                     ClickEvent.Action.RUN_COMMAND,
-                                    "/alert set \"" + name + "\" false"
+                                    "/warning set \"" + name + "\" false"
                             ))
                             .withHoverEvent(new HoverEvent(
                                     HoverEvent.Action.SHOW_TEXT,
-                                    Component.literal(tr("alertcommand12")).append(name)
+                                    Component.literal(tr("warningcommand12")).append(name)
                             ))
                             .withColor(ChatFormatting.GRAY)
                     );
@@ -101,11 +95,11 @@ public class alertEasyCommand implements IEasyCommand{
                     .withStyle(Style.EMPTY
                             .withClickEvent(new ClickEvent(
                                     ClickEvent.Action.RUN_COMMAND,
-                                    "/alert set \"" + name + "\" true"
+                                    "/warning set \"" + name + "\" true"
                             ))
                             .withHoverEvent(new HoverEvent(
                                     HoverEvent.Action.SHOW_TEXT,
-                                    Component.literal("alertcommand13").append(name)
+                                    Component.literal("warningcommand13").append(name)
                             ))
                             .withColor(ChatFormatting.GRAY)
                     );
@@ -129,13 +123,13 @@ public class alertEasyCommand implements IEasyCommand{
                 tickcount = 0;
                 PlayerList playerList = server.getPlayerList();
                 for (ServerPlayer player : playerList.getPlayers()) {
-                    for (alertConfig.alert alert : alertList) {
-                        if (alert.status) {
-                            if (player.serverLevel().dimension().location().getPath().equals(alert.dimension) && Math.abs(player.getX() - alert.pos.getX()) <= 250 && Math.abs(player.getZ() - alert.pos.getZ()) <= 250) {
+                    for (warningConfig.warning warning : warningList) {
+                        if (warning.status) {
+                            if (player.serverLevel().dimension().location().getPath().equals(warning.dimension) && Math.abs(player.getX() - warning.pos.getX()) <= 250 && Math.abs(player.getZ() - warning.pos.getZ()) <= 250) {
                                   ClientboundSetTitleTextPacket titleTextPacket = new ClientboundSetTitleTextPacket(Component.literal(tr("sducarpet.easycommand.fakepeacewarn1")).withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                                   player.connection.send(titleTextPacket);
-                                  player.sendSystemMessage(Component.literal(alert.text+" ").append(Component.literal(tr("sducarpet.easycommand.alertcommand11")).withColor(0xFF5555)).append(Component.literal("("+alert.pos.toShortString()+")")).append(Component.literal(alert.dimension).withColor(getDimensionColor(alert.dimension))), true);
-                                  drawDirectionArrow(player, alert.pos);
+                                  player.sendSystemMessage(Component.literal(warning.text+" ").append(Component.literal(tr("sducarpet.easycommand.warningcommand11")).withColor(0xFF5555)).append(Component.literal("("+warning.pos.toShortString()+")")).append(Component.literal(warning.dimension).withColor(getDimensionColor(warning.dimension))), true);
+                                  drawDirectionArrow(player, warning.pos);
                             }
                         }
                     }

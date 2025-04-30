@@ -2,6 +2,7 @@ package top.sducraft;
 
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
+import carpet.CarpetSettings;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -11,7 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.sducraft.commands.commandRegister;
 import top.sducraft.config.loadConfig;
-import top.sducraft.helpers.commands.easyCommand.alertEasyCommand;
+import top.sducraft.helpers.commands.easyCommand.warningEasyCommand;
 import top.sducraft.helpers.rule.fakePeaceHelper.fakePeaceHelper;
 import java.util.Map;
 import static carpet.utils.Translations.getTranslationFromResourcePath;
@@ -31,7 +32,7 @@ public class SDUcraftCarpetAdditionMod implements CarpetExtension, ModInitialize
         ServerLifecycleEvents.SERVER_STARTED.register(loadConfig::load);
         ServerLifecycleEvents.SERVER_STARTED.register(fakePeaceHelper::loadChunkOnInitialize);
         ServerTickEvents.START_SERVER_TICK.register(fakePeaceHelper::onServerTick);
-        ServerTickEvents.START_SERVER_TICK.register(alertEasyCommand::warnPlayer);
+        ServerTickEvents.START_SERVER_TICK.register(warningEasyCommand::warnPlayer);
         commandRegister.registerCommands();
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             if(!(handler.getPlayer() instanceof FakePlayer)) {showJoinMessage(handler.getPlayer());}
@@ -46,7 +47,7 @@ public class SDUcraftCarpetAdditionMod implements CarpetExtension, ModInitialize
 
     @Override
     public Map<String, String> canHasTranslations(String lang) {
-        Map<String, String> langdict = getTranslationFromResourcePath(String.format("assets/sdu/lang/%s.json", lang));
+        Map<String, String> langdict = getTranslationFromResourcePath(String.format("assets/sdu/lang/%s.json",lang));
         if (langdict == null)
             langdict = getTranslationFromResourcePath("assets/sdu/lang/en_us.json");
         return langdict;

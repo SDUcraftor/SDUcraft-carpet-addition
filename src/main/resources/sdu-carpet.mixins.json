@@ -16,7 +16,6 @@
     "rule.projectileRaycastLength.ProjectileUtilMixin",
     "rule.tickRateChangedMessage.MinecraftServerMixin",
     "rule.tickRateChangedMessage.ServerTickRateManagerMixin",
-    "rule.tntTeleportThroughNetherPortal.primedTntMixin"
   ],
   "client": [
     "rule.firework.fireworkParticlesMixin",

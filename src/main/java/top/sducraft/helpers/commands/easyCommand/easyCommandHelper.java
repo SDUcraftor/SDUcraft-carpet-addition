@@ -13,7 +13,7 @@ public class easyCommandHelper {
             new mirrorManageEasyCommand(),
             new spectatorEasyCommand(),
             new tickRateManagerEasyCommand(),
-            new alertEasyCommand()
+            new warningEasyCommand()
     );
 
     public static void showEasyCommandInterface(ServerPlayer player) {
