@@ -7,7 +7,7 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 
-import static top.sducraft.util.massageComponentCreate.createCommandClickComponent;
+import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 
 public class locEasyCommand implements IEasyCommand {
     @Override

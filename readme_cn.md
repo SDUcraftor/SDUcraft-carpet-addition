@@ -39,7 +39,7 @@
 * 有效值：true, false
 * 分类：SDU
     * 使用/setfakepeace <dimension> <pos>设置伪和平开关的位置(开关必须为拉杆)
-### itempickupDelay
+### itemPickUpDelay
 ***
 修改被玩家丢出的物品再次被拾取的时间
 * 类型：int

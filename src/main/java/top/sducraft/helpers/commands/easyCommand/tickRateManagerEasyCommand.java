@@ -9,8 +9,8 @@ import net.minecraft.server.ServerTickRateManager;
 import net.minecraft.server.level.ServerPlayer;
 import java.util.Objects;
 
-import static top.sducraft.util.massageComponentCreate.createCommandClickComponent;
-import static top.sducraft.util.massageComponentCreate.createSuggestClickComponent;
+import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
+import static top.sducraft.util.MassageComponentCreate.createSuggestClickComponent;
 
 public class tickRateManagerEasyCommand implements IEasyCommand {
     @Override

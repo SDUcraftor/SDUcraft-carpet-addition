@@ -2,7 +2,7 @@ package top.sducraft.helpers.commands.easyCommand;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import static top.sducraft.util.massageComponentCreate.*;
+import static top.sducraft.util.MassageComponentCreate.*;
 
 public class easyPerpetualDayEasyCommand implements IEasyCommand {
     @Override

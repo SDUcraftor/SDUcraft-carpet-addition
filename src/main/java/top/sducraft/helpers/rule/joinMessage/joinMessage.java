@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static top.sducraft.util.massageComponentCreate.createSuggestClickComponent;
+import static top.sducraft.util.MassageComponentCreate.createSuggestClickComponent;
 import static top.sducraft.helpers.commands.tickRateChangeMessage.tickRateChangeMessageCommandHelper.sendTickRateChangeMessage;
 
 public abstract class joinMessage {

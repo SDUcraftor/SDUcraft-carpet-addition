@@ -3,8 +3,8 @@ package top.sducraft.helpers.commands.easyCommand;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import static top.sducraft.helpers.commands.easyFakePeace.easyFakePeaceCommandHelper.showFakePeaceStatus;
-import static top.sducraft.util.massageComponentCreate.createCommandClickComponent;
-import static top.sducraft.util.massageComponentCreate.createDescriptionClickComponent;
+import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
+import static top.sducraft.util.MassageComponentCreate.createDescriptionClickComponent;
 
 public class fakepeaceEasyCommand implements IEasyCommand {
     @Override

@@ -4,3 +4,4 @@ accessible field net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity
 accessible field net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity exactTeleport Z
 accessible method net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity findExitPosition (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;
 accessible method net/minecraft/world/level/block/FaceAttachedHorizontalDirectionalBlock getConnectedDirection (Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/core/Direction;
+accessible field net/minecraft/world/level/block/entity/HopperBlockEntity cooldownTime I

@@ -7,8 +7,8 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 
-import static top.sducraft.util.massageComponentCreate.createCommandClickComponent;
-import static top.sducraft.util.massageComponentCreate.createSuggestClickComponent;
+import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
+import static top.sducraft.util.MassageComponentCreate.createSuggestClickComponent;
 
 public class spectatorEasyCommand implements IEasyCommand {
     @Override

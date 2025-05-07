@@ -19,8 +19,8 @@ import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.config.rule.warningConfig;
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.rule.warningConfig.warningList;
-import static top.sducraft.util.massageComponentCreate.createCommandClickComponent;
-import static top.sducraft.util.massageComponentCreate.getDimensionColor;
+import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
+import static top.sducraft.util.MassageComponentCreate.getDimensionColor;
 
 public class warningEasyCommand implements IEasyCommand{
     private static int tickcount = 0 ;
@@ -86,7 +86,7 @@ public class warningEasyCommand implements IEasyCommand{
                             ))
                             .withHoverEvent(new HoverEvent(
                                     HoverEvent.Action.SHOW_TEXT,
-                                    Component.literal(tr("warningcommand12")).append(name)
+                                    Component.literal(tr("sducarpet.easycommand.warningcommand12")).append(name)
                             ))
                             .withColor(ChatFormatting.GRAY)
                     );
@@ -99,7 +99,7 @@ public class warningEasyCommand implements IEasyCommand{
                             ))
                             .withHoverEvent(new HoverEvent(
                                     HoverEvent.Action.SHOW_TEXT,
-                                    Component.literal("warningcommand13").append(name)
+                                    Component.literal(tr("sducarpet.easycommand.warningcommand13")).append(name)
                             ))
                             .withColor(ChatFormatting.GRAY)
                     );

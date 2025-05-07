@@ -8,13 +8,13 @@ import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import top.sducraft.SDUcraftCarpetSettings;
 import static top.sducraft.config.rule.easyfakePeaceConfig.setFakePeaceCoordinates;
 
+// TODO 2025/5/2: 快速开启永昼机
 public class easyPerpetualDay {
-    public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
-        commandDispatcher.register(Commands.literal("perpetualday")
-                .requires(c -> SDUcraftCarpetSettings.easyCommand)
-                .then(Commands.argument("dimension", DimensionArgument.dimension())
-                        .then(Commands.argument("pos", BlockPosArgument.blockPos())
-                                .executes(context -> setFakePeaceCoordinates(DimensionArgument.getDimension(context, "dimension").toString(),BlockPosArgument.getBlockPos(context,"pos").getX(),BlockPosArgument.getBlockPos(context,"pos").getY(),BlockPosArgument.getBlockPos(context,"pos").getZ())
-                                ))));
-    }
+//    public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
+//            commandDispatcher.register(Commands.literal("test")
+//                    .executes(context -> {
+//                        System.out.print("TEST");
+//                        return 1;
+//                    }));
+//        }
 }

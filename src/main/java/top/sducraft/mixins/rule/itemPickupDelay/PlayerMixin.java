@@ -18,7 +18,7 @@ public abstract class PlayerMixin extends Entity implements TraceableEntity {
 
     @ModifyArg(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",at= @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;setPickUpDelay(I)V"))
     public int drop(int i){
-        return SDUcraftCarpetSettings.itempickupDelay;
+        return SDUcraftCarpetSettings.itemPickUpDelay;
     }
 
 }

@@ -4,6 +4,7 @@
   "package": "top.sducraft.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "carpet.SettingsManagerMixin",
     "rule.armorStandIgnoreShulkerDamage.ArmorStandMixin",
     "rule.brittleDeepSlate.BlockBehaviorMixin",
     "rule.chickenJockeyGenerationOdds.ZombieMixin",
@@ -15,7 +16,9 @@
     "rule.pearlTicketoptimization.ThrownEnderpearlMixin",
     "rule.projectileRaycastLength.ProjectileUtilMixin",
     "rule.tickRateChangedMessage.MinecraftServerMixin",
-    "rule.tickRateChangedMessage.ServerTickRateManagerMixin"
+    "rule.tickRateChangedMessage.ServerTickRateManagerMixin",
+    "rule.visualizers.hopperVisualizers.HopperBlockEntityMixin",
+    "rule.visualizers.hopperVisualizers.HopperBlockMixin"
   ],
   "client": [
     "rule.firework.fireworkParticlesMixin",

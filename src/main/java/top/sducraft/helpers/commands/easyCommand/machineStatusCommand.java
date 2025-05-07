@@ -13,7 +13,7 @@ import top.sducraft.config.rule.machineStatusCommandConfig;
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.rule.machineStatusCommandConfig.permMachineList;
 import static top.sducraft.config.rule.machineStatusCommandConfig.tempMachineList;
-import static top.sducraft.util.massageComponentCreate.createCommandClickComponent;
+import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 
 public class machineStatusCommand implements IEasyCommand {
     @Override

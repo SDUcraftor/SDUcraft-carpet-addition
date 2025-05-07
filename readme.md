@@ -37,7 +37,7 @@ Allow players to quickly control fake peace through the /fakepeace command
 * Valid values: true, false
 * Category: SDU
     * Use /setfakepeace <dimension> <pos> to set the location of the fake peace switch (the switch must be a lever)
-### itempickupDelay
+### itemPickUpDelay
 ***  
 Modifie the time it takes for items thrown by players to be picked up again
 * Type: int

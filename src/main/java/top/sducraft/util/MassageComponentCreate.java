@@ -7,7 +7,7 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import org.jetbrains.annotations.Nullable;
 
-public class massageComponentCreate {
+public class MassageComponentCreate {
 
     public static Component createDescriptionClickComponent(String label, String url, @Nullable String hoverText, @Nullable String tips) {
         Component description = Component.literal(label)

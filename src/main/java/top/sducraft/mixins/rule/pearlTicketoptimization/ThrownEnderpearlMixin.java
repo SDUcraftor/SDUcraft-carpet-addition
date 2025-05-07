@@ -26,6 +26,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
     private Vec3 realVelocity;
     private Vec3 realPos;
     private boolean sync = true;
+    private boolean luan = false;
 
     public ThrownEnderpearlMixin(EntityType<? extends ThrowableItemProjectile> entityType, Level level) {
         super(entityType, level);
@@ -46,6 +47,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
         return highestY;
     }
 
+    @Unique
     private static boolean isEntityTickingChunk(LevelChunk chunk) {
         return (chunk != null && chunk.getFullStatus() == ENTITY_TICKING);
     }
@@ -57,7 +59,11 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
             Vec3 currVelocity = this.getDeltaMovement().add(Vec3.ZERO);
             Vec3 currPos = this.position().add(Vec3.ZERO);
 
-            if (((Math.abs(currVelocity.length()) >= 10)||!sync) &&SDUcraftCarpetSettings.pearlTicketoptimization) {
+            if(!luan && currVelocity.length() >= 50 ) {
+                luan = true;
+            }
+
+            if (((Math.abs(currVelocity.length()) >= 10)||!sync) &&SDUcraftCarpetSettings.pearlTicketOptimization) {
                 if (sync) {
                     realPos = this.position().add(Vec3.ZERO);
                     realVelocity = this.getDeltaMovement().add(Vec3.ZERO);
@@ -68,7 +74,6 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
 
                 ChunkPos currChunk = new ChunkPos(new BlockPos((int) currPos.x, (int) currPos.y, (int) currPos.z));
                 ChunkPos nextChunk = new ChunkPos(new BlockPos((int) nextPos.x, (int) nextPos.y, (int) nextPos.z));
-
 
                 ServerChunkCache serverChunkSource = ((ServerLevel) level).getChunkSource();
                 LevelChunk levelChunk = serverChunkSource.getChunkNow(nextChunk.x, nextChunk.z);
@@ -93,7 +98,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
                     int minY = serverLevel.getMinBuildHeight();
                     highestY += minY;
 
-                    if (realPos.y > highestY && nextPos.y > highestY && nextPos.y + nextVelocity.y > highestY) {
+                    if ((realPos.y > highestY ||luan) && nextPos.y > highestY && nextPos.y + nextVelocity.y > highestY) {
                         this.setPos(currPos);
                         this.setDeltaMovement(Vec3.ZERO);
                         sync = false;

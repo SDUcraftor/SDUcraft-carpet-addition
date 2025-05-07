@@ -6,9 +6,14 @@ import carpet.api.settings.Validator;
 import carpet.api.settings.Validators;
 import carpet.utils.CommandHelper;
 import net.minecraft.commands.CommandSourceStack;
+import org.jetbrains.annotations.Nullable;
+
+import static carpet.api.settings.RuleCategory.FEATURE;
+import static top.sducraft.helpers.visualizers.Visualizers.updateVisualizers;
 
 public class SDUcraftCarpetSettings {
     public static final String sdu= "SDU";
+    public static final String yaca = "YACA";
 
     @Rule(categories = {sdu})
     public static boolean armorStandIgnoreShulkerDamage = false;
@@ -37,7 +42,7 @@ public class SDUcraftCarpetSettings {
             strict = false,
             categories = {sdu}
     )
-    public static int itempickupDelay = 40;
+    public static int itemPickUpDelay = 40;
 
     @Rule(categories = {sdu})
     public static boolean disableNetherPortal = false;
@@ -109,18 +114,36 @@ public class SDUcraftCarpetSettings {
     )
     public static int projectileRaycastLength = 0;
 
+
     @Rule(
             categories = {sdu}
     )
-    public static boolean pearlTicketoptimization = false;
+    public static boolean pearlTicketOptimization = false;
 
-    private static class NotifyPlayers extends Validator<Boolean> {
+    @Rule(
+            validators = UpdateVisualizer.class,
+            categories = {yaca, FEATURE}
+    )
+    public static boolean hopperCooldownVisualize = false;
+
+    private static class NotifyPlayers<T> extends Validator<T> {
         @Override
-        public Boolean validate(CommandSourceStack source, CarpetRule<Boolean> changingRule, Boolean newValue, String userInput) {
-            if (source != null) {
-                CommandHelper.notifyPlayersCommandsChanged(source.getServer());
+        public T validate(@Nullable CommandSourceStack commandSourceStack, CarpetRule<T> carpetRule, T t, String s) {
+            if (commandSourceStack != null) {
+                CommandHelper.notifyPlayersCommandsChanged(commandSourceStack.getServer());
             }
-            return newValue;
+            return t;
         }
     }
+
+    private static class UpdateVisualizer<T> extends Validator<T> {
+        @Override
+        public T validate(@Nullable CommandSourceStack commandSourceStack, CarpetRule<T> carpetRule, T t, String s) {
+            if (commandSourceStack!= null) {
+                updateVisualizers(commandSourceStack.getServer());
+            }
+            return t;
+        }
+    }
+
 }
