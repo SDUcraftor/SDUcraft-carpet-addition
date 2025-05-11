@@ -8,11 +8,11 @@
     "rule.armorStandIgnoreShulkerDamage.ArmorStandMixin",
     "rule.brittleDeepSlate.BlockBehaviorMixin",
     "rule.chickenJockeyGenerationOdds.ZombieMixin",
-    "rule.disableNetherPortal.entityMIxin",
+    "rule.disableNetherPortal.EntityMixin",
     "rule.easyFakePeace.MinecraftServerMixin",
     "rule.endGatewayTicket.TheEndGatewayBlockEntityMixin",
     "rule.itemPickupDelay.PlayerMixin",
-    "rule.netherPortalCooldown.entityMixin",
+    "rule.netherPortalCooldown.EntityMixin",
     "rule.pearlTicketoptimization.ThrownEnderpearlMixin",
     "rule.projectileRaycastLength.ProjectileUtilMixin",
     "rule.tickRateChangedMessage.MinecraftServerMixin",
@@ -21,7 +21,7 @@
     "rule.visualizers.hopperVisualizers.HopperBlockMixin"
   ],
   "client": [
-    "rule.firework.fireworkParticlesMixin",
+    "rule.firework.FireworkParticlesMixin",
     "rule.firework.ParticleEngineMixin"
   ],
   "injectors": {

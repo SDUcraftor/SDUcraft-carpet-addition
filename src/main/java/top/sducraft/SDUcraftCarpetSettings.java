@@ -13,7 +13,7 @@ import static top.sducraft.helpers.visualizers.Visualizers.updateVisualizers;
 
 public class SDUcraftCarpetSettings {
     public static final String sdu= "SDU";
-    public static final String yaca = "YACA";
+    public static final String Visualize = "Visualize";
 
     @Rule(categories = {sdu})
     public static boolean armorStandIgnoreShulkerDamage = false;
@@ -122,9 +122,15 @@ public class SDUcraftCarpetSettings {
 
     @Rule(
             validators = UpdateVisualizer.class,
-            categories = {yaca, FEATURE}
+            categories = {Visualize, FEATURE}
     )
     public static boolean hopperCooldownVisualize = false;
+
+//    @Rule(
+//            validators = UpdateVisualizer.class,
+//            categories = {Visualize, FEATURE}
+//    )
+//    public static boolean BlockEventVisualize = false;
 
     private static class NotifyPlayers<T> extends Validator<T> {
         @Override

@@ -16,7 +16,7 @@ import java.util.function.Predicate;
 public class HopperCooldownVisualizing {
     public static Map<BlockPos, Display.TextDisplay> visualizers = new HashMap<>();
 
-    public static void setVisualizer(ServerLevel world, BlockPos pos, int cooldown) {
+    public static void setVisualizer(ServerLevel level, BlockPos pos, int cooldown) {
         if (visualizers.containsKey(pos)) {
             Display.TextDisplay entity = visualizers.get(pos);
             CompoundTag nbt = entity.saveWithoutId(new CompoundTag());
@@ -26,13 +26,13 @@ public class HopperCooldownVisualizing {
             nbt.putString("text", textJson);
             entity.load(nbt);
         } else {
-            Display.TextDisplay entity = new Display.TextDisplay(EntityType.TEXT_DISPLAY, world);
+            Display.TextDisplay entity = new Display.TextDisplay(EntityType.TEXT_DISPLAY, level);
             entity.setInvisible(true);
             entity.setNoGravity(true);
             entity.setInvulnerable(true);
             entity.setPos(pos.getCenter().x(), pos.getCenter().y(), pos.getCenter().z());
             entity.addTag("hopperCooldownVisualizer");
-            world.addFreshEntity(entity);
+            level.addFreshEntity(entity);
             CompoundTag nbt = entity.saveWithoutId(new CompoundTag());
             String color = cooldown == 0 ? "green" : "red";
             nbt.putString("billboard", "center");

@@ -63,7 +63,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
                 luan = true;
             }
 
-            if (((Math.abs(currVelocity.length()) >= 10)||!sync) &&SDUcraftCarpetSettings.pearlTicketOptimization) {
+            if (((Math.abs(currVelocity.length()) >= 10)||!sync) && SDUcraftCarpetSettings.pearlTicketOptimization) {
                 if (sync) {
                     realPos = this.position().add(Vec3.ZERO);
                     realVelocity = this.getDeltaMovement().add(Vec3.ZERO);
@@ -82,8 +82,8 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
                     try {
                         CompoundTag currcompoundTag = serverChunkSource.chunkMap.read(new ChunkPos(currChunk.x, currChunk.z)).get().orElse(null);
                         highestY = getHighestBlock(currcompoundTag);
-                        for (int i = -1; i <= 1; i++) {
-                            for (int j = -1; j <= 1; j++) {
+                        for (int i = -2; i <= 2; i++) {
+                            for (int j = -2; j <= 2; j++) {
                                 CompoundTag nextcompoundTag = serverChunkSource.chunkMap.read(new ChunkPos(nextChunk.x + i, nextChunk.z + j)).get().orElse(null);
                                 if (getHighestBlock(nextcompoundTag) > highestY) {
                                     highestY = getHighestBlock(nextcompoundTag);

@@ -56,4 +56,6 @@ public class MassageComponentCreate {
                 return 0x800080;
             }
     }
+
+
 }

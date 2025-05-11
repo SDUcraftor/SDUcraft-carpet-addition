@@ -12,9 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import top.sducraft.SDUcraftCarpetSettings;
-import top.sducraft.helpers.commands.tickRateChangeMessage.tickRateChangeMessageCommandHelper;
-
-
+import top.sducraft.helpers.commands.tickRateChangeMessage.TickRateChangeMessageCommandHelper;
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
@@ -35,9 +33,8 @@ public abstract class MinecraftServerMixin {
                     }
                 }
             }
-            //游戏速度正常时重置留言
             if (tickRateManager.tickrate() == 20 && !tickRateManager.isFrozen() && !tickRateManager.isSprinting()) {
-                tickRateChangeMessageCommandHelper.resetTickRateChangeMessage();
+                TickRateChangeMessageCommandHelper.resetTickRateChangeMessage();
             }
         }
     }
