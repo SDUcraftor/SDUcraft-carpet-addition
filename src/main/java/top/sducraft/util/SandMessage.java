@@ -12,6 +12,8 @@ import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static top.sducraft.util.DelayedEventScheduler.addScheduleEvent;
+
 public class SandMessage {
     public static void sandCustomMessage(ServerPlayer player, String message, ChatFormatting color) {
             player.displayClientMessage(Component.literal(message).withStyle(color),false);
@@ -24,14 +26,10 @@ public class SandMessage {
     }
 
     public static void sandAllPlayerCustomMessage(MinecraftServer server, String message, ChatFormatting color,int delay) {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
+        addScheduleEvent(delay, () -> {
                 for(ServerPlayer player : server.getPlayerList().getPlayers()){
                     sandCustomMessage(player, message, color);
-                }
-                timer.cancel();}
-        }, delay);
+                }}
+        );
     }
 }

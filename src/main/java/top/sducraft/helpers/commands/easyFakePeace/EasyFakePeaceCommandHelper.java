@@ -63,7 +63,7 @@ public class EasyFakePeaceCommandHelper {
                                 sandAllPlayerCustomMessage(source.getServer(),dimensionName+tr("sducarpet.easycommand.fakepeace1"),ChatFormatting.WHITE);
                             } else {
                                 sandAllPlayerCustomMessage(source.getServer(),dimensionName+tr("sducarpet.easycommand.fakepeace2"),ChatFormatting.WHITE);
-                                sandAllPlayerCustomMessage(source.getServer(),dimensionName+tr("sducarpet.easycommand.fakepeace3"),ChatFormatting.WHITE,15000);
+                                sandAllPlayerCustomMessage(source.getServer(),dimensionName+tr("sducarpet.easycommand.fakepeace3"),ChatFormatting.WHITE,300);
                             }
                 }
             } else {

@@ -14,6 +14,8 @@ import top.sducraft.config.LoadConfig;
 import top.sducraft.helpers.commands.easyCommand.WarningEasyCommand;
 import top.sducraft.helpers.rule.fakePeaceHelper.FakePeaceHelper;
 import top.sducraft.helpers.visualizers.Visualizers;
+import top.sducraft.util.DelayedEventScheduler;
+
 import java.util.Map;
 import static carpet.utils.Translations.getTranslationFromResourcePath;
 import static top.sducraft.helpers.rule.joinMessage.JoinMessage.showJoinMessage;
@@ -34,6 +36,7 @@ public class SDUcraftCarpetAdditionMod implements CarpetExtension, ModInitialize
         ServerLifecycleEvents.SERVER_STARTED.register(Visualizers::clearVisualizersOnServerStart);
         ServerTickEvents.START_SERVER_TICK.register(FakePeaceHelper::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(WarningEasyCommand::warnPlayer);
+        ServerTickEvents.START_SERVER_TICK.register(DelayedEventScheduler::tick);
         CommandRegister.registerCommands();
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             if(!(handler.getPlayer() instanceof FakePlayer)) {showJoinMessage(handler.getPlayer());}
