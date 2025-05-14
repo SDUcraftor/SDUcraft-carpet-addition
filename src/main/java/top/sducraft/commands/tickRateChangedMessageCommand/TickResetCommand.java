@@ -6,7 +6,6 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.ServerTickRateManager;
 import top.sducraft.SDUcraftCarpetSettings;
-
 import static carpet.utils.Translations.tr;
 
 public class TickResetCommand {
@@ -16,6 +15,7 @@ public class TickResetCommand {
                 .then(Commands.literal("reset")
                 .executes(context -> {
                     ServerTickRateManager serverTickRateManager = context.getSource().getServer().tickRateManager();
+                    serverTickRateManager.finishTickSprint();
                     serverTickRateManager.setTickRate(20);
                     serverTickRateManager.setFrozen(false);
                     context.getSource().sendSuccess(() -> Component.literal(tr("carpet.command.resetTick")), true);

@@ -6,3 +6,4 @@ accessible method net/minecraft/world/level/block/entity/TheEndGatewayBlockEntit
 accessible method net/minecraft/world/level/block/FaceAttachedHorizontalDirectionalBlock getConnectedDirection (Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/core/Direction;
 accessible field net/minecraft/world/level/block/entity/HopperBlockEntity cooldownTime I
 accessible method net/minecraft/world/level/block/entity/HopperBlockEntity getAttachedContainer (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/Container;
+accessible method net/minecraft/server/ServerTickRateManager finishTickSprint ()V

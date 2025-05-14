@@ -24,8 +24,8 @@ public abstract class JoinMessage {
                             .append(createSuggestClickComponent(" /easycommand ","/easycommand",null))
                             .append(Component.literal("""
                                 来获取良好的游戏内指令体验
-                               
-                                喜报:全物品已完工,感谢ShannonfAz和帮忙备料的TXWZ,hejia等人
+                                
+                                在镜像服/创造服中粘贴投影请安装litemoretica
                                 """))
                     ,false);
             sendTickRateChangeMessage(player);
