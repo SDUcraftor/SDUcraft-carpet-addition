@@ -1,6 +1,7 @@
 package top.sducraft.commands;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import top.sducraft.commands.allitemCommand.AllItemCommand;
 import top.sducraft.commands.easyCommand.Easycommand;
 import top.sducraft.commands.easyCommand.MachineStatusCommand;
 import top.sducraft.commands.easyCommand.WarningCommand;
@@ -18,5 +19,6 @@ public class CommandRegister {
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> MachineStatusCommand.register(dispatcher)));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> TickResetCommand.register(dispatcher)));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> WarningCommand.register(dispatcher)));
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> AllItemCommand.register(dispatcher)));
     }
 }

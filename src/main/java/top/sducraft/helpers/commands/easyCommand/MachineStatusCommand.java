@@ -1,5 +1,6 @@
 package top.sducraft.helpers.commands.easyCommand;
 
+import carpet.CarpetServer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -10,6 +11,9 @@ import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import top.sducraft.config.rule.MachineStatusCommandConfig;
+
+import java.util.Objects;
+
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.rule.MachineStatusCommandConfig.permMachineList;
 import static top.sducraft.config.rule.MachineStatusCommandConfig.tempMachineList;
@@ -89,5 +93,17 @@ public class MachineStatusCommand implements IEasyCommand {
             }
             return 1;
         }
+    }
+
+    public static boolean getAllItemStatus(){
+        for(MachineStatusCommandConfig.Machine machine : permMachineList) {
+            if (Objects.equals(machine.name, "全物品")) {
+                BlockState blockState = getDimension(CarpetServer.minecraft_server, machine.dimension).getBlockState(machine.pos);
+                if((blockState.getBlock() instanceof LeverBlock && blockState.getValue(LeverBlock.POWERED)) || (blockState.getBlock() instanceof RedstoneLampBlock && blockState.getValue(RedstoneLampBlock.LIT))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

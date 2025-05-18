@@ -72,5 +72,14 @@
   "sducarpet.easycommand.warningcommand6": "已存在警告",
   "sducarpet.easycommand.warningcommand7": "没有警报，请使用 \"/warning add\" 添加警报",
   "sducarpet.easycommand.warningcommand8": "/warning list 展示所有警告\n/warning add <name> <dimension> <blockPos> 添加警告\n/warning rel <name> 删除警告\n/warning set <name> <true/false> 开/关警告",
-  "sducarpet.easycommand.warningcommand9": "\n注意事项:只有op能添加/删除警告"
+  "sducarpet.easycommand.warningcommand9": "\n注意事项:只有op能添加/删除警告",
+
+  "sducarpet.easycommand.allitemcommand": "错误的类型,请输入 item 或 bulk",
+  "sducarpet.easycommand.allitemcommand1": "输入坐标必须沿 X 或 Z 轴直线排列",
+  "sducarpet.easycommand.allitemcommand2": "未找到物品 ",
+  "sducarpet.easycommand.allitemcommand3": "是否要搜索(点击物品名可直接搜索对应物品)：",
+  "sducarpet.easycommand.allitemcommand4": "Click to turn on the warning",
+  "sducarpet.easycommand.allitemcommand5": "Click to turn on the warning",
+  "sducarpet.easycommand.allitemcommand6": "Click to turn on the warning"
+
 }
