@@ -82,6 +82,7 @@ public class AllItemData {
         itemData data = dataList.get(key);
             if (data != null) {
                 data.storePos.addAll(storePos);
+                data.chestPos.addAll(chestPos);
             } else {
                 dataList.put(key, new itemData(type, storePos, chestPos));
             }

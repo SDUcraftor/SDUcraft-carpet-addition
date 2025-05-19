@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
@@ -24,6 +25,7 @@ import top.sducraft.config.allItemData.AllItemData;
 import javax.swing.plaf.IconUIResource;
 import java.util.*;
 
+import static top.sducraft.config.allItemData.AllItemData.dataList;
 import static top.sducraft.util.DelayedEventScheduler.addScheduleEvent;
 
 public class DebugAllitem {
@@ -56,17 +58,8 @@ public class DebugAllitem {
                                 .executes(context -> {
                                     ServerPlayer player = context.getSource().getPlayerOrException();
                                     ServerLevel level = player.serverLevel();
+                                    generateDisplays(level);
 
-                                    for (Map.Entry<String, AllItemData.itemData> entry :  AllItemData.dataList.entrySet()) {
-                                        String descriptionId = entry.getKey();
-                                        AllItemData.itemData data = entry.getValue();
-                                        if (data.chestPos != null) {
-                                                    Item item = getItemByDescriptionId(descriptionId);
-                                                    if (item != null) {
-                                                        spawnItemDisplay(level, data.chestPos, item, 0xFFFF00);
-                                                     }
-                                        }
-                                    }
 
                                     context.getSource().sendSuccess(() -> Component.literal("已生成chest展示实体"), false);
                                     return 1;
@@ -76,19 +69,14 @@ public class DebugAllitem {
                                 .executes(context -> {
                                     ServerPlayer player = context.getSource().getPlayerOrException();
                                     ServerLevel level = player.serverLevel();
+                                    generateDisplays(level);
 
-                                    for (Map.Entry<String, AllItemData.itemData> entry :  AllItemData.dataList.entrySet()) {
-                                        String descriptionId = entry.getKey();
+                                    for (Map.Entry<String, AllItemData.itemData> entry :  dataList.entrySet()) {
                                         AllItemData.itemData data = entry.getValue();
 
                                         Set<BlockPos> store = new HashSet<>(data.storePos != null ? data.storePos : Set.of());
                                         Set<BlockPos> chest = data.chestPos != null ? data.chestPos : Set.of();
                                         store.removeAll(chest);
-
-                                                Item item = getItemByDescriptionId(descriptionId);
-                                                if (item != null) {
-                                                    spawnItemDisplay(level, chest, item, 0xFFFF00);
-                                                }
 
                                         for (BlockPos pos :store) {
                                             if (level.getBlockEntity(pos) instanceof Container) {
@@ -117,48 +105,104 @@ public class DebugAllitem {
         );
     }
 
-    public static boolean spawnItemDisplay(ServerLevel level, Set<BlockPos> chestPos, Item item, int color) {
-        BlockPos bestSpawnPos = null;
-        int maxAirNeighbors = -1;
+    public static void generateDisplays(ServerLevel level) {
+        List<BlockPos> referencePositions = new ArrayList<>();
+        List<Map.Entry<String, AllItemData.itemData>> entries = new ArrayList<>(dataList.entrySet());
 
-        for (BlockPos pos : chestPos) {
-            if (!(level.getBlockEntity(pos) instanceof Container)) continue;
+        // Step 1: Build reference list from every 20th item
+        for (int i = 0; i < entries.size(); i += 20) {
+            AllItemData.itemData data = entries.get(i).getValue();
+            if (data.chestPos == null) continue;
 
-            for (Direction dir : Direction.values()) {
-                BlockPos candidatePos = pos.relative(dir);
+            BlockPos best = null;
+            int maxAir = -1;
+            for (BlockPos chestPos : data.chestPos) {
+                for (Direction dir : Direction.values()) {
+                    BlockPos neighbor = chestPos.relative(dir);
+                    if (!level.isEmptyBlock(neighbor)) continue;
 
-                int airNeighbors = 0;
-                for (Direction dir2 : Direction.values()) {
-                    if (level.isEmptyBlock(candidatePos.relative(dir2))) {
-                        airNeighbors++;
-                    }
-                }
-
-                if (airNeighbors > maxAirNeighbors) {
-                    maxAirNeighbors = airNeighbors;
-                    bestSpawnPos = candidatePos;
-                } else if (airNeighbors == maxAirNeighbors) {
-                    if (bestSpawnPos == null
-                            || candidatePos.getX() < bestSpawnPos.getX()
-                            || (candidatePos.getX() == bestSpawnPos.getX() && candidatePos.getY() < bestSpawnPos.getY())
-                            || (candidatePos.getX() == bestSpawnPos.getX() && candidatePos.getY() == bestSpawnPos.getY() && candidatePos.getZ() < bestSpawnPos.getZ())) {
-                        bestSpawnPos = candidatePos;
+                    int airCount = countAirInCube7x3x7(level, neighbor);
+                    if (airCount > maxAir || (airCount == maxAir && isPreferredDirection(neighbor, best))) {
+                        maxAir = airCount;
+                        best = neighbor;
                     }
                 }
             }
+            if (best != null) referencePositions.add(best);
         }
 
-        if (bestSpawnPos == null) return false;
+        for (Map.Entry<String, AllItemData.itemData> entry : dataList.entrySet()) {
+            String descriptionId = entry.getKey();
+            AllItemData.itemData data = entry.getValue();
+            Item item = getItemByDescriptionId(descriptionId);
+            if (item == null || data.chestPos == null) continue;
 
+            BlockPos bestCandidate = null;
+            int bestScore = -1;
+
+            for (BlockPos chestPos : data.chestPos) {
+                for (Direction dir : Direction.values()) {
+                    BlockPos neighbor = chestPos.relative(dir);
+                    int score = level.isEmptyBlock(neighbor)? 10 : 0 ;
+
+                    int airCount = countAirInCube7x3x7(level, neighbor);
+                    int correlation = calculateCorrelation(neighbor, referencePositions);
+                    score += airCount + 3*correlation;
+
+                    if (score > bestScore || (score == bestScore && isPreferredDirection(neighbor, bestCandidate))) {
+                        bestScore = score;
+                        bestCandidate = neighbor;
+                    }
+                }
+            }
+
+            if (bestCandidate != null) {
+                spawnItemDisplay(level, bestCandidate, item, 0xFFFF00);
+            }
+        }
+    }
+
+    private static int calculateCorrelation(BlockPos pos, List<BlockPos> referenceList) {
+        int correlation = 0;
+        for (BlockPos ref : referenceList) {
+            if (pos.getX() == ref.getX() || pos.getZ() == ref.getZ()) {
+                if( pos.getY() == ref.getY()) correlation++;
+            }
+        }
+        return correlation;
+    }
+
+    private static boolean isPreferredDirection(BlockPos a, BlockPos b) {
+        if (b == null) return true;
+        if (a.getX() != b.getX()) return a.getX() < b.getX();
+        if (a.getY() != b.getY()) return a.getY() < b.getY();
+        return a.getZ() < b.getZ();
+    }
+
+    private static void spawnItemDisplay(ServerLevel level, BlockPos pos, Item item, int color) {
         Display.ItemDisplay display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, level);
-        display.setPos(Vec3.atCenterOf(bestSpawnPos));
+        display.setPos(Vec3.atCenterOf(pos));
         display.setItemStack(new ItemStack(item));
         display.setGlowingTag(true);
         display.addTag("allitem_debug");
         display.getEntityData().set(Display.DATA_GLOW_COLOR_OVERRIDE_ID, color);
         display.getEntityData().set(Display.DATA_SCALE_ID, new Vector3f(0.5F));
         level.addFreshEntity(display);
-        return true;
+    }
+
+    private static int countAirInCube7x3x7(ServerLevel level, BlockPos center) {
+        int count = 0;
+        for (int dx = -3; dx <= 3; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                for (int dz = -3; dz <= 3; dz++) {
+                    BlockPos checkPos = center.offset(dx, dy, dz);
+                    if (level.isEmptyBlock(checkPos)) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
     }
 
     private static void spawnBlockDisplay(ServerLevel level, BlockPos pos, BlockState blockState, int color) {
