@@ -35,7 +35,8 @@ public class AllItemCommandHelper {
                     ItemStack firstItem = ItemStack.EMPTY;
                     for (int i = 0; i < hopper.getContainerSize(); i++) {
                         ItemStack stack = hopper.getItem(i);
-                        if (!stack.isEmpty()&& !stack.hasTag()) {
+//                        if (!stack.isEmpty()&& !stack.hasTag()) {
+                            if (!stack.isEmpty()) {
                             firstItem = stack;
                             break;
                         }

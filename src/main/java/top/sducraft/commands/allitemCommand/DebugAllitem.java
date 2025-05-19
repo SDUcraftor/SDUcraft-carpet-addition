@@ -21,10 +21,10 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import top.sducraft.config.allItemData.AllItemData;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import javax.swing.plaf.IconUIResource;
+import java.util.*;
+
+import static top.sducraft.util.DelayedEventScheduler.addScheduleEvent;
 
 public class DebugAllitem {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
@@ -61,14 +61,10 @@ public class DebugAllitem {
                                         String descriptionId = entry.getKey();
                                         AllItemData.itemData data = entry.getValue();
                                         if (data.chestPos != null) {
-                                            for (BlockPos pos :data.chestPos) {
-                                                if ((level.getBlockEntity(pos) instanceof Container)) {
                                                     Item item = getItemByDescriptionId(descriptionId);
                                                     if (item != null) {
-                                                        spawnItemDisplay(level, pos, item, 0xFFFF00);
-                                                    }
-                                                }
-                                            }
+                                                        spawnItemDisplay(level, data.chestPos, item, 0xFFFF00);
+                                                     }
                                         }
                                     }
 
@@ -85,28 +81,22 @@ public class DebugAllitem {
                                         String descriptionId = entry.getKey();
                                         AllItemData.itemData data = entry.getValue();
 
-                                        Set<BlockPos> store = data.storePos != null ? data.storePos : Set.of();
+                                        Set<BlockPos> store = new HashSet<>(data.storePos != null ? data.storePos : Set.of());
                                         Set<BlockPos> chest = data.chestPos != null ? data.chestPos : Set.of();
+                                        store.removeAll(chest);
 
-                                        Set<BlockPos> all = new HashSet<>();
-                                        all.addAll(store);
-                                        all.addAll(chest);
-
-                                        for (BlockPos pos : all) {
-                                            if (!(level.getBlockEntity(pos) instanceof Container)) continue;
-
-                                            if (chest.contains(pos)) {
                                                 Item item = getItemByDescriptionId(descriptionId);
                                                 if (item != null) {
-                                                    spawnItemDisplay(level, pos, item, 0xFFFF00); // chest优先，黄光
+                                                    spawnItemDisplay(level, chest, item, 0xFFFF00);
                                                 }
-                                            } else if (store.contains(pos)) {
+
+                                        for (BlockPos pos :store) {
+                                            if (level.getBlockEntity(pos) instanceof Container) {
                                                 BlockState state = level.getBlockState(pos);
-                                                spawnBlockDisplay(level, pos, state, 0x00FF00); // store，绿光
+                                                spawnBlockDisplay(level, pos, state, 0x00FF00);
                                             }
                                         }
                                     }
-
                                     context.getSource().sendSuccess(() -> Component.literal("已生成全部展示实体"), false);
                                     return 1;
                                 })
@@ -116,7 +106,7 @@ public class DebugAllitem {
                                     for (ServerLevel level : context.getSource().getServer().getAllLevels()){
                                         for (Entity entity : level.getEntities().getAll()) {
                                             if(entity!=null && entity.getTags().contains("allitem_debug")) {
-                                                entity.discard();
+                                                addScheduleEvent(1, entity::discard);
                                             }
                                         }
                                     }
@@ -127,28 +117,48 @@ public class DebugAllitem {
         );
     }
 
-    private static void spawnItemDisplay(ServerLevel level, BlockPos pos, Item item, int color) {
-        BlockPos spawnPos = null;
-        for (Direction dir : Direction.values()) {
-            BlockPos adjacent = pos.relative(dir);
-            if (level.isEmptyBlock(adjacent)) {
-                spawnPos = adjacent;
-                break;
+    public static boolean spawnItemDisplay(ServerLevel level, Set<BlockPos> chestPos, Item item, int color) {
+        BlockPos bestSpawnPos = null;
+        int maxAirNeighbors = -1;
+
+        for (BlockPos pos : chestPos) {
+            if (!(level.getBlockEntity(pos) instanceof Container)) continue;
+
+            for (Direction dir : Direction.values()) {
+                BlockPos candidatePos = pos.relative(dir);
+
+                int airNeighbors = 0;
+                for (Direction dir2 : Direction.values()) {
+                    if (level.isEmptyBlock(candidatePos.relative(dir2))) {
+                        airNeighbors++;
+                    }
+                }
+
+                if (airNeighbors > maxAirNeighbors) {
+                    maxAirNeighbors = airNeighbors;
+                    bestSpawnPos = candidatePos;
+                } else if (airNeighbors == maxAirNeighbors) {
+                    if (bestSpawnPos == null
+                            || candidatePos.getX() < bestSpawnPos.getX()
+                            || (candidatePos.getX() == bestSpawnPos.getX() && candidatePos.getY() < bestSpawnPos.getY())
+                            || (candidatePos.getX() == bestSpawnPos.getX() && candidatePos.getY() == bestSpawnPos.getY() && candidatePos.getZ() < bestSpawnPos.getZ())) {
+                        bestSpawnPos = candidatePos;
+                    }
+                }
             }
         }
-        if (spawnPos == null) spawnPos = pos;
+
+        if (bestSpawnPos == null) return false;
 
         Display.ItemDisplay display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, level);
-        display.setPos(Vec3.atCenterOf(spawnPos));
+        display.setPos(Vec3.atCenterOf(bestSpawnPos));
         display.setItemStack(new ItemStack(item));
         display.setGlowingTag(true);
-        display.setCustomName(Component.literal(item.getDescription().getString()));
-        display.setCustomNameVisible(true);
         display.addTag("allitem_debug");
         display.getEntityData().set(Display.DATA_GLOW_COLOR_OVERRIDE_ID, color);
-        display.getEntityData().set(Display.DATA_SCALE_ID,new Vector3f(0.5F));
-
+        display.getEntityData().set(Display.DATA_SCALE_ID, new Vector3f(0.5F));
         level.addFreshEntity(display);
+        return true;
     }
 
     private static void spawnBlockDisplay(ServerLevel level, BlockPos pos, BlockState blockState, int color) {

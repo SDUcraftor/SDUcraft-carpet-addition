@@ -19,6 +19,8 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.allItemData.AllItemData.*;
+import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.countItemInWorld;
+import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.getCountString;
 import static top.sducraft.util.DelayedEventScheduler.addScheduleEvent;
 
 public class SearchAllItem {
@@ -38,10 +40,12 @@ public class SearchAllItem {
                     addScheduleEvent(200, entity::discard);
                     player.lookAt(source.getAnchor(), entity.position().add(0.5, -1.5, 0.5));
                 }
+//                spawnItemDisplay(player.serverLevel(), data.chestPos, getItemByDescriptionId(descriptionId), 0xFFFF00);
                 source.sendSuccess(() -> Component.literal(tr("成功搜索到物品") + keyword)
                         .withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/allitem info "+keyword))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(tr("点击查看 ")+keyword+tr("物品详细信息"))))),false);
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(tr("点击查看 ")+keyword+tr("物品详细信息")))))
+                        .append(Component.literal(tr(",当前储量为")+getCountString(countItemInWorld(data)))),false);
 //                displayItemInfo(keyword, data, player);
                 return 1;
             } else {
