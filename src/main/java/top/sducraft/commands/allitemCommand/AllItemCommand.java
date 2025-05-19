@@ -1,11 +1,14 @@
 package top.sducraft.commands.allitemCommand;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.network.chat.Component;
 import top.sducraft.config.allItemData.AllItemData;
+
+import java.util.Objects;
 
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.allItemData.AllItemData.search;
@@ -14,7 +17,6 @@ import static top.sducraft.helpers.commands.allItemCommand.AllItemCommandHelper.
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.*;
 import static top.sducraft.helpers.commands.allItemCommand.SearchAllItem.*;
 
-// TODO 2025/5/6:全物品查找,全物品当前容量列表
 public class AllItemCommand {
         public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
                 commandDispatcher.register(Commands.literal("allitem")
@@ -71,19 +73,53 @@ public class AllItemCommand {
                                     displayLackItemInfoWithPage(context.getSource().getPlayerOrException(),1);
                                     return 1;
                                 })
-                        .then(Commands.argument("page", StringArgumentType.string())
+                        .then(Commands.argument("page", IntegerArgumentType.integer())
                                                 .executes(context -> {
-                                                    displayLackItemInfoWithPage(context.getSource().getPlayerOrException(),Integer.parseInt(StringArgumentType.getString(context,"page")));
+                                                    displayLackItemInfoWithPage(context.getSource().getPlayerOrException(),IntegerArgumentType.getInteger(context,"page"));
                                                 return 1;})))
                         .then(Commands.literal("full")
                                .executes(context -> {
                                    displayFullItemInfoWithPage(context.getSource().getPlayerOrException(),1);
                                    return 1;
                                })
-                        .then(Commands.argument("page", StringArgumentType.string())
+                        .then(Commands.argument("page", IntegerArgumentType.integer())
                                         .executes(context -> {
-                                            displayFullItemInfoWithPage(context.getSource().getPlayerOrException(),Integer.parseInt(StringArgumentType.getString(context,"page")));
+                                            displayFullItemInfoWithPage(context.getSource().getPlayerOrException(),IntegerArgumentType.getInteger(context,"page"));
                                             return 1;
-                                        })))));
+                                        })))
+                        .then(Commands.literal("all")
+                                        .executes(context -> {
+                                            displayAllItemInfoWithPage(context.getSource().getPlayerOrException(),1);
+                                            return 1;
+                                        })
+                                .then(Commands.argument("page", IntegerArgumentType.integer())
+                                        .executes(context -> {
+                                            displayAllItemInfoWithPage(context.getSource().getPlayerOrException(),IntegerArgumentType.getInteger(context,"page"));
+                                            return 1;})))
+                        .then(Commands.literal("store")
+                        .then(Commands.argument("item", StringArgumentType.greedyString())
+                                .suggests((context, builder) -> suggestFuzzyItemNames(builder))
+                                        .executes(context -> {
+                                            AllItemData.itemData data = search(StringArgumentType.getString(context,"item"));
+                                            if(data !=null ){
+                                                displayItemStoreInfo(data,context.getSource());
+                                                return 1;
+                                            }
+                                            else {
+                                                context.getSource().sendFailure(Component.literal(tr("未找到物品")));
+                                                return 0;
+                                            }
+                                        })))
+                        .then(Commands.literal("bulk")
+                                .executes(context -> displayItemInfoWithPage(context.getSource().getPlayerOrException(),1,"bulk"))
+                                .then(Commands.argument("page",IntegerArgumentType.integer())
+                                        .executes(context -> displayItemInfoWithPage(context.getSource().getPlayerOrException(),IntegerArgumentType.getInteger(context,"page"),"bulk")
+                                        )))
+                        .then(Commands.literal("custom")
+                                .executes(context -> displayItemInfoWithPage(context.getSource().getPlayerOrException(),1,"item"))
+                                .then(Commands.argument("page",IntegerArgumentType.integer())
+                                        .executes(context -> displayItemInfoWithPage(context.getSource().getPlayerOrException(),IntegerArgumentType.getInteger(context,"page"),"item")
+                                        )))
+                        ));
         }
 }

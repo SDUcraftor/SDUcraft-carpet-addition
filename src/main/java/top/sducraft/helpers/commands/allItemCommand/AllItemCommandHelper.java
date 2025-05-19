@@ -32,7 +32,6 @@ public class AllItemCommandHelper {
             while (true) {
                 BlockEntity be = level.getBlockEntity(current);
                 if (be instanceof HopperBlockEntity hopper) {
-                    // 读取第一个非空物品槽
                     ItemStack firstItem = ItemStack.EMPTY;
                     for (int i = 0; i < hopper.getContainerSize(); i++) {
                         ItemStack stack = hopper.getItem(i);

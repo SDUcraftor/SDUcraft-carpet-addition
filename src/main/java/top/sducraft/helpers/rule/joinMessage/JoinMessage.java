@@ -25,7 +25,7 @@ public abstract class JoinMessage {
                             .append(Component.literal("""
                                 来获取良好的游戏内指令体验
                                 
-                                在镜像服/创造服中粘贴投影请安装litemoretica
+                                喜报:全物品助手以完成,使用/easycommand allitem 获取详细信息
                                 """))
                     ,false);
             sendTickRateChangeMessage(player);

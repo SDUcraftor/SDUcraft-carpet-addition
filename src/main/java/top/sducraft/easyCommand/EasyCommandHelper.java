@@ -1,4 +1,4 @@
-package top.sducraft.helpers.commands.easyCommand;
+package top.sducraft.easyCommand;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,7 +13,8 @@ public class EasyCommandHelper {
             new MirrorManageEasyCommand(),
             new SpectatorEasyCommand(),
             new TickRateManagerEasyCommand(),
-            new WarningEasyCommand()
+            new WarningEasyCommand(),
+            new AllItemEasyCommand()
     );
 
     public static void showEasyCommandInterface(ServerPlayer player) {

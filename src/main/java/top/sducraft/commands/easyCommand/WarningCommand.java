@@ -11,7 +11,7 @@ import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import top.sducraft.SDUcraftCarpetSettings;
-import top.sducraft.helpers.commands.easyCommand.WarningEasyCommand;
+import top.sducraft.easyCommand.WarningEasyCommand;
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.rule.WarningConfig.*;
 

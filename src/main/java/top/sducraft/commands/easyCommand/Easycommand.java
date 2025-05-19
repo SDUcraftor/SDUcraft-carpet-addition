@@ -6,9 +6,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import top.sducraft.SDUcraftCarpetSettings;
-import top.sducraft.helpers.commands.easyCommand.IEasyCommand;
-import static top.sducraft.helpers.commands.easyCommand.EasyCommandHelper.EASYCOMMANDS;
-import static top.sducraft.helpers.commands.easyCommand.EasyCommandHelper.showEasyCommandInterface;
+import top.sducraft.easyCommand.IEasyCommand;
+import static top.sducraft.easyCommand.EasyCommandHelper.EASYCOMMANDS;
+import static top.sducraft.easyCommand.EasyCommandHelper.showEasyCommandInterface;
 
 public class Easycommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {

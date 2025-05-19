@@ -9,3 +9,6 @@ accessible method net/minecraft/world/level/block/entity/HopperBlockEntity getAt
 accessible method net/minecraft/server/ServerTickRateManager finishTickSprint ()V
 accessible method net/minecraft/world/entity/Display$BlockDisplay setBlockState (Lnet/minecraft/world/level/block/state/BlockState;)V
 accessible method net/minecraft/server/level/ServerLevel getEntities ()Lnet/minecraft/world/level/entity/LevelEntityGetter;
+accessible method net/minecraft/world/entity/Display$ItemDisplay setItemStack (Lnet/minecraft/world/item/ItemStack;)V
+accessible field net/minecraft/world/entity/Display DATA_GLOW_COLOR_OVERRIDE_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible field net/minecraft/world/entity/Display DATA_SCALE_ID Lnet/minecraft/network/syncher/EntityDataAccessor;

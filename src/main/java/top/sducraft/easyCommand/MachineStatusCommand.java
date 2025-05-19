@@ -1,4 +1,4 @@
-package top.sducraft.helpers.commands.easyCommand;
+package top.sducraft.easyCommand;
 
 import carpet.CarpetServer;
 import net.minecraft.ChatFormatting;

@@ -6,6 +6,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -35,9 +36,12 @@ public class SearchAllItem {
                     entity.addTag("allitem_display");
                     level.addFreshEntity(entity);
                     addScheduleEvent(200, entity::discard);
-                    player.lookAt(source.getAnchor(), entity.position());
+                    player.lookAt(source.getAnchor(), entity.position().add(0.5, -1.5, 0.5));
                 }
-                source.sendSuccess(() -> Component.literal(tr("成功搜索到物品") + keyword),false);
+                source.sendSuccess(() -> Component.literal(tr("成功搜索到物品") + keyword)
+                        .withStyle(Style.EMPTY
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/allitem info "+keyword))
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(tr("点击查看 ")+keyword+tr("物品详细信息"))))),false);
 //                displayItemInfo(keyword, data, player);
                 return 1;
             } else {
@@ -61,7 +65,7 @@ public class SearchAllItem {
     public static void deleteAllItemDisplay(MinecraftServer server) {
         for (ServerLevel level : server.getAllLevels()){
             for (Entity entity : level.getEntities().getAll()) {
-                if(entity.getTags().contains("allitem_display")) {
+                if(entity != null && entity.getTags().contains("allitem_display")) {
                     entity.discard();
                 }
             }

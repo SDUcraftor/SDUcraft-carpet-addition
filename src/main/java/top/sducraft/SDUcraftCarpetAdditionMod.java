@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.sducraft.commands.CommandRegister;
 import top.sducraft.config.LoadConfig;
-import top.sducraft.helpers.commands.easyCommand.WarningEasyCommand;
+import top.sducraft.easyCommand.WarningEasyCommand;
 import top.sducraft.helpers.rule.fakePeaceHelper.FakePeaceHelper;
 import top.sducraft.helpers.visualizers.Visualizers;
 import top.sducraft.util.DelayedEventScheduler;

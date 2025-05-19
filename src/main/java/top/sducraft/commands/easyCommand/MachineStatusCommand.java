@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import top.sducraft.SDUcraftCarpetSettings;
 import java.util.Objects;
 import static top.sducraft.config.rule.MachineStatusCommandConfig.*;
-import static top.sducraft.helpers.commands.easyCommand.MachineStatusCommand.showMachineStatus;
+import static top.sducraft.easyCommand.MachineStatusCommand.showMachineStatus;
 
 public class MachineStatusCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
