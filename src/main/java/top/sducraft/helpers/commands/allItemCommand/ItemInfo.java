@@ -28,7 +28,7 @@ import static top.sducraft.easyCommand.MachineStatusCommand.getAllItemStatus;
 import static top.sducraft.util.DelayedEventScheduler.addScheduleEvent;
 
 public class ItemInfo {
-    public static void displayItemInfo(String name,AllItemData.itemData data, ServerPlayer player) {
+    public static void displayItemInfo(String name, AllItemData.ItemData data, ServerPlayer player) {
         String typename = Objects.equals(data.type, "item") ? tr("常规物品") : tr("大宗物品");
         Component  title = Component.empty().append(Component.literal("\n"+name).withColor(0xFFFF00)).append(Component.literal(tr("物品信息:\n")));
         int count = countItemInWorld(data);
@@ -52,7 +52,7 @@ public class ItemInfo {
                 ,false);
     }
 
-    public static int displayItemStoreInfo(AllItemData.itemData data, CommandSourceStack source) {
+    public static int displayItemStoreInfo(AllItemData.ItemData data, CommandSourceStack source) {
         ServerPlayer player = source.getPlayer();
         ServerLevel level = player.serverLevel();
         Set<BlockPos> allPositions = new HashSet<>();
@@ -96,7 +96,7 @@ public class ItemInfo {
     public static void displayLackItemInfo(ServerPlayer player){
         int count = 0;
         for (String key :  dataList.keySet()) {
-            AllItemData.itemData data =dataList.get(key);
+            AllItemData.ItemData data =dataList.get(key);
             int itemCount = countItemInWorld(data);
             if (itemCount < 100) {
                 count++;
@@ -119,11 +119,11 @@ public class ItemInfo {
         final int NO_PAGING_THRESHOLD = 15;
         final int threshold = 100;
 
-        Map<String, AllItemData.itemData> nameToData = Objects.equals(CarpetSettings.language, "zh_cn") ? AllItemData.chineseNameToData : AllItemData.englishNameToData;
+        Map<String, AllItemData.ItemData> nameToData = Objects.equals(CarpetSettings.language, "zh_cn") ? AllItemData.chineseNameToData : AllItemData.englishNameToData;
         List<Map.Entry<Component, Integer>> lackItems = new ArrayList<>();
-        for (Map.Entry<String, AllItemData.itemData> entry : nameToData.entrySet()) {
+        for (Map.Entry<String, AllItemData.ItemData> entry : nameToData.entrySet()) {
             String key = entry.getKey();
-            AllItemData.itemData data = entry.getValue();
+            AllItemData.ItemData data = entry.getValue();
             int count = countItemInWorld(data);
             if (count < threshold) {
                 String typename = Objects.equals(data.type, "item") ? tr("(常规物品)") : tr("(大宗物品)");
@@ -177,11 +177,11 @@ public class ItemInfo {
     }
 
     public static void displayFullItemInfo(ServerPlayer player){
-        Map<String, AllItemData.itemData> nameToData =
+        Map<String, AllItemData.ItemData> nameToData =
                 Objects.equals(CarpetSettings.language, "zh_cn") ? AllItemData.chineseNameToData : AllItemData.englishNameToData;
         int count = 0;
         for (String key :  dataList.keySet()) {
-            AllItemData.itemData data =dataList.get(key);
+            AllItemData.ItemData data =dataList.get(key);
             double ratio = 1- (double) countRemainCapacity(data) /countCapacity(data);
             if (ratio>=0.8) {
                 count++;
@@ -204,14 +204,14 @@ public class ItemInfo {
         final int ITEMS_PER_PAGE = 15;
         final int NO_PAGING_THRESHOLD = 15;
 
-        Map<String, AllItemData.itemData> nameToData =
+        Map<String, AllItemData.ItemData> nameToData =
                 Objects.equals(CarpetSettings.language, "zh_cn") ? AllItemData.chineseNameToData : AllItemData.englishNameToData;
 
         List<Map.Entry<Component, Double>> fullItems = new ArrayList<>();
 
-        for (Map.Entry<String, AllItemData.itemData> entry : nameToData.entrySet()) {
+        for (Map.Entry<String, AllItemData.ItemData> entry : nameToData.entrySet()) {
             String key = entry.getKey();
-            AllItemData.itemData data = entry.getValue();
+            AllItemData.ItemData data = entry.getValue();
 
             int current = countRemainCapacity(data);
             int total = countCapacity(data);
@@ -277,12 +277,12 @@ public class ItemInfo {
     public static void displayAllItemInfoWithPage(ServerPlayer player, int page) {
         final int ITEMS_PER_PAGE = 15;
         final int NO_PAGING_THRESHOLD = 15;
-        Map<String, AllItemData.itemData> nameToData =
+        Map<String, AllItemData.ItemData> nameToData =
                 Objects.equals(CarpetSettings.language, "zh_cn") ? AllItemData.chineseNameToData : AllItemData.englishNameToData;
         List<Map.Entry<Component, Double>> fullItems = new ArrayList<>();
-        for (Map.Entry<String, AllItemData.itemData> entry : nameToData.entrySet()) {
+        for (Map.Entry<String, AllItemData.ItemData> entry : nameToData.entrySet()) {
             String key = entry.getKey();
-            AllItemData.itemData data = entry.getValue();
+            AllItemData.ItemData data = entry.getValue();
             int current = countRemainCapacity(data);
             int total = countCapacity(data);
             if (total == 0) continue;
@@ -339,12 +339,12 @@ public class ItemInfo {
     public static int displayItemInfoWithPage(ServerPlayer player, int page ,String type) {
         final int ITEMS_PER_PAGE = 15;
         final int NO_PAGING_THRESHOLD = 15;
-        Map<String, AllItemData.itemData> nameToData =
+        Map<String, AllItemData.ItemData> nameToData =
                 Objects.equals(CarpetSettings.language, "zh_cn") ? AllItemData.chineseNameToData : AllItemData.englishNameToData;
         List<Map.Entry<Component, Double>> fullItems = new ArrayList<>();
-        for (Map.Entry<String, AllItemData.itemData> entry : nameToData.entrySet()) {
+        for (Map.Entry<String, AllItemData.ItemData> entry : nameToData.entrySet()) {
             String key = entry.getKey();
-            AllItemData.itemData data = entry.getValue();
+            AllItemData.ItemData data = entry.getValue();
             if(type.equals(data.type)){
             int current = countRemainCapacity(data);
             int total = countCapacity(data);
@@ -402,7 +402,7 @@ public class ItemInfo {
     }
 
 
-    public static int countItemInWorld(AllItemData.itemData data) {
+    public static int countItemInWorld(AllItemData.ItemData data) {
         ServerLevel level = CarpetServer.minecraft_server.overworld();
         Set<BlockPos> positions = data.storePos;
         positions.addAll(data.chestPos);
@@ -445,7 +445,7 @@ public class ItemInfo {
         return count;
     }
 
-    public static int countRemainCapacity(AllItemData.itemData data) {
+    public static int countRemainCapacity(AllItemData.ItemData data) {
         int remainCapacity = 0;
         Set<BlockPos> allPositions = new HashSet<>();
         if (data.storePos != null) allPositions.addAll(data.storePos);
@@ -485,7 +485,7 @@ public class ItemInfo {
         return remainCapacity;
     }
 
-    public static int countCapacity(AllItemData.itemData data) {
+    public static int countCapacity(AllItemData.ItemData data) {
         int totalSlots = 0;
         int totalCount = 0;
 

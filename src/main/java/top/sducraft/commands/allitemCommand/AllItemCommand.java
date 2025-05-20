@@ -8,8 +8,6 @@ import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.network.chat.Component;
 import top.sducraft.config.allItemData.AllItemData;
 
-import java.util.Objects;
-
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.allItemData.AllItemData.search;
 import static top.sducraft.helpers.commands.allItemCommand.AllItemCommandHelper.addItemToData;
@@ -58,7 +56,7 @@ public class AllItemCommand {
                         .then(Commands.argument("item", StringArgumentType.greedyString())
                                 .suggests((context, builder) -> suggestFuzzyItemNames(builder))
                                 .executes(context -> {
-                                    AllItemData.itemData data = search(StringArgumentType.getString(context,"item"));
+                                    AllItemData.ItemData data = search(StringArgumentType.getString(context,"item"));
                                     if(data !=null ){
                                         displayItemInfo(StringArgumentType.getString(context,"item"),data,context.getSource().getPlayer());
                                         return 1;
@@ -100,7 +98,7 @@ public class AllItemCommand {
                         .then(Commands.argument("item", StringArgumentType.greedyString())
                                 .suggests((context, builder) -> suggestFuzzyItemNames(builder))
                                         .executes(context -> {
-                                            AllItemData.itemData data = search(StringArgumentType.getString(context,"item"));
+                                            AllItemData.ItemData data = search(StringArgumentType.getString(context,"item"));
                                             if(data !=null ){
                                                 displayItemStoreInfo(data,context.getSource());
                                                 return 1;

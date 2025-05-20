@@ -21,11 +21,12 @@ import static carpet.utils.Translations.tr;
 import static top.sducraft.config.allItemData.AllItemData.*;
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.countItemInWorld;
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.getCountString;
+import static top.sducraft.helpers.commands.allItemCommand.SpawnDisplay.spawnItemDisplay;
 import static top.sducraft.util.DelayedEventScheduler.addScheduleEvent;
 
 public class SearchAllItem {
     public static int searchAndDisplay(String keyword, CommandSourceStack source) {
-        itemData data = search(keyword);
+        ItemData data = search(keyword);
         ServerPlayer player = source.getPlayer();
         if(player != null) {
             if (data != null && !data.storePos.isEmpty()) {
@@ -41,6 +42,7 @@ public class SearchAllItem {
                     player.lookAt(source.getAnchor(), entity.position().add(0.5, -1.5, 0.5));
                 }
 //                spawnItemDisplay(player.serverLevel(), data.chestPos, getItemByDescriptionId(descriptionId), 0xFFFF00);
+                spawnItemDisplay(data, SpawnDisplay.DisplayType.TEMP);
                 source.sendSuccess(() -> Component.literal(tr("成功搜索到物品") + keyword)
                         .withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/allitem info "+keyword))
