@@ -38,7 +38,7 @@ public class SearchAllItem {
                     entity.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
                     entity.addTag("allitem_display");
                     level.addFreshEntity(entity);
-                    addScheduleEvent(200, entity::discard);
+                    addScheduleEvent(600, entity::discard);
                     player.lookAt(source.getAnchor(), entity.position().add(0.5, -1.5, 0.5));
                 }
 //                spawnItemDisplay(player.serverLevel(), data.chestPos, getItemByDescriptionId(descriptionId), 0xFFFF00);

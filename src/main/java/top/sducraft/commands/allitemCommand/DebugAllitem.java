@@ -52,13 +52,14 @@ public class DebugAllitem {
                                 .then(Commands.argument("item", StringArgumentType.greedyString())
                                         .suggests((context, builder) -> suggestFuzzyItemNames(builder))
                                         .executes(context -> {
+                                            ServerLevel level = context.getSource().getServer().overworld();
                                             AllItemData.ItemData data = AllItemData.search(StringArgumentType.getString(context, "item"));
                                             if (data != null) {
 
                                                 Set<BlockPos> store = data.storePos;
-                                                store.removeAll(data.chestPos);
+                                                store.addAll(data.chestPos);
                                                 for (BlockPos pos : store){
-                                                    spawnBlockDisplay(context.getSource().getServer().overworld(), pos, context.getSource().getServer().overworld().getBlockState(pos), 0x00FF00);
+                                                    if (level.getBlockEntity(pos) instanceof Container) spawnBlockDisplay(context.getSource().getServer().overworld(), pos, context.getSource().getServer().overworld().getBlockState(pos), 0x00FF00);
                                                 }
                                                 context.getSource().sendSuccess(() -> Component.literal(tr("已生成")+StringArgumentType.getString(context, "item")+("展示实体")), false);
                                             }
@@ -97,8 +98,6 @@ public class DebugAllitem {
                                         AllItemData.ItemData data = entry.getValue();
 
                                         Set<BlockPos> store = new HashSet<>(data.storePos != null ? data.storePos : Set.of());
-                                        Set<BlockPos> chest = data.chestPos != null ? data.chestPos : Set.of();
-                                        store.removeAll(chest);
                                         spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM);
 
                                         for (BlockPos pos :store) {

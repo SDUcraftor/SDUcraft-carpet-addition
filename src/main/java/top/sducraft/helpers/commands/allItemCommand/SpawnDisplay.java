@@ -1,16 +1,20 @@
 package top.sducraft.helpers.commands.allItemCommand;
 
 import carpet.CarpetServer;
+import com.mojang.math.Transformation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import top.sducraft.config.allItemData.AllItemData;
 import java.util.ArrayList;
@@ -121,12 +125,48 @@ public class SpawnDisplay {
         display.setGlowingTag(true);
         display.addTag("allitem_debug");
         display.getEntityData().set(Display.DATA_GLOW_COLOR_OVERRIDE_ID, color);
-        display.getEntityData().set(Display.DATA_SCALE_ID, new Vector3f(0.5F));
+        Vec3 displayPos = Vec3.atCenterOf(pos);
+        Vec3 lookDirection = null;
+
+        for (Direction dir : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}) {
+            BlockPos neighborPos = pos.relative(dir);
+            BlockEntity be = level.getBlockEntity(neighborPos);
+            if (be instanceof Container) {
+                Vec3 chestCenter = Vec3.atCenterOf(neighborPos);
+                lookDirection = chestCenter.subtract(displayPos).normalize();
+                break;
+            }
+        }
+
+        if (lookDirection != null) {
+            Quaternionf rotation = getLookRotation(lookDirection);
+            Transformation transform = new Transformation(
+                    new Vector3f(0, 0, 0),
+                    new Quaternionf(),
+                    new Vector3f(0.5f),
+                    rotation
+            );
+            display.setTransformation(transform);
+        }
+        else {
+            display.getEntityData().set(Display.DATA_SCALE_ID, new Vector3f(0.5F));
+        }
         level.addFreshEntity(display);
         if (type.equals(DisplayType.TEMP)){
-            addScheduleEvent(200 , display::discard);
+            addScheduleEvent(600 , display::discard);
         }
     }
+
+    private static Quaternionf getLookRotation(Vec3 direction) {
+        // 原始默认朝向为 -Z
+        Vector3f from = new Vector3f(0, 0, -1);
+        Vector3f to = new Vector3f((float) direction.x, (float) direction.y, (float) direction.z);
+        from.normalize();
+        to.normalize();
+
+        return new Quaternionf().rotateTo(from, to);
+    }
+
 
     private static int countAirInCube7x3x7(ServerLevel level, BlockPos center) {
         int count = 0;
