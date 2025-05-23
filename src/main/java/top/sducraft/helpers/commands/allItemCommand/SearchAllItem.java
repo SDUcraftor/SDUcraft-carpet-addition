@@ -42,7 +42,7 @@ public class SearchAllItem {
                     player.lookAt(source.getAnchor(), entity.position().add(0.5, -1.5, 0.5));
                 }
 //                spawnItemDisplay(player.serverLevel(), data.chestPos, getItemByDescriptionId(descriptionId), 0xFFFF00);
-                spawnItemDisplay(data, SpawnDisplay.DisplayType.TEMP);
+                spawnItemDisplay(data, SpawnDisplay.DisplayType.TEMP,"allitem_display");
                 source.sendSuccess(() -> Component.literal(tr("成功搜索到物品") + keyword)
                         .withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/allitem info "+keyword))

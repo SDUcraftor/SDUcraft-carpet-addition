@@ -40,7 +40,7 @@ public class DebugAllitem {
                                             for (BlockPos pos : data.storePos) {
                                                 if (level.getBlockEntity(pos) instanceof Container) {
                                                     BlockState state = level.getBlockState(pos);
-                                                    spawnBlockDisplay(level, pos, state, 0x00FF00);
+                                                    spawnBlockDisplay(level, pos, state, 0x00FF00,"allitem_debug");
                                                 }
                                             }
                                         }
@@ -59,7 +59,7 @@ public class DebugAllitem {
                                                 Set<BlockPos> store = data.storePos;
                                                 store.addAll(data.chestPos);
                                                 for (BlockPos pos : store){
-                                                    if (level.getBlockEntity(pos) instanceof Container) spawnBlockDisplay(context.getSource().getServer().overworld(), pos, context.getSource().getServer().overworld().getBlockState(pos), 0x00FF00);
+                                                    if (level.getBlockEntity(pos) instanceof Container) spawnBlockDisplay(context.getSource().getServer().overworld(), pos, context.getSource().getServer().overworld().getBlockState(pos), 0x00FF00, "allitem_debug");
                                                 }
                                                 context.getSource().sendSuccess(() -> Component.literal(tr("已生成")+StringArgumentType.getString(context, "item")+("展示实体")), false);
                                             }
@@ -72,7 +72,7 @@ public class DebugAllitem {
                                 .executes(context -> {
                                     for (Map.Entry<String, AllItemData.ItemData> entry :  dataList.entrySet()) {
                                         AllItemData.ItemData data = entry.getValue();
-                                        spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM);
+                                        spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM,"allitem_debug");
                                     }
                                     return 1;
                                 })
@@ -81,7 +81,7 @@ public class DebugAllitem {
                                         .executes(context -> {
                                             AllItemData.ItemData data = AllItemData.search(StringArgumentType.getString(context, "item"));
                                             if (data != null) {
-                                                spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM);
+                                                spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM,"allitem_debug");
                                                 context.getSource().sendSuccess(() -> Component.literal(tr("已生成")+StringArgumentType.getString(context, "item")+("展示实体")), false);
                                             }
                                             else {
@@ -98,12 +98,12 @@ public class DebugAllitem {
                                         AllItemData.ItemData data = entry.getValue();
 
                                         Set<BlockPos> store = new HashSet<>(data.storePos != null ? data.storePos : Set.of());
-                                        spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM);
+                                        spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM,"allitem_debug");
 
                                         for (BlockPos pos :store) {
                                             if (level.getBlockEntity(pos) instanceof Container) {
                                                 BlockState state = level.getBlockState(pos);
-                                                spawnBlockDisplay(level, pos, state, 0x00FF00);
+                                                spawnBlockDisplay(level, pos, state, 0x00FF00, "allitem_debug");
                                             }
                                         }
                                     }

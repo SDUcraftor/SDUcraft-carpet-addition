@@ -1,15 +1,19 @@
 plugins {
-    id 'fabric-loom' version '1.5-SNAPSHOT'
+    id 'fabric-loom' version '1.6.5'
     id 'maven-publish'
     id 'org.jetbrains.kotlin.jvm'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 loom {
     accessWidenerPath = file("src/main/resources/sdu-carpet.accesswidener")
+//    transitiveAccessWideners = true
 }
 
 version = project.mod_version
 group = project.maven_group
+
+
 
 repositories {
     // Add repositories to retrieve artifacts from in here.
@@ -30,6 +34,9 @@ repositories {
             includeGroup("modrinth.maven")
         }
     }
+    maven {
+        url 'https://jitpack.io/'
+    }
     mavenCentral()
 }
 
@@ -40,6 +47,8 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "curse.maven:carpet-349239:${project.carpet_core_version}"
+    implementation 'com.github.Querz:NBT:6.1'
+    include 'com.github.Querz:NBT:6.1'
 }
 
 processResources {

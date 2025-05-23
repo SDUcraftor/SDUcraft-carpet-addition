@@ -37,10 +37,10 @@ public class SpawnDisplay {
         }
     }
 
-    public static void spawnItemDisplay(AllItemData.ItemData data , DisplayType type) {
+    public static void spawnItemDisplay(AllItemData.ItemData data , DisplayType type, String tag) {
         ServerLevel level = CarpetServer.minecraft_server.overworld();
         DisplayInfo info = datadisplayinfoMap.get(data);
-        spawnItemDisplay(level,info.displayPos,info.item, 0xFFFF00 ,type );
+        spawnItemDisplay(level,info.displayPos,info.item, 0xFFFF00, type, tag );
     }
 
     public enum DisplayType {
@@ -118,12 +118,12 @@ public class SpawnDisplay {
         return a.getZ() < b.getZ();
     }
 
-    private static void spawnItemDisplay(ServerLevel level, BlockPos pos, Item item, int color,DisplayType type) {
+    private static void spawnItemDisplay(ServerLevel level, BlockPos pos, Item item, int color,DisplayType type,String tag) {
         Display.ItemDisplay display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, level);
         display.setPos(Vec3.atCenterOf(pos));
         display.setItemStack(new ItemStack(item));
         display.setGlowingTag(true);
-        display.addTag("allitem_debug");
+        display.addTag(tag);
         display.getEntityData().set(Display.DATA_GLOW_COLOR_OVERRIDE_ID, color);
         Vec3 displayPos = Vec3.atCenterOf(pos);
         Vec3 lookDirection = null;
@@ -158,12 +158,10 @@ public class SpawnDisplay {
     }
 
     private static Quaternionf getLookRotation(Vec3 direction) {
-        // 原始默认朝向为 -Z
         Vector3f from = new Vector3f(0, 0, -1);
         Vector3f to = new Vector3f((float) direction.x, (float) direction.y, (float) direction.z);
         from.normalize();
         to.normalize();
-
         return new Quaternionf().rotateTo(from, to);
     }
 
@@ -183,13 +181,13 @@ public class SpawnDisplay {
         return count;
     }
 
-    public static void spawnBlockDisplay(ServerLevel level, BlockPos pos, BlockState blockState, int color) {
+    public static void spawnBlockDisplay(ServerLevel level, BlockPos pos, BlockState blockState, int color, String tag) {
         Display.BlockDisplay display = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level);
         display.setBlockState(blockState);
         display.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
         display.setGlowingTag(true);
         display.getEntityData().set(Display.DATA_GLOW_COLOR_OVERRIDE_ID, color);
-        display.addTag("allitem_debug");
+        display.addTag(tag);
         level.addFreshEntity(display);
     }
 

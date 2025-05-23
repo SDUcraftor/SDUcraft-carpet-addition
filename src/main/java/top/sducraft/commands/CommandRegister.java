@@ -8,6 +8,7 @@ import top.sducraft.commands.easyCommand.MachineStatusCommand;
 import top.sducraft.commands.easyCommand.WarningCommand;
 import top.sducraft.commands.fakePeaceCommand.FakePeaceCommand;
 import top.sducraft.commands.fakePeaceCommand.SetFakePeaceCommand;
+import top.sducraft.commands.syncmaticaCommand.SyncmaticaCommand;
 import top.sducraft.commands.tickRateChangedMessageCommand.TickRateChangeMessageCommand;
 import top.sducraft.commands.tickRateChangedMessageCommand.TickResetCommand;
 
@@ -22,5 +23,6 @@ public class CommandRegister {
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> WarningCommand.register(dispatcher)));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> AllItemCommand.register(dispatcher)));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {DebugAllitem.register(dispatcher);}));
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {SyncmaticaCommand.register(dispatcher);}));
     }
 }
