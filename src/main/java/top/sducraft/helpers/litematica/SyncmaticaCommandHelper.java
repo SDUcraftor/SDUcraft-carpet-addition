@@ -5,18 +5,11 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
-import net.querz.nbt.io.NBTDeserializer;
-import net.querz.nbt.tag.CompoundTag;
-import net.querz.nbt.tag.ListTag;
-
-import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import java.util.*;
 import static carpet.utils.Translations.tr;
 
 public class SyncmaticaCommandHelper {
+
     public static void listSyncmatica(ServerPlayer player, int page) {
         List<LoadSyncmatica.Litematica> list = LoadSyncmatica.litematicas;
         if (list.isEmpty()) {
@@ -69,25 +62,4 @@ public class SyncmaticaCommandHelper {
         }
     }
 
-    public static Set<String> getBlockNames(File litematicFile) {
-        Set<String> blockNames = new HashSet<>();
-        try {
-            CompoundTag root = (CompoundTag) new NBTDeserializer(true).fromFile(litematicFile).getTag();
-            CompoundTag regions = root.getCompoundTag("Regions");
-            for (String regionName : regions.keySet()) {
-                CompoundTag region = regions.getCompoundTag(regionName);
-                ListTag<CompoundTag> palette = region.getListTag("BlockStatePalette").asCompoundTagList();
-                for (CompoundTag entry : palette) {
-                    String name = entry.getString("Name");
-                    if (name.startsWith("minecraft:") && name.length() > 10) {
-                        name = name.substring(10);
-                    }
-                    blockNames.add(name);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return blockNames;
-    }
 }

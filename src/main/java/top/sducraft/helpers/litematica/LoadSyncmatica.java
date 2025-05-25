@@ -4,15 +4,12 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import java.io.File;
 import java.io.FileReader;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-
-import static top.sducraft.config.allItemData.AllItemData.fuzzySearch;
 
 public class LoadSyncmatica {
     public static File configFile;
@@ -46,7 +43,8 @@ public class LoadSyncmatica {
                 return false;
             }
             FileReader reader = new FileReader(configFile);
-            Type type = new TypeToken<Map<String, List<Litematica>>>() {}.getType();
+            Type type = new TypeToken<Map<String, List<Litematica>>>() {
+            }.getType();
             Map<String, List<Litematica>> data = new Gson().fromJson(reader, type);
             reader.close();
             litematicas.clear();
@@ -62,14 +60,14 @@ public class LoadSyncmatica {
 
         Litematica litematica = null;
         int count = 0;
-        for (Litematica p : litematicas){
+        for (Litematica p : litematicas) {
             if (p.file_name.equals(name)) {
                 litematica = p;
                 count++;
             }
         }
 
-        if (count == 1){
+        if (count == 1) {
             return litematica;
         }
         return null;
