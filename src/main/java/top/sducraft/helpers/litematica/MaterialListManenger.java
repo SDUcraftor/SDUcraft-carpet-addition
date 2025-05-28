@@ -43,7 +43,7 @@ public class MaterialListManenger {
                 int xSize = size.getInt("x");
                 int ySize = size.getInt("y");
                 int zSize = size.getInt("z");
-                int volume = xSize * ySize * zSize;
+                int volume = Math.abs(xSize * ySize * zSize);
 
                 BitSet bitSet = BitSet.valueOf(blockStates);
                 int paletteBits = Math.max(4, Integer.SIZE - Integer.numberOfLeadingZeros(palette.size() - 1));
