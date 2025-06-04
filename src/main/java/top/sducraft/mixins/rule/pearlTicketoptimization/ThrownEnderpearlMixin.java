@@ -2,8 +2,12 @@ package top.sducraft.mixins.rule.pearlTicketoptimization;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.entity.projectile.ThrownEnderpearl;
@@ -111,14 +115,14 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
                     }
                 }
 
-//                if(pearlLog) {
+//
+//                MinecraftServer server = level.getServer();
 //                    PlayerList playerList = server.getPlayerList();
 //                    for (ServerPlayer player : playerList.getPlayers()) {
 //                        if (player != null) {
 //                            player.displayClientMessage(Component.literal("\ncurrPos:" + currPos + "\ncurrVelocity:" + currVelocity + "\nrealPos:" + realPos.toString() + "\nrealVelocity:" + realVelocity.toString() + "\nnextPos" + nextPos + "\nnextVelocity " + nextVelocity + sync), false);
 //                        }
 //                    }
-//                }
                 realPos = nextPos;
                 realVelocity = nextVelocity;
             }

@@ -15,6 +15,8 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.Vec3;
+import top.sducraft.util.DelayedEvents;
+
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import static carpet.utils.Translations.tr;
@@ -22,7 +24,7 @@ import static top.sducraft.config.allItemData.AllItemData.*;
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.countItemInWorld;
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.getCountString;
 import static top.sducraft.helpers.commands.allItemCommand.SpawnDisplay.spawnItemDisplay;
-import static top.sducraft.util.DelayedEventScheduler.addScheduleEvent;
+
 
 public class SearchAllItem {
     public static int searchAndDisplay(String keyword, CommandSourceStack source) {
@@ -38,7 +40,7 @@ public class SearchAllItem {
                     entity.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
                     entity.addTag("allitem_display");
                     level.addFreshEntity(entity);
-                    addScheduleEvent(600, entity::discard);
+                    DelayedEvents.START_SERVER_TICK.register(600, server -> entity.discard());
                     player.lookAt(source.getAnchor(), entity.position().add(0.5, -1.5, 0.5));
                 }
 //                spawnItemDisplay(player.serverLevel(), data.chestPos, getItemByDescriptionId(descriptionId), 0xFFFF00);

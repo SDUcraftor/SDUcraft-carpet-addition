@@ -14,13 +14,13 @@ import top.sducraft.config.LoadConfig;
 import top.sducraft.easyCommand.WarningEasyCommand;
 import top.sducraft.helpers.rule.fakePeaceHelper.FakePeaceHelper;
 import top.sducraft.helpers.visualizers.Visualizers;
-import top.sducraft.util.DelayedEventScheduler;
+import top.sducraft.util.DelayedEvents;
 
 import java.util.Map;
 import static carpet.utils.Translations.getTranslationFromResourcePath;
 import static top.sducraft.helpers.commands.allItemCommand.SearchAllItem.deleteAllItemDisplay;
 import static top.sducraft.helpers.rule.joinMessage.JoinMessage.showJoinMessage;
-import static top.sducraft.util.DelayedEventScheduler.addScheduleEvent;
+import static top.sducraft.util.DelayedEvents.*;
 
 
 public class SDUcraftCarpetAdditionMod implements CarpetExtension, ModInitializer {
@@ -38,8 +38,8 @@ public class SDUcraftCarpetAdditionMod implements CarpetExtension, ModInitialize
         ServerLifecycleEvents.SERVER_STARTED.register(Visualizers::clearVisualizersOnServerStart);
         ServerTickEvents.START_SERVER_TICK.register(FakePeaceHelper::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(WarningEasyCommand::warnPlayer);
-        ServerTickEvents.START_SERVER_TICK.register(DelayedEventScheduler::tick);
-        addScheduleEvent(10,() -> { deleteAllItemDisplay(CarpetServer.minecraft_server);});
+        DelayedEvents.init();
+        START_SERVER_TICK.register(10, server -> { deleteAllItemDisplay(CarpetServer.minecraft_server);});
         CommandRegister.registerCommands();
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             if(!(handler.getPlayer() instanceof FakePlayer)) {showJoinMessage(handler.getPlayer());}

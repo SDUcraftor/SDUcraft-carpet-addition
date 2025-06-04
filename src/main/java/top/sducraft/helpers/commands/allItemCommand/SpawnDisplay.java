@@ -17,12 +17,13 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import top.sducraft.config.allItemData.AllItemData;
+import top.sducraft.util.DelayedEvents;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import static top.sducraft.config.allItemData.AllItemData.dataList;
-import static top.sducraft.util.DelayedEventScheduler.addScheduleEvent;
 
 public class SpawnDisplay {
     public static Map<AllItemData.ItemData, DisplayInfo> datadisplayinfoMap = new HashMap<>();
@@ -153,7 +154,7 @@ public class SpawnDisplay {
         }
         level.addFreshEntity(display);
         if (type.equals(DisplayType.TEMP)){
-            addScheduleEvent(600 , display::discard);
+            DelayedEvents.START_SERVER_TICK.register(600 , s -> display.discard());
         }
     }
 

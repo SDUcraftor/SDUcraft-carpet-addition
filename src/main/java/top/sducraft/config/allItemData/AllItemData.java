@@ -7,15 +7,15 @@ import com.google.gson.reflect.TypeToken;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
+import top.sducraft.util.DelayedEvents;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Type;
 import java.util.*;
-
 import static top.sducraft.helpers.commands.allItemCommand.SpawnDisplay.generateDisplaysInfo;
 import static top.sducraft.helpers.translation.allitem.ItemTranslation.translateItem;
-import static top.sducraft.util.DelayedEventScheduler.addScheduleEvent;
 
 public class AllItemData {
     public static File configFile;
@@ -53,7 +53,7 @@ public class AllItemData {
                 dataList = new Gson().fromJson(reader, type);
                 reader.close();
                 updateNameToDataMap();
-                addScheduleEvent(20,()->generateDisplaysInfo(CarpetServer.minecraft_server.overworld()));
+                DelayedEvents.START_SERVER_TICK.register(20, s ->generateDisplaysInfo(CarpetServer.minecraft_server.overworld()));
             }
         } catch (Exception e) {
             e.printStackTrace();

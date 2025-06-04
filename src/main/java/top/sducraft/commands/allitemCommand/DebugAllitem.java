@@ -14,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import top.sducraft.config.allItemData.AllItemData;
 import top.sducraft.helpers.commands.allItemCommand.SpawnDisplay;
+import top.sducraft.util.DelayedEvents;
 
 import java.util.*;
 
@@ -22,7 +23,6 @@ import static top.sducraft.config.allItemData.AllItemData.dataList;
 import static top.sducraft.helpers.commands.allItemCommand.SearchAllItem.suggestFuzzyItemNames;
 import static top.sducraft.helpers.commands.allItemCommand.SpawnDisplay.spawnBlockDisplay;
 import static top.sducraft.helpers.commands.allItemCommand.SpawnDisplay.spawnItemDisplay;
-import static top.sducraft.util.DelayedEventScheduler.addScheduleEvent;
 
 public class DebugAllitem {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
@@ -116,7 +116,7 @@ public class DebugAllitem {
                                     for (ServerLevel level : context.getSource().getServer().getAllLevels()){
                                         for (Entity entity : level.getEntities().getAll()) {
                                             if(entity!=null && entity.getTags().contains("allitem_debug")) {
-                                                addScheduleEvent(1, entity::discard);
+                                                DelayedEvents.START_SERVER_TICK.register(1, s -> entity.discard());
                                             }
                                         }
                                     }

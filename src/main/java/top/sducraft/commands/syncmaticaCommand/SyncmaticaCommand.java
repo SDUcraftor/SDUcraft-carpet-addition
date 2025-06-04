@@ -9,13 +9,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import top.sducraft.util.DelayedEvents;
+
 import java.io.File;
 import java.util.Map;
 import static carpet.utils.Translations.tr;
 import static top.sducraft.helpers.litematica.LoadSyncmatica.*;
 import static top.sducraft.helpers.litematica.MaterialListManenger.*;
 import static top.sducraft.helpers.litematica.SyncmaticaCommandHelper.listSyncmatica;
-import static top.sducraft.util.DelayedEventScheduler.addScheduleEvent;
 
 public class SyncmaticaCommand {
             public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
@@ -78,7 +79,7 @@ public class SyncmaticaCommand {
                                                         for (ServerLevel level : context.getSource().getServer().getAllLevels()){
                                                         for (Entity entity : level.getEntities().getAll()) {
                                                             if(entity!=null && entity.getTags().contains("material")) {
-                                                                addScheduleEvent(1, entity::discard);
+                                                                DelayedEvents.START_SERVER_TICK.register(1, s -> entity.discard());
                                                             }
                                                         }
                                                     }

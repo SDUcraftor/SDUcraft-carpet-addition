@@ -21,11 +21,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.Vec3;
 import top.sducraft.config.allItemData.AllItemData;
+import top.sducraft.util.DelayedEvents;
+
 import java.util.*;
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.allItemData.AllItemData.dataList;
 import static top.sducraft.easyCommand.MachineStatusCommand.getAllItemStatus;
-import static top.sducraft.util.DelayedEventScheduler.addScheduleEvent;
 
 public class ItemInfo {
     public static void displayItemInfo(String name, AllItemData.ItemData data, ServerPlayer player) {
@@ -70,7 +71,7 @@ public class ItemInfo {
                 entity.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
                 entity.addTag("allitem_display");
                 level.addFreshEntity(entity);
-                addScheduleEvent(200, entity::discard);
+                DelayedEvents.START_SERVER_TICK.register(200, s -> entity.discard());
                 player.lookAt(source.getAnchor(),entity.position().add(0.5, -1.5, 0.5));
                 count++;
             }
