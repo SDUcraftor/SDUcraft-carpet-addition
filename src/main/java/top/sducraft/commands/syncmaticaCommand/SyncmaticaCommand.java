@@ -34,6 +34,7 @@ public class SyncmaticaCommand {
                                             }))
                                     .then(Commands.literal("list")
                                             .executes(context -> {
+                                                loadSyncmatica(context.getSource().getServer());
                                                 ServerPlayer player = context.getSource().getPlayer();
                                                 if (player != null) {
                                                     listSyncmatica(player,1);
@@ -44,6 +45,7 @@ public class SyncmaticaCommand {
                                                 }
                                             }).then(Commands.argument("page", IntegerArgumentType.integer(0))
                                                     .executes(context -> {
+                                                        loadSyncmatica(context.getSource().getServer());
                                                         ServerPlayer  player = context.getSource().getPlayer();
                                                         if (player != null) {
                                                             listSyncmatica(player,IntegerArgumentType.getInteger(context,"page"));
