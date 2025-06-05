@@ -74,11 +74,15 @@
   "sducarpet.easycommand.warningcommand8": " /warning list View all warnings\n /warning add <name> <dimension> <blockPos> <text> Add warnings\n /warning rel <name> Remove warning \n/warning set <name> <true/false> Turn on/off warning\n",
   "sducarpet.easycommand.warningcommand9": "Note: Using /warning list will provide a quick settings panel",
 
-  "sducarpet.easycommand.allitemcommand": "错误的类型,请输入 item 或 bulk",
-  "sducarpet.easycommand.allitemcommand1": "输入坐标必须沿 X 或 Z 轴直线排列",
-  "sducarpet.easycommand.allitemcommand2": "未找到物品 ",
-  "sducarpet.easycommand.allitemcommand3": "是否要搜索(点击物品名可直接搜索对应物品)：",
+  "sducarpet.easycommand.allitemcommand": "Wrong type, enter item or bulk",
+  "sducarpet.easycommand.allitemcommand1": "The input coordinates must be arranged in a straight line along the X or Z axis",
+  "sducarpet.easycommand.allitemcommand2": "Item not found ",
+  "sducarpet.easycommand.allitemcommand3": "Whether you want to search (click on the item name to search for the corresponding item directly):",
   "sducarpet.easycommand.allitemcommand4": "Click to turn on the warning",
   "sducarpet.easycommand.allitemcommand5": "Click to turn on the warning",
-  "sducarpet.easycommand.allitemcommand6": "Click to turn on the warning"
+  "sducarpet.easycommand.allitemcommand6": "Click to turn on the warning",
+  "sducarpet.command.chat1": "Successfully cleared the conversation history",
+  "sducarpet.command.chat2": "Conversation history purging failed",
+  "sducarpet.command.chat3": "You are waiting for the last reply, please wait...",
+  "sducarpet.command.chat4": "Request Exception:"
 }

@@ -7,7 +7,7 @@ import static top.sducraft.util.MassageComponentCreate.*;
 public class EasyPerpetualDayEasyCommand implements IEasyCommand {
     @Override
     public Component clickButton() {
-        return createCommandClickComponent("[永昼机]", "/easycommand perpetualday","点击进入永昼机控制界面");
+            return createCommandClickComponent("[永昼机]", "/easycommand perpetualday","点击进入永昼机控制界面");
     }
 
     @Override

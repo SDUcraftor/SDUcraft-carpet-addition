@@ -15,7 +15,7 @@ import static carpet.utils.Translations.tr;
 public class SettingsManagerMixin {
     @Inject(method = "listAllSettings", at = @At(value = "INVOKE",target = "Lcarpet/utils/Translations;tr(Ljava/lang/String;)Ljava/lang/String;",ordinal = 1,shift = At.Shift.AFTER),remap = false)
     private void listAllSettings(CommandSourceStack source, CallbackInfoReturnable<Integer> cir) {
-        String mod_version = "1.2.4";
+        String mod_version = "1.3.3";
         Messenger.m(source, "g "+"Carpet SDUcraft Addition"+" "+ tr(TranslationKeys.VERSION) + ": " + mod_version);
     }
 

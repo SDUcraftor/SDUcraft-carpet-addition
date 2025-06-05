@@ -80,6 +80,10 @@
   "sducarpet.easycommand.allitemcommand3": "是否要搜索(点击物品名可直接搜索对应物品)：",
   "sducarpet.easycommand.allitemcommand4": "Click to turn on the warning",
   "sducarpet.easycommand.allitemcommand5": "Click to turn on the warning",
-  "sducarpet.easycommand.allitemcommand6": "Click to turn on the warning"
+  "sducarpet.easycommand.allitemcommand6": "Click to turn on the warning",
+  "sducarpet.command.chat1": "成功清除对话历史",
+  "sducarpet.command.chat2": "清除失败",
+  "sducarpet.command.chat3": "You are waiting for the last reply, please wait...",
+  "sducarpet.command.chat4": "Request Exception:"
 
 }

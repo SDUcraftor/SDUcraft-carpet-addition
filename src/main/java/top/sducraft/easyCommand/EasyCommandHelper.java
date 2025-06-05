@@ -15,7 +15,8 @@ public class EasyCommandHelper {
             new TickRateManagerEasyCommand(),
             new WarningEasyCommand(),
             new AllItemEasyCommand(),
-            new PrimeBackupEasyCommand()
+            new PrimeBackupEasyCommand(),
+            new SyncmaticaEasyCommand()
     );
 
     public static void showEasyCommandInterface(ServerPlayer player) {
