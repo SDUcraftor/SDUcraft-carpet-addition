@@ -2,25 +2,30 @@ package top.sducraft.helpers.chat;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.network.chat.Component;
-import okhttp3.*;
 import net.minecraft.server.level.ServerPlayer;
 import top.sducraft.config.chat.ChatAIConfig;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-
+import java.util.concurrent.ConcurrentHashMap;
 import static carpet.utils.Translations.tr;
 
 public class OpenaiChat {
 
-    private static final OkHttpClient client = new OkHttpClient.Builder()
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .writeTimeout(5, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .build();;
+    private static final HttpClient httpClient = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(5))
+            .build();
+
     private static final Gson gson = new GsonBuilder().create();
-    private static final Set<UUID> generatingPlayers = new HashSet<>();
+    private static final Set<UUID> generatingPlayers = ConcurrentHashMap.newKeySet();
+
 
     public static String getCompletionWithMemory(String userPrompt, ServerPlayer player) {
         ChatAIConfig.APIConfig cfg = ChatAIConfig.config;
@@ -29,65 +34,80 @@ public class OpenaiChat {
 
         List<ChatMemory.Message> history = ChatMemory.getHistory(player);
 
-        List<ChatMemory.Message> messages = new ArrayList<>();
-        messages.add(new ChatMemory.Message("system", cfg.systemPrompt));
-        messages.addAll(history);
+        JsonArray messagesJsonArray = new JsonArray();
 
-        Map<String, Object> body = new HashMap<>();
-        body.put("model", cfg.model);
-        body.put("messages", messages);
-        body.put("stream", false);
-        body.put("temperature", cfg.temperature);
-        body.put("max_tokens", cfg.maxTokens);
+        JsonObject systemMessage = new JsonObject();
+        systemMessage.addProperty("role", "system");
+        systemMessage.addProperty("content", cfg.systemPrompt);
+        messagesJsonArray.add(systemMessage);
 
-        String json = gson.toJson(body);
+        for (ChatMemory.Message m : history) {
+            JsonObject msg = new JsonObject();
+            msg.addProperty("role", m.role);
+            msg.addProperty("content", m.content);
+            messagesJsonArray.add(msg);
+        }
 
-        Request request = new Request.Builder()
-                .url(cfg.apiUrl)
-                .addHeader(cfg.authorizationHeader, "Bearer " + cfg.apiKey)
-                .addHeader("Content-Type", "application/json")
-                .post(RequestBody.create(json, MediaType.parse("application/json")))
+        JsonObject body = new JsonObject();
+        body.addProperty("model", cfg.model);
+        body.add("messages", messagesJsonArray);
+        body.addProperty("stream", false);
+        body.addProperty("temperature", cfg.temperature);
+        body.addProperty("max_tokens", cfg.maxTokens);
+
+        String requestBody = gson.toJson(body);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(cfg.apiUrl))
+                .timeout(Duration.ofSeconds(30))
+                .header(cfg.authorizationHeader, "Bearer " + cfg.apiKey)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody, StandardCharsets.UTF_8))
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                return tr("sducarpet.command.chat4") + response.code();
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                return tr("sducarpet.command.chat4") + response.statusCode();
             }
 
-            String respBody = response.body().string();
-            JsonObject respJson = gson.fromJson(respBody, JsonObject.class);
-            JsonObject message = respJson
-                    .getAsJsonArray("choices").get(0)
-                    .getAsJsonObject().getAsJsonObject("message");
+            JsonObject respJson = gson.fromJson(response.body(), JsonObject.class);
+            JsonObject message = respJson.getAsJsonArray("choices")
+                    .get(0).getAsJsonObject()
+                    .getAsJsonObject("message");
 
             String reply = message.get("content").getAsString();
 
             ChatMemory.appendMessage(player, "assistant", reply);
+
             return reply;
 
         } catch (Exception e) {
-            return tr("sducarpet.command.chat4")  + e.getMessage();
+            return tr("sducarpet.command.chat4") + e.getMessage();
         }
     }
 
     public static void tryStartChat(String prompt, ServerPlayer player) {
         UUID id = player.getUUID();
         if (generatingPlayers.contains(id)) {
-            player.displayClientMessage(Component.literal(tr("sducarpet.command.chat3")),false);
+            player.displayClientMessage(Component.literal(tr("sducarpet.command.chat3")), false);
             return;
         }
 
         generatingPlayers.add(id);
-        player.displayClientMessage(Component.literal("\nuser:\n"+prompt),false);
+        player.displayClientMessage(Component.literal("\nuser:\n" + prompt), false);
+
         new Thread(() -> {
             try {
                 String reply = getCompletionWithMemory(prompt, player);
-                player.displayClientMessage(Component.literal("deepseek:\n"+reply),false);
+                player.getServer().execute(() -> {
+                    player.displayClientMessage(Component.literal("deepseek:\n" + reply), false);
+                });
             } finally {
                 generatingPlayers.remove(id);
             }
         }).start();
     }
-
 }
 
