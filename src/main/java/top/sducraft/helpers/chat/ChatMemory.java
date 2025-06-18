@@ -1,12 +1,11 @@
 package top.sducraft.helpers.chat;
 
 import net.minecraft.server.level.ServerPlayer;
-
 import java.util.*;
 
 public class ChatMemory {
     private static final Map<UUID, LinkedList<Message>> memory = new HashMap<>();
-    private static final int MAX_HISTORY = 3;
+    private static final int MAX_HISTORY = 10;
 
     public static class Message {
         public String role;

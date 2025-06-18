@@ -6,10 +6,12 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
+import top.sducraft.config.chat.ChatAIConfig;
 import top.sducraft.helpers.chat.ChatMemory;
-
 import static carpet.utils.Translations.tr;
+import static top.sducraft.config.chat.ChatAIConfig.configList;
+import static top.sducraft.config.chat.ChatAIConfig.setActiveConfig;
+import static top.sducraft.helpers.chat.OpenaiChat.suggestArgument;
 import static top.sducraft.helpers.chat.OpenaiChat.tryStartChat;
 
 public class ChatCommand {
@@ -26,7 +28,24 @@ public class ChatCommand {
                                                 context.getSource().sendFailure(Component.literal(tr("sducarpet.command.chat2")));
                                                 return 0;
                                             }))
+                                    .then(Commands.literal("model")
+                                            .then(Commands.argument("model", StringArgumentType.greedyString())
+                                                    .suggests((context, builder) -> {
+                                                        for (ChatAIConfig.APIConfig cfg: configList){
+                                                            builder.suggest(cfg.model);
+                                                        }
+                                                        return  builder.buildFuture();
+                                                    })
+                                                    .executes(context -> {
+                                                        if(setActiveConfig(StringArgumentType.getString(context, "model"),context.getSource().getPlayer().getUUID())) {
+                                                            context.getSource().sendSuccess(() -> Component.literal(tr("sducarpet.command.chat5") + StringArgumentType.getString(context, "model")), false);
+                                                            return 1;
+                                                        }
+                                                        context.getSource().sendFailure(Component.literal(tr("sducarpet.command.chat6")));
+                                                        return 0;
+                                                    })))
                                     .then(Commands.argument("content", StringArgumentType.greedyString())
+                                            .suggests((context, builder) -> suggestArgument(builder))
                                             .executes(context -> {
                                                 ServerPlayer player = context.getSource().getPlayer();
                                                 if (player != null) {

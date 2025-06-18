@@ -84,5 +84,7 @@
   "sducarpet.command.chat1": "Successfully cleared the conversation history",
   "sducarpet.command.chat2": "Conversation history purging failed",
   "sducarpet.command.chat3": "You are waiting for the last reply, please wait...",
-  "sducarpet.command.chat4": "Request Exception:"
+  "sducarpet.command.chat4": "Request Exception:",
+  "sducarpet.command.chat5": "Successfully switched the model to",
+  "sducarpet.command.chat6": "Can not find model "
 }

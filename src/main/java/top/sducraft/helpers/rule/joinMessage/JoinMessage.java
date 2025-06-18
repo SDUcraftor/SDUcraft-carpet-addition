@@ -23,7 +23,8 @@ public abstract class JoinMessage {
                             .append(Component.literal("""
                                 来获取良好的游戏内指令体验
                                 
-                                喜报:全物品助手以完成,使用/easycommand allitem 获取详细信息
+                                喜报:现已接入deepseek 使用/chat 发起聊天 添加参数 -think 可以同时返回思索部分
+                                
                                 """))
                     ,false);
             sendTickRateChangeMessage(player);
