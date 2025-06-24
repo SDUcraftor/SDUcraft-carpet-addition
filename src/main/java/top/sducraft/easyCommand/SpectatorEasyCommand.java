@@ -7,6 +7,9 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 import static top.sducraft.util.MassageComponentCreate.createSuggestClickComponent;
 
@@ -22,10 +25,10 @@ public class SpectatorEasyCommand implements IEasyCommand {
     }
 
     @Override
-    public void showEasyCommandInterface(ServerPlayer player) {
+    public void showEasyCommandInterface(ServerPlayer player) throws URISyntaxException {
         Component component = Component.literal("\n[!!spec命令简介]").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://mcdreforged.com/zh-CN/plugin/gamemode"))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("点击查看!!spec命令使用文档"))))
+                        .withClickEvent(new ClickEvent.OpenUrl(new URI("https://mcdreforged.com/zh-CN/plugin/gamemode")))
+                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看!!spec命令使用文档"))))
                 .append(Component.literal("一个基于MCDR的游戏模式切换插件\n"))
                 .append(Component.literal("注意事项:tp指令只能在旁观者模式下使用").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
 

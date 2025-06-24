@@ -155,20 +155,20 @@ public class MaterialListManenger {
             if (page == 1 && totalPages > 1) {
                 pagination = Component.literal("第 " + page + " 页 / 共 " + totalPages + " 页 ")
                         .append(Component.literal("->").withStyle(Style.EMPTY
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/syncmatica material lack " + (page + 1)))
+                                .withClickEvent(new ClickEvent.RunCommand("/syncmatica material lack " + (page + 1)))
                                 .withColor(ChatFormatting.AQUA)));
             } else if (page == totalPages && totalPages > 1) {
                 pagination = Component.literal("<-").withStyle(Style.EMPTY
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/syncmatica material lack " + (page - 1)))
+                                .withClickEvent(new ClickEvent.RunCommand("/syncmatica material lack " + (page - 1)))
                                 .withColor(ChatFormatting.AQUA))
                         .append(Component.literal(" 第 " + page + " 页 / 共 " + totalPages + " 页"));
             } else {
                 pagination = Component.literal("<-").withStyle(Style.EMPTY
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/syncmatica material lack " + (page - 1)))
+                                .withClickEvent(new ClickEvent.RunCommand("/syncmatica material lack " + (page - 1)))
                                 .withColor(ChatFormatting.AQUA))
                         .append(Component.literal(" 第 " + page + " 页 / 共 " + totalPages + " 页 "))
                         .append(Component.literal("->").withStyle(Style.EMPTY
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/syncmatica material lack " + (page + 1)))
+                                .withClickEvent(new ClickEvent.RunCommand("/syncmatica material lack " + (page + 1)))
                                 .withColor(ChatFormatting.AQUA)));
             }
             player.displayClientMessage(pagination, false);
@@ -205,20 +205,20 @@ public class MaterialListManenger {
             if (page == 1 && totalPages > 1) {
                 pagination = Component.literal("第 " + page + " 页 / 共 " + totalPages + " 页 ")
                         .append(Component.literal("->").withStyle(Style.EMPTY
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/syncmatica material missing " + (page + 1)))
+                                .withClickEvent(new ClickEvent.RunCommand("/syncmatica material missing " + (page + 1)))
                                 .withColor(ChatFormatting.AQUA)));
             } else if (page == totalPages && totalPages > 1) {
                 pagination = Component.empty().append(Component.literal("<-").withStyle(Style.EMPTY
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/syncmatica material missing " + (page - 1)))
+                                .withClickEvent(new ClickEvent.RunCommand("/syncmatica material missing " + (page - 1)))
                                 .withColor(ChatFormatting.AQUA)))
                         .append(Component.literal(" 第 " + page + " 页 / 共 " + totalPages + " 页"));
             } else {
                 pagination = Component.empty().append(Component.literal("<-").withStyle(Style.EMPTY
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/syncmatica material missing " + (page - 1)))
+                                .withClickEvent(new ClickEvent.RunCommand("/syncmatica material missing " + (page - 1)))
                                 .withColor(ChatFormatting.AQUA)))
                         .append(Component.literal(" 第 " + page + " 页 / 共 " + totalPages + " 页 "))
                         .append(Component.literal("->").withStyle(Style.EMPTY
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/syncmatica material missing " + (page + 1)))
+                                .withClickEvent(new ClickEvent.RunCommand("/syncmatica material missing " + (page + 1)))
                                 .withColor(ChatFormatting.AQUA)));
             }
             player.displayClientMessage(pagination, false);

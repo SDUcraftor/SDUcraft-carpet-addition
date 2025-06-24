@@ -63,7 +63,7 @@ public class SyncmaticaCommand {
                                                 Litematica litematica = getLitematica(StringArgumentType.getString(context, "syncmatic"));
                                                 if (litematica != null) {
                                                     ServerPlayer  player = context.getSource().getPlayer();
-                                                    File syncmatics = new File(context.getSource().getServer().getServerDirectory(), "syncmatics");
+                                                    File syncmatics = new File(context.getSource().getServer().getServerDirectory().toString(), "syncmatics");
                                                     File litematicaFile = new File(syncmatics, litematica.hash.toString()+".litematic");
                                                     Map<String, Integer> blockCounts = getBlockCounts(litematicaFile);
                                                     ServerLevel level = context.getSource().getServer().overworld();

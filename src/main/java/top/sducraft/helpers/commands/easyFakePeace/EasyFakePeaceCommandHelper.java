@@ -90,13 +90,13 @@ public class EasyFakePeaceCommandHelper {
             trueComponent = Component.literal("[true] ")
                     .withStyle(Style.EMPTY.withBold(true).withUnderlined(true).withColor(ChatFormatting.AQUA));
             falseComponent = Component.literal("[false]")
-                    .withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/fakepeace " + dimensionKey + " false"))
-                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("点击关闭").append(dimensionName).append("伪和平")))
+                    .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/fakepeace " + dimensionKey + " false"))
+                            .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击关闭").append(dimensionName).append("伪和平")))
                             .withColor(ChatFormatting.GRAY));
         } else {
             trueComponent = Component.literal("[true] ")
-                    .withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/fakepeace " + dimensionKey + " true"))
-                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("点击开启").append(dimensionName).append("伪和平")))
+                    .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/fakepeace " + dimensionKey + " true"))
+                            .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击开启").append(dimensionName).append("伪和平")))
                             .withColor(ChatFormatting.GRAY));
             falseComponent = Component.literal("[false]")
                     .withStyle(Style.EMPTY.withBold(true).withUnderlined(true).withColor(ChatFormatting.AQUA));

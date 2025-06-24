@@ -7,6 +7,9 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 import static top.sducraft.util.MassageComponentCreate.createSuggestClickComponent;
 
@@ -22,10 +25,10 @@ public class MirrorManageEasyCommand implements IEasyCommand {
     }
 
     @Override
-    public void showEasyCommandInterface(ServerPlayer player) {
+    public void showEasyCommandInterface(ServerPlayer player) throws URISyntaxException {
         Component component = Component.literal("\n[!!msr指令简介]").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://mcdreforged.com/zh-CN/plugin/mirror_server_reforged"))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("点击查看MCDR的镜像服务器管理插件文档"))))
+                        .withClickEvent(new ClickEvent.OpenUrl(new URI("https://mcdreforged.com/zh-CN/plugin/mirror_server_reforged")))
+                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看MCDR的镜像服务器管理插件文档"))))
                 .append(Component.literal("一个基于MCDR的镜像服务器管理插件\n"))
                 .append(Component.literal("注意事项:在执行镜像服相关操作请先确认镜像服中没有人正在测试机器~").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
 

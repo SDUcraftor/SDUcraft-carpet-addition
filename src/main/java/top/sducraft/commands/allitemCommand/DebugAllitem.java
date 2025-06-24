@@ -31,7 +31,7 @@ public class DebugAllitem {
                         .then(Commands.literal("store")
                                 .executes(context -> {
                                     ServerPlayer player = context.getSource().getPlayerOrException();
-                                    ServerLevel level = player.serverLevel();
+                                    ServerLevel level = player.level();
                                     Map<String, AllItemData.ItemData> dataMap = Objects.equals(CarpetSettings.language, "zh_cn") ?
                                             AllItemData.chineseNameToData : AllItemData.englishNameToData;
 
@@ -92,7 +92,7 @@ public class DebugAllitem {
                         .then(Commands.literal("all")
                                 .executes(context -> {
                                     ServerPlayer player = context.getSource().getPlayerOrException();
-                                    ServerLevel level = player.serverLevel();
+                                    ServerLevel level = player.level();
 
                                     for (Map.Entry<String, AllItemData.ItemData> entry :  dataList.entrySet()) {
                                         AllItemData.ItemData data = entry.getValue();

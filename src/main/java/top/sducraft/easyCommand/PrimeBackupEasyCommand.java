@@ -7,6 +7,9 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.displayAllItemInfo;
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 
@@ -22,10 +25,10 @@ public class PrimeBackupEasyCommand implements IEasyCommand{
     }
 
     @Override
-    public void showEasyCommandInterface(ServerPlayer player) {
+    public void showEasyCommandInterface(ServerPlayer player) throws URISyntaxException {
         Component component = Component.literal("\n[pb 命令简介]").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://tisunion.github.io/PrimeBackup/zh/"))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("点击查看pb 命令简介介绍"))))
+                        .withClickEvent(new ClickEvent.OpenUrl(new URI("https://tisunion.github.io/PrimeBackup/zh/")))
+                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看pb 命令简介介绍"))))
                 .append(Component.literal("""
                         一个强大的 MCDR 备份插件，一套先进的 Minecraft 存档备份解决方案
                         """));

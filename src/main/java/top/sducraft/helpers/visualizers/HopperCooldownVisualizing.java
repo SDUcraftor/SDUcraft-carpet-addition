@@ -4,13 +4,19 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.*;
 import java.util.function.Predicate;
+
+import static com.mojang.text2speech.Narrator.LOGGER;
 
 
 public class HopperCooldownVisualizing {
@@ -19,12 +25,14 @@ public class HopperCooldownVisualizing {
     public static void setVisualizer(ServerLevel level, BlockPos pos, int cooldown) {
         if (visualizers.containsKey(pos)) {
             Display.TextDisplay entity = visualizers.get(pos);
-            CompoundTag nbt = entity.saveWithoutId(new CompoundTag());
+            ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(entity.problemPath(), LOGGER);
+            TagValueOutput nbt = TagValueOutput.createWithContext(scopedCollector, entity.registryAccess());
+            entity.saveWithoutId(nbt);
             String color = cooldown == 0 ? "green" : "red";
             String textJson = "{\"text\":\"" + cooldown + "\",\"color\":\"" + color + "\"}";
-            nbt.remove("text");
+            nbt.discard("text");
             nbt.putString("text", textJson);
-            entity.load(nbt);
+            entity.load(TagValueInput.create(scopedCollector, entity.registryAccess(), nbt.buildResult()));
         } else {
             Display.TextDisplay entity = new Display.TextDisplay(EntityType.TEXT_DISPLAY, level);
             entity.setInvisible(true);
@@ -33,14 +41,16 @@ public class HopperCooldownVisualizing {
             entity.setPos(pos.getCenter().x(), pos.getCenter().y(), pos.getCenter().z());
             entity.addTag("hopperCooldownVisualizer");
             level.addFreshEntity(entity);
-            CompoundTag nbt = entity.saveWithoutId(new CompoundTag());
+            ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(entity.problemPath(), LOGGER);
+            TagValueOutput nbt = TagValueOutput.createWithContext(scopedCollector, entity.registryAccess());
+            entity.saveWithoutId(nbt);
             String color = cooldown == 0 ? "green" : "red";
             nbt.putString("billboard", "center");
             String textJson = "{\"text\":\"" + String.valueOf(cooldown) + "\",\"color\":\"" + color + "\"}";
             nbt.putByte("see_through", (byte) 1);
             nbt.putInt("background", 0x00000000);
             nbt.putString("text", textJson);
-            entity.load(nbt);
+            entity.load(TagValueInput.create(scopedCollector, entity.registryAccess(), nbt.buildResult()));
             visualizers.put(pos, entity);
         }
     }

@@ -33,7 +33,7 @@ public class SearchAllItem {
         if(player != null) {
             if (data != null && !data.storePos.isEmpty()) {
                 for(BlockPos pos : data.chestPos) {
-                    ServerLevel level = player.serverLevel();
+                    ServerLevel level = player.level();
                     Display.BlockDisplay entity = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level);
                     entity.setBlockState(source.getLevel().getBlockState(pos));
                     entity.setGlowingTag(true);
@@ -43,12 +43,12 @@ public class SearchAllItem {
                     DelayedEvents.START_SERVER_TICK.register(600, server -> entity.discard());
                     player.lookAt(source.getAnchor(), entity.position().add(0.5, -1.5, 0.5));
                 }
-//                spawnItemDisplay(player.serverLevel(), data.chestPos, getItemByDescriptionId(descriptionId), 0xFFFF00);
+//                spawnItemDisplay(player.level(), data.chestPos, getItemByDescriptionId(descriptionId), 0xFFFF00);
                 spawnItemDisplay(data, SpawnDisplay.DisplayType.TEMP,"allitem_display");
                 source.sendSuccess(() -> Component.literal(tr("成功搜索到物品") + keyword)
                         .withStyle(Style.EMPTY
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/allitem info "+keyword))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(tr("点击查看 ")+keyword+tr("物品详细信息")))))
+                                .withClickEvent(new ClickEvent.RunCommand("/allitem info "+keyword))
+                                .withHoverEvent(new HoverEvent.ShowText(Component.literal(tr("点击查看 ")+keyword+tr("物品详细信息")))))
                         .append(Component.literal(tr(",当前储量为")+getCountString(countItemInWorld(data)))),false);
 //                displayItemInfo(keyword, data, player);
                 return 1;
@@ -59,7 +59,7 @@ public class SearchAllItem {
                 } else {
                     Component component = Component.empty();
                     for (String name : fuzzyMatches) {
-                        component = Component.empty().append(component).append("\n").append(Component.literal(name)).withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem search " + name)));
+                        component = Component.empty().append(component).append("\n").append(Component.literal(name)).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem search " + name)));
                     }
                     source.sendFailure(Component.literal(tr("sducarpet.easycommand.allitemcommand2")).append(Component.literal("\""+keyword+"\"")));
                     ;

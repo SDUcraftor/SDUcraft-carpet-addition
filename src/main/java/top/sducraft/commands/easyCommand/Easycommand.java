@@ -7,6 +7,9 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.easyCommand.IEasyCommand;
+
+import java.net.URISyntaxException;
+
 import static top.sducraft.easyCommand.EasyCommandHelper.EASYCOMMANDS;
 import static top.sducraft.easyCommand.EasyCommandHelper.showEasyCommandInterface;
 
@@ -28,7 +31,11 @@ public class Easycommand {
                         .executes(context -> {
                             for (IEasyCommand command : EASYCOMMANDS) {
                                 if (command.getCommandName().equalsIgnoreCase(StringArgumentType.getString(context, "option"))) {
-                                    command.showEasyCommandInterface(context.getSource().getPlayer());
+                                    try {
+                                        command.showEasyCommandInterface(context.getSource().getPlayer());
+                                    } catch (URISyntaxException e) {
+                                        throw new RuntimeException(e);
+                                    }
                                     return 1;
                                 }
                             }

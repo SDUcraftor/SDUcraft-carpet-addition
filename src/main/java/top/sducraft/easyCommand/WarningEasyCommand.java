@@ -38,8 +38,8 @@ public class WarningEasyCommand implements IEasyCommand{
     @Override
     public void showEasyCommandInterface(ServerPlayer player) {
         Component component = Component.literal("\n[warning指令介绍]\n").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
-//                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://mcdreforged.com/zh-CN/plugin/gamemode"))
-//                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("点击查看!!spec命令使用文档"))))
+//                        .withClickEvent(new ClickEvent.OpenUrl(new URI("https://mcdreforged.com/zh-CN/plugin/gamemode"))
+//                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看!!spec命令使用文档"))))
                 .append(Component.literal(tr("sducarpet.easycommand.warningcommand8")))
                 .append(Component.literal(tr("sducarpet.easycommand.warningcommand9")).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
         player.displayClientMessage(component, false);
@@ -80,12 +80,12 @@ public class WarningEasyCommand implements IEasyCommand{
 
             falseButton = Component.literal("[false]")
                     .withStyle(Style.EMPTY
-                            .withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND,
+                            .withClickEvent(new
+                                    ClickEvent.RunCommand(
                                     "/warning set \"" + name + "\" false"
                             ))
-                            .withHoverEvent(new HoverEvent(
-                                    HoverEvent.Action.SHOW_TEXT,
+                            .withHoverEvent(new
+                                    HoverEvent.ShowText(
                                     Component.literal(tr("sducarpet.easycommand.warningcommand12")).append(name)
                             ))
                             .withColor(ChatFormatting.GRAY)
@@ -93,12 +93,12 @@ public class WarningEasyCommand implements IEasyCommand{
         } else {
             trueButton = Component.literal("[true] ")
                     .withStyle(Style.EMPTY
-                            .withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND,
+                            .withClickEvent(new
+                                    ClickEvent.RunCommand(
                                     "/warning set \"" + name + "\" true"
                             ))
-                            .withHoverEvent(new HoverEvent(
-                                    HoverEvent.Action.SHOW_TEXT,
+                            .withHoverEvent(new
+                                    HoverEvent.ShowText(
                                     Component.literal(tr("sducarpet.easycommand.warningcommand13")).append(name)
                             ))
                             .withColor(ChatFormatting.GRAY)
@@ -125,7 +125,7 @@ public class WarningEasyCommand implements IEasyCommand{
                 for (ServerPlayer player : playerList.getPlayers()) {
                     for (WarningConfig.warning warning : warningList) {
                         if (warning.status) {
-                            if (player.serverLevel().dimension().location().getPath().equals(warning.dimension) && Math.abs(player.getX() - warning.pos.getX()) <= 250 && Math.abs(player.getZ() - warning.pos.getZ()) <= 250) {
+                            if (player.level().dimension().location().getPath().equals(warning.dimension) && Math.abs(player.getX() - warning.pos.getX()) <= 250 && Math.abs(player.getZ() - warning.pos.getZ()) <= 250) {
                                   ClientboundSetTitleTextPacket titleTextPacket = new ClientboundSetTitleTextPacket(Component.literal(tr("sducarpet.easycommand.fakepeacewarn1")).withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                                   player.connection.send(titleTextPacket);
                                   player.sendSystemMessage(Component.literal(warning.text+" ").append(Component.literal(tr("sducarpet.easycommand.warningcommand11")).withColor(0xFF5555)).append(Component.literal("("+warning.pos.toShortString()+")")).append(Component.literal(warning.dimension).withColor(getDimensionColor(warning.dimension))), true);
@@ -139,7 +139,7 @@ public class WarningEasyCommand implements IEasyCommand{
     }
 
     private static void drawDirectionArrow(ServerPlayer player, BlockPos targetPos) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         double dx = player.getX() - (targetPos.getX() + 0.5);
         double dz = player.getZ() - (targetPos.getZ() + 0.5);
         double dist = Math.hypot(dx, dz);
@@ -152,7 +152,7 @@ public class WarningEasyCommand implements IEasyCommand{
         double headLen     = 3.0;
         double headAngle   = Math.PI / 4;
         ParticleOptions particle = new DustParticleOptions(
-                new Vector3f(0f, 1f, 0f), 1.0f
+                1, 1.0f
         );
         for (double offset = startBack; offset <= endFront; offset += step) {
             Vec3 base = player.position().add(dirX * offset, 0, dirZ * offset);

@@ -7,6 +7,9 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.ServerTickRateManager;
 import net.minecraft.server.level.ServerPlayer;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Objects;
 
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
@@ -24,14 +27,14 @@ public class TickRateManagerEasyCommand implements IEasyCommand {
     }
 
     @Override
-    public void showEasyCommandInterface(ServerPlayer player) {
+    public void showEasyCommandInterface(ServerPlayer player) throws URISyntaxException {
         Component component = Component.literal("\n[tick命令简介]").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/tick"))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("点击查看tick命令完整介绍"))))
+                        .withClickEvent(new ClickEvent.OpenUrl(new URI("https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/tick")))
+                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看tick命令完整介绍"))))
                 .append(Component.literal("Minecraft的绝大多数计算逻辑都在一个游戏循环内执行，执行一次这个循环就被称为执行了一次游戏刻(GameTick)作为单位时缩写为gt.在默认情况下,每秒会进行20个游戏刻,每秒最多运行游戏刻的次数可以使用tick指令进行修改.特别的,SDUcraft中开启了tickcommandcarpet化,这将使得加速游戏时的命令变为/tick warp\n"))
                 .append(Component.literal("注意事项:在更改游戏速度前请先与其他玩家沟通,在更改游戏速度后可以使用").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE))
                 .append(Component.literal(" /leavemessage ").withStyle(Style.EMPTY
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/leavemessage"))
+                        .withClickEvent(new ClickEvent.RunCommand("/leavemessage"))
                         .withColor(ChatFormatting.AQUA)))
                 .append(Component.literal("指令进行留言")).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
 

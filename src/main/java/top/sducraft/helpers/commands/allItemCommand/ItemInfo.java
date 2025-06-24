@@ -5,6 +5,8 @@ import carpet.CarpetSettings;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.ClickEvent;
@@ -17,6 +19,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.Vec3;
@@ -42,20 +45,20 @@ public class ItemInfo {
         player.displayClientMessage((Component.empty().append(title)
                         .append(Component.literal(tr("分类:")+typename))
                         .append(Component.literal(tr("\n当前储量:"))
-                                .withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/allitem info store "+name)))
+                                .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info store "+name)))
                         .append(Component.literal(countStr).withColor(0x7EFCFC)
-                                .withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/allitem info store "+name))))
+                                .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info store "+name))))
                         .append(Component.literal("("+String.format("%.1f%%",ratio * 100)+")").withColor(ratio > 0.8? 0xFF0000 : 0x00FF00))
-                                .withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/allitem info store "+name)))
+                                .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info store "+name)))
                         .append(Component.literal(tr("\n箱子位置:")+ chestStr)
-                                .withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/allitem search "+name))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(tr("点击搜索\"")+name+tr("\"物品位置"))))))))
+                                .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem search "+name))
+                                .withHoverEvent(new HoverEvent.ShowText(Component.literal(tr("点击搜索\"")+name+tr("\"物品位置"))))))))
                 ,false);
     }
 
     public static int displayItemStoreInfo(AllItemData.ItemData data, CommandSourceStack source) {
         ServerPlayer player = source.getPlayer();
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         Set<BlockPos> allPositions = new HashSet<>();
         if (data.storePos != null) allPositions.addAll(data.storePos);
         if (data.chestPos != null) allPositions.addAll(data.chestPos);
@@ -66,7 +69,7 @@ public class ItemInfo {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof Container) {
                 Display.BlockDisplay entity = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level);
-                entity.setBlockState(player.serverLevel().getBlockState(pos));
+                entity.setBlockState(player.level().getBlockState(pos));
                 entity.setGlowingTag(true);
                 entity.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
                 entity.addTag("allitem_display");
@@ -110,8 +113,8 @@ public class ItemInfo {
         }
         player.displayClientMessage(Component.literal(tr("缺货物品信息:共")+count+tr("个物品缺货,使用"))
                 .append(Component.literal("/allitem info lack").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info lack"))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(tr("点击查看缺货物品详细信息"))))))
+                        .withClickEvent(new ClickEvent.RunCommand("/allitem info lack"))
+                        .withHoverEvent(new HoverEvent.ShowText(Component.literal(tr("点击查看缺货物品详细信息"))))))
                 .append(Component.literal("查看详细信息")), false);
     }
 
@@ -132,8 +135,8 @@ public class ItemInfo {
                         .append(Component.literal(typename))
                         .append(Component.literal(key).withColor(0xFFFF00))
                         .append(getCountString(count))
-                        .withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info "+key))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(tr("点击查看")+key+(tr("详细信息")))))), count));
+                        .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info "+key))
+                        .withHoverEvent(new HoverEvent.ShowText(Component.literal(tr("点击查看")+key+(tr("详细信息")))))), count));
             }
         }
 
@@ -159,18 +162,18 @@ public class ItemInfo {
 
         if (paginate) {
             if(page < totalPages && page > 1) {
-                player.displayClientMessage(Component.empty().append(Component.literal("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info lack " + (page - 1))).withColor(ChatFormatting.AQUA)))
+                player.displayClientMessage(Component.empty().append(Component.literal("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info lack " + (page - 1))).withColor(ChatFormatting.AQUA)))
                         .append(Component.literal(tr("第 ")).append(Component.literal(String.valueOf(page))).append(Component.literal(tr(" 页 / 共 ")))
                                 .append(Component.literal(String.valueOf(totalPages)).append(Component.literal(" 页")))
-                                .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info lack " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
+                                .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info lack " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
             }
             else if (page == 1) {
                 player.displayClientMessage(Component.literal(tr("第 ")).append(Component.literal(String.valueOf(page))).append(Component.literal(tr(" 页 / 共 ")))
                                 .append(Component.literal(String.valueOf(totalPages)).append(Component.literal(" 页"))
-                                .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info lack " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
+                                .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info lack " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
             }
             else {
-                player.displayClientMessage(Component.empty().append(Component.literal("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info lack " + (page - 1)))))
+                player.displayClientMessage(Component.empty().append(Component.literal("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info lack " + (page - 1)))))
                         .append(Component.literal(tr("第 ")).append(Component.literal(String.valueOf(page))).append(Component.literal(tr(" 页 / 共 ")))
                                 .append(Component.literal(String.valueOf(totalPages)).append(Component.literal(" 页")))), false);
             }
@@ -196,8 +199,8 @@ public class ItemInfo {
 
         player.displayClientMessage(Component.literal(tr("即将爆仓物品信息:共")+count+tr("个物品即将爆仓,使用"))
                 .append(Component.literal("/allitem info full").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info full"))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(tr("点击查看即将爆仓物品详细信息"))))))
+                        .withClickEvent(new ClickEvent.RunCommand("/allitem info full"))
+                        .withHoverEvent(new HoverEvent.ShowText(Component.literal(tr("点击查看即将爆仓物品详细信息"))))))
                 .append(Component.literal(tr("查看详细信息"))), false);
     }
 
@@ -226,8 +229,8 @@ public class ItemInfo {
                         .append(Component.literal(typename))
                         .append(Component.literal(key).withColor(0xFFFF00))
                         .append(Component.literal(" (" + percent + ") ").withColor(0xFF0000))
-                        .withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info "+key))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(tr("点击查看")+key+(tr("详细信息"))))));
+                        .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info "+key))
+                        .withHoverEvent(new HoverEvent.ShowText(Component.literal(tr("点击查看")+key+(tr("详细信息"))))));
                 fullItems.add(Map.entry(line, ratio));
             }
         }
@@ -255,20 +258,20 @@ public class ItemInfo {
         if (paginate) {
             if (page > 1 && page < totalPages) {
                 player.displayClientMessage(Component.empty()
-                        .append(Component.literal("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info full " + (page - 1))).withColor(ChatFormatting.AQUA)))
+                        .append(Component.literal("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info full " + (page - 1))).withColor(ChatFormatting.AQUA)))
                         .append(Component.literal(tr("第 ")).append(Component.literal(String.valueOf(page))).append(Component.literal(tr(" 页 / 共 ")))
                                 .append(Component.literal(String.valueOf(totalPages)).append(Component.literal(" 页")))
-                                .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info full " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
+                                .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info full " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
             } else if (page == 1) {
                 player.displayClientMessage(Component.literal(tr("第 "))
                         .append(Component.literal(String.valueOf(page)))
                         .append(Component.literal(tr(" 页 / 共 ")))
                         .append(Component.literal(String.valueOf(totalPages)))
                         .append(Component.literal(" 页"))
-                        .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info full " + (page + 1))).withColor(ChatFormatting.AQUA))), false);
+                        .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info full " + (page + 1))).withColor(ChatFormatting.AQUA))), false);
             } else {
                 player.displayClientMessage(Component.empty()
-                        .append(Component.literal("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info full " + (page - 1)))))
+                        .append(Component.literal("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info full " + (page - 1)))))
                         .append(Component.literal(tr("第 ")).append(Component.literal(String.valueOf(page))).append(Component.literal(tr(" 页 / 共 ")))
                                 .append(Component.literal(String.valueOf(totalPages))).append(Component.literal(" 页"))), false);
             }
@@ -296,8 +299,8 @@ public class ItemInfo {
                         .append(Component.literal(" ("))
                         .append(Component.literal(percent).withColor(ratio > 0.8? 0xFF0000 : 0x00FF00))
                         .append(Component.literal(")"))
-                        .withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info "+key))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(tr("点击查看")+key+(tr("详细信息"))))));
+                        .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info "+key))
+                                .withHoverEvent(new HoverEvent.ShowText(Component.literal(tr("点击查看")+key+(tr("详细信息"))))));
                 fullItems.add(Map.entry(line, ratio));
         }
 
@@ -317,20 +320,20 @@ public class ItemInfo {
         if (paginate) {
             if (page > 1 && page < totalPages) {
                 player.displayClientMessage(Component.empty()
-                        .append(Component.literal("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info all " + (page - 1))).withColor(ChatFormatting.AQUA)))
+                        .append(Component.literal("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info all " + (page - 1))).withColor(ChatFormatting.AQUA)))
                         .append(Component.literal(tr("第 ")).append(Component.literal(String.valueOf(page))).append(Component.literal(tr(" 页 / 共 ")))
                                 .append(Component.literal(String.valueOf(totalPages)).append(Component.literal(" 页")))
-                                .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info all " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
+                                .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info all " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
             } else if (page == 1) {
                 player.displayClientMessage(Component.literal(tr("第 "))
                         .append(Component.literal(String.valueOf(page)))
                         .append(Component.literal(tr(" 页 / 共 ")))
                         .append(Component.literal(String.valueOf(totalPages)))
                         .append(Component.literal(" 页"))
-                        .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info all " + (page + 1))).withColor(ChatFormatting.AQUA))), false);
+                        .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info all " + (page + 1))).withColor(ChatFormatting.AQUA))), false);
             } else {
                 player.displayClientMessage(Component.empty()
-                        .append(Component.literal("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info all " + (page - 1)))))
+                        .append(Component.literal("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info all " + (page - 1)))))
                         .append(Component.literal(tr("第 ")).append(Component.literal(String.valueOf(page))).append(Component.literal(tr(" 页 / 共 ")))
                                 .append(Component.literal(String.valueOf(totalPages))).append(Component.literal(" 页"))), false);
             }
@@ -359,8 +362,8 @@ public class ItemInfo {
                     .append(Component.literal(" ("))
                     .append(Component.literal(percent).withColor(ratio > 0.8? 0xFF0000 : 0x00FF00))
                     .append(Component.literal(")"))
-                    .withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info "+key))
-                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(tr("点击查看")+key+(tr("详细信息"))))));
+                    .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info "+key))
+                            .withHoverEvent(new HoverEvent.ShowText(Component.literal(tr("点击查看")+key+(tr("详细信息"))))));
             fullItems.add(Map.entry(line, ratio));
             }
         }
@@ -381,20 +384,20 @@ public class ItemInfo {
         if (paginate) {
             if (page > 1 && page < totalPages) {
                 player.displayClientMessage(Component.empty()
-                        .append(Component.literal("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info " + (type.equals("bulk")?"bulk":"custom") + " " + (page - 1))).withColor(ChatFormatting.AQUA)))
+                        .append(Component.literal("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info " + (type.equals("bulk")?"bulk":"custom") + " " + (page - 1))).withColor(ChatFormatting.AQUA)))
                         .append(Component.literal(tr("第 ")).append(Component.literal(String.valueOf(page))).append(Component.literal(tr(" 页 / 共 ")))
                                 .append(Component.literal(String.valueOf(totalPages)).append(Component.literal(" 页")))
-                                .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info " + (type.equals("bulk")?"bulk":"custom") + " " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
+                                .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info " + (type.equals("bulk")?"bulk":"custom") + " " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
             } else if (page == 1) {
                 player.displayClientMessage(Component.literal(tr("第 "))
                         .append(Component.literal(String.valueOf(page)))
                         .append(Component.literal(tr(" 页 / 共 ")))
                         .append(Component.literal(String.valueOf(totalPages)))
                         .append(Component.literal(" 页"))
-                        .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info " + (type.equals("bulk")?"bulk":"custom") + " " + (page + 1))).withColor(ChatFormatting.AQUA))), false);
+                        .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info " + (type.equals("bulk")?"bulk":"custom") + " " + (page + 1))).withColor(ChatFormatting.AQUA))), false);
             } else {
                 player.displayClientMessage(Component.empty()
-                        .append(Component.literal("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/allitem info " + (type.equals("bulk")?"bulk":"custom") + " " + (page - 1)))))
+                        .append(Component.literal("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info " + (type.equals("bulk")?"bulk":"custom") + " " + (page - 1)))))
                         .append(Component.literal(tr("第 ")).append(Component.literal(String.valueOf(page))).append(Component.literal(tr(" 页 / 共 ")))
                                 .append(Component.literal(String.valueOf(totalPages))).append(Component.literal(" 页"))), false);
             }
@@ -418,8 +421,8 @@ public class ItemInfo {
                 for (int i = 0; i < container.getContainerSize(); i++) {
                     ItemStack stack = container.getItem(i);
                     if (!stack.isEmpty()) {
-                        if (stack.getItem().getDescriptionId().contains("shulker_box")) {
-                            count += countItemsInShulkerBox(stack);
+                        if (stack.getDisplayName().getString().contains("shulker_box")) {
+//                            count += countItemsInShulkerBox(stack);
                         }
                         else {
                             count += stack.getCount();
@@ -430,21 +433,18 @@ public class ItemInfo {
         }
         return count;
       }
-    private static int countItemsInShulkerBox(ItemStack stack) {
-        int count = 0;
-        CompoundTag tag =stack.getTag();
-        if (tag != null && tag.contains("BlockEntityTag")) {
-            CompoundTag bet = tag.getCompound("BlockEntityTag");
-            if (bet.contains("Items", 9)) {
-                ListTag items = bet.getList("Items", 10);
-                for (int j = 0; j < items.size(); j++) {
-                    CompoundTag itemTag = items.getCompound(j);
-                    count += itemTag.getByte("Count");
-                }
-            }
-        }
-        return count;
-    }
+//    private static int countItemsInShulkerBox(ItemStack stack) {
+//        int count = 0;
+//        CustomData bet = stack.get(DataComponents.BLOCK_ENTITY_DATA);
+//        if (bet != null && bet.contains("Items", 9)) {
+//            ListTag items = bet.getList("Items", 10); // tag type 10 = CompoundTag
+//            for (int j = 0; j < items.size(); j++) {
+//                CompoundTag itemTag = items.getCompound(j);
+//                count += itemTag.getByte("Count");
+//            }
+//        }
+//        return count;
+//    }
 
     public static int countRemainCapacity(AllItemData.ItemData data) {
         int remainCapacity = 0;

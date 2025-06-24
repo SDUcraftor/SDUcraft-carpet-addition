@@ -7,6 +7,9 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.displayAllItemInfo;
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 
@@ -22,10 +25,10 @@ public class SyncmaticaEasyCommand implements IEasyCommand{
     }
 
     @Override
-    public void showEasyCommandInterface(ServerPlayer player) {
+    public void showEasyCommandInterface(ServerPlayer player) throws URISyntaxException {
         Component component = Component.literal("\n[syncmatica命令简介]").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.mcmod.cn/class/6842.html"))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("点击查看共享投影介绍"))))
+                        .withClickEvent(new ClickEvent.OpenUrl(new URI("https://www.mcmod.cn/class/6842.html")))
+                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看共享投影介绍"))))
                 .append(Component.literal("""
                         Syncmatica 模组可以使你在服务器中与其他安装了 Syncmatica 模组的玩家一起共享投影
                         syncmatica命令用于在全物品中高亮对应材质

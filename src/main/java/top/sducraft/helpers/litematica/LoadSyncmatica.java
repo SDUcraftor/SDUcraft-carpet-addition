@@ -35,7 +35,7 @@ public class LoadSyncmatica {
 
     public static boolean loadSyncmatica(MinecraftServer server) {
         try {
-            File rootDir = server.getServerDirectory();
+            File rootDir = server.getServerDirectory().toFile();
             File configDir = new File(rootDir, "config/syncmatica");
             configFile = new File(configDir, "placements.json");
             if (!configFile.exists()) {

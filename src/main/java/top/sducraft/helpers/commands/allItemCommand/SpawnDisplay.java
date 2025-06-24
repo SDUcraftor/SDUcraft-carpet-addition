@@ -194,7 +194,7 @@ public class SpawnDisplay {
 
     public static Item getItemByDescriptionId(String descriptionId) {
         for (Item item : BuiltInRegistries.ITEM) {
-            if (new ItemStack(item).getDescriptionId().equals(descriptionId)) {
+            if (new ItemStack(item).getDisplayName().getString().equals(descriptionId)) {
                 return item;
             }
         }

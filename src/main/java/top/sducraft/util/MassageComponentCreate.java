@@ -7,15 +7,18 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import org.jetbrains.annotations.Nullable;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 public class MassageComponentCreate {
 
-    public static Component createDescriptionClickComponent(String label, String url, @Nullable String hoverText, @Nullable String tips) {
+    public static Component createDescriptionClickComponent(String label, String url, @Nullable String hoverText, @Nullable String tips) throws URISyntaxException {
         Component description = Component.literal(label)
                 .withStyle(Style.EMPTY
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url))
+                        .withClickEvent(new ClickEvent.OpenUrl(new URI(url)))
                         .withColor(ChatFormatting.GRAY));
         if (hoverText != null) {
-            description = Component.empty().append(description).withStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(hoverText))));
+            description = Component.empty().append(description).withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Component.literal(hoverText))));
         }
         if (tips != null) {
             description = Component.empty().append(description).append(Component.literal("\n"+tips));
@@ -26,10 +29,10 @@ public class MassageComponentCreate {
     public static Component createCommandClickComponent(String label, String command, @Nullable String hoverText) {
         Component clickcomponent = Component.literal(label)
                 .withStyle(Style.EMPTY
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command))
+                        .withClickEvent(new ClickEvent.RunCommand(command))
                         .withColor(ChatFormatting.AQUA));
         if (hoverText != null) {
-            clickcomponent = Component.empty().append(clickcomponent).withStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(hoverText))));
+            clickcomponent = Component.empty().append(clickcomponent).withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Component.literal(hoverText))));
         }
         return clickcomponent;
     }
@@ -37,10 +40,10 @@ public class MassageComponentCreate {
     public static Component createSuggestClickComponent(String label, String command, @Nullable String hoverText) {
         Component suggestclickcomponent = Component.literal(label)
                 .withStyle(Style.EMPTY
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command))
+                        .withClickEvent(new ClickEvent.SuggestCommand(command))
                         .withColor(ChatFormatting.AQUA));
         if (hoverText != null) {
-            suggestclickcomponent = Component.empty().append(suggestclickcomponent).withStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(hoverText))));
+            suggestclickcomponent = Component.empty().append(suggestclickcomponent).withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Component.literal(hoverText))));
         }
         return suggestclickcomponent;
     }

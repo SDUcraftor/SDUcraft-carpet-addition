@@ -5,7 +5,6 @@ accessible field net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity
 accessible method net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity findExitPosition (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;
 accessible method net/minecraft/world/level/block/FaceAttachedHorizontalDirectionalBlock getConnectedDirection (Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/core/Direction;
 accessible field net/minecraft/world/level/block/entity/HopperBlockEntity cooldownTime I
-accessible method net/minecraft/world/level/block/entity/HopperBlockEntity getAttachedContainer (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/Container;
 accessible method net/minecraft/server/ServerTickRateManager finishTickSprint ()V
 accessible method net/minecraft/world/entity/Display$BlockDisplay setBlockState (Lnet/minecraft/world/level/block/state/BlockState;)V
 accessible method net/minecraft/server/level/ServerLevel getEntities ()Lnet/minecraft/world/level/entity/LevelEntityGetter;
@@ -14,3 +13,4 @@ accessible field net/minecraft/world/entity/Display DATA_GLOW_COLOR_OVERRIDE_ID 
 accessible field net/minecraft/world/entity/Display DATA_SCALE_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
 accessible method net/minecraft/world/entity/Display setTransformation (Lcom/mojang/math/Transformation;)V
 accessible method net/minecraft/world/entity/Display createTransformation (Lnet/minecraft/network/syncher/SynchedEntityData;)Lcom/mojang/math/Transformation;
+accessible method net/minecraft/server/level/TicketType register (Ljava/lang/String;JZLnet/minecraft/server/level/TicketType$TicketUse;)Lnet/minecraft/server/level/TicketType;

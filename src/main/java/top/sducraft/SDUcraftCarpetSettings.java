@@ -16,9 +16,6 @@ public class SDUcraftCarpetSettings {
     public static final String Visualize = "Visualize";
 
     @Rule(categories = {sdu})
-    public static boolean armorStandIgnoreShulkerDamage = false;
-
-    @Rule(categories = {sdu})
     public static boolean brittleDeepSlate = false;
 
     @Rule(  categories = {sdu},
@@ -86,9 +83,6 @@ public class SDUcraftCarpetSettings {
             categories = {"firework"}
     )
     public static double bigfireworkRange = 0.5;
-
-    @Rule(categories = {sdu})
-    public static boolean endGatewayTicket = false;
 
     @Rule(
             validators = Validators.NonNegativeNumber.class,

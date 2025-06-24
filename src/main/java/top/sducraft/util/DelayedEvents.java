@@ -3,6 +3,7 @@ package top.sducraft.util;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -52,7 +53,7 @@ public class DelayedEvents {
 
     @FunctionalInterface
     public interface ScheduledServerCallback {
-        void run(MinecraftServer server);
+        void run(MinecraftServer server) throws URISyntaxException;
     }
 }
 

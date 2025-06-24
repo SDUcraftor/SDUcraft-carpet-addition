@@ -43,7 +43,7 @@ public class AllItemCommandHelper {
                     }
 
                     if (!firstItem.isEmpty()) {
-                        String key = firstItem.getDescriptionId();
+                        String key = firstItem.getDisplayName().getString();
                         addItem(key,type,getAlignedPositions(current, startStorePos, endStorePos, alignX),getAlignedPositions(current, startChestPos, endChestPos, alignX));
                     }
                 }
@@ -71,13 +71,13 @@ public class AllItemCommandHelper {
                 ItemStack firstItem = ItemStack.EMPTY;
                 for (int i = 0; i < hopper.getContainerSize(); i++) {
                     ItemStack stack = hopper.getItem(i);
-                    if (!stack.isEmpty()&& !stack.hasTag()) {
+                    if (!stack.isEmpty()&& stack.getTags() != null) {
                         firstItem = stack;
                         break;
                     }
                 }
                 if (!firstItem.isEmpty()) {
-                    String key = firstItem.getDescriptionId();
+                    String key = firstItem.getDisplayName().getString();
                     delItem(key);
                 }
             }

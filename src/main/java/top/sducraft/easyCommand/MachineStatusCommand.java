@@ -33,8 +33,8 @@ public class MachineStatusCommand implements IEasyCommand {
     @Override
     public void showEasyCommandInterface(ServerPlayer player) {
         Component component = Component.literal("\n[machine指令介绍]\n").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
-//                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://mcdreforged.com/zh-CN/plugin/gamemode"))
-//                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("点击查看!!spec命令使用文档"))))
+//                        .withClickEvent(new ClickEvent.OpenUrl(new URI("https://mcdreforged.com/zh-CN/plugin/gamemode"))
+//                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看!!spec命令使用文档"))))
                 .append(Component.literal("""
                         /machine status 查看当前机器状态
                         /machine add <temp/perm> <name> <dimension> <blockPos> 添加机器
