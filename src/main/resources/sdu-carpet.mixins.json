@@ -5,12 +5,10 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "carpet.SettingsManagerMixin",
-    "rule.armorStandIgnoreShulkerDamage.ArmorStandMixin",
     "rule.brittleDeepSlate.BlockBehaviorMixin",
     "rule.chickenJockeyGenerationOdds.ZombieMixin",
     "rule.disableNetherPortal.EntityMixin",
     "rule.easyFakePeace.MinecraftServerMixin",
-    "rule.endGatewayTicket.TheEndGatewayBlockEntityMixin",
     "rule.itemPickupDelay.LivingEntityMixin",
     "rule.netherPortalCooldown.EntityMixin",
     "rule.pearlTicketoptimization.ThrownEnderpearlMixin",
