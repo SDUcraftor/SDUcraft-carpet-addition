@@ -93,9 +93,9 @@ public class OpenaiChat {
         boolean inReasoning = false;
 
         try {
+            player.displayClientMessage(Component.literal("\nresponse:\n" + userPrompt), false);
             HttpResponse<java.io.InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.body(), StandardCharsets.UTF_8));
-
             String line;
             while ((line = reader.readLine()) != null) {
                 if (!line.startsWith("data: ")) continue;

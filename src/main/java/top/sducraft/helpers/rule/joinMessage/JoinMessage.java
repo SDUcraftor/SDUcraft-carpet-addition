@@ -31,5 +31,7 @@ public abstract class JoinMessage {
                     ,false);
             sendTickRateChangeMessage(player);
         });
+
+
     }
 }

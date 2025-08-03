@@ -13,7 +13,7 @@ import java.net.URISyntaxException;
 import static top.sducraft.easyCommand.EasyCommandHelper.EASYCOMMANDS;
 import static top.sducraft.easyCommand.EasyCommandHelper.showEasyCommandInterface;
 
-public class Easycommand {
+public class EasyCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("easycommand")
                 .requires(c -> SDUcraftCarpetSettings.easyCommand)

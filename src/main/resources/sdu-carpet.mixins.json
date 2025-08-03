@@ -19,8 +19,6 @@
     "rule.visualizers.hopperVisualizers.HopperBlockMixin"
   ],
   "client": [
-    "rule.firework.FireworkParticlesMixin",
-    "rule.firework.ParticleEngineMixin"
   ],
   "injectors": {
     "defaultRequire": 1

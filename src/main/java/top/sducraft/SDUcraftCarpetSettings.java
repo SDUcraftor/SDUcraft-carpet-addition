@@ -54,38 +54,6 @@ public class SDUcraftCarpetSettings {
 
     @Rule(
             validators = Validators.NonNegativeNumber.class,
-            options = {"2"},
-            strict = false,
-            categories = {"firework"}
-    )
-    public static int fireworkParticleNumber = 2;
-
-    @Rule(
-            validators = Validators.NonNegativeNumber.class,
-            options = {"0.25"},
-            strict = false,
-            categories = {"firework"}
-    )
-    public static double fireworkRange = 0.25;
-
-    @Rule(
-            validators = Validators.NonNegativeNumber.class,
-            options = {"4"},
-            strict = false,
-            categories = {"firework"}
-    )
-    public static int bigfireworkParticleNumber = 4;
-
-    @Rule(
-            validators = Validators.NonNegativeNumber.class,
-            options = {"0.5"},
-            strict = false,
-            categories = {"firework"}
-    )
-    public static double bigfireworkRange = 0.5;
-
-    @Rule(
-            validators = Validators.NonNegativeNumber.class,
             options = {"0","0.05","1"},
             strict = false,
             categories = {sdu}
@@ -113,6 +81,11 @@ public class SDUcraftCarpetSettings {
             categories = {sdu}
     )
     public static boolean pearlTicketOptimization = false;
+
+    @Rule(
+            categories = {sdu}
+    )
+    public static boolean dynamicViewDistance = false;
 
     @Rule(
             validators = UpdateVisualizer.class,

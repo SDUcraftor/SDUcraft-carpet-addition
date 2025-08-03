@@ -7,11 +7,13 @@ import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.server.level.TicketType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.sducraft.commands.CommandRegister;
 import top.sducraft.config.LoadConfig;
 import top.sducraft.easyCommand.WarningEasyCommand;
+import top.sducraft.helpers.rule.dynamicViewDistance.DynamicViewDistance;
 import top.sducraft.helpers.rule.fakePeaceHelper.FakePeaceHelper;
 import top.sducraft.helpers.visualizers.Visualizers;
 import top.sducraft.util.DelayedEvents;
@@ -26,6 +28,7 @@ import static top.sducraft.util.DelayedEvents.*;
 public class SDUcraftCarpetAdditionMod implements CarpetExtension, ModInitializer {
     public static String MOD_ID = "SDU-carpet";
     public final static Logger LOGGER = LogManager.getLogger(MOD_ID);
+    public static final TicketType FAKE_PEACE_TICKET_TYPE =TicketType.register("fakepeace", 100L, false, TicketType.TicketUse.LOADING_AND_SIMULATION);
 
     static {
         CarpetServer.manageExtension(new SDUcraftCarpetAdditionMod());
@@ -37,6 +40,7 @@ public class SDUcraftCarpetAdditionMod implements CarpetExtension, ModInitialize
         ServerLifecycleEvents.SERVER_STARTED.register(FakePeaceHelper::loadChunkOnInitialize);
         ServerLifecycleEvents.SERVER_STARTED.register(Visualizers::clearVisualizersOnServerStart);
         ServerTickEvents.START_SERVER_TICK.register(FakePeaceHelper::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(DynamicViewDistance::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(WarningEasyCommand::warnPlayer);
         DelayedEvents.init();
         START_SERVER_TICK.register(10, server -> { deleteAllItemDisplay(CarpetServer.minecraft_server);});
