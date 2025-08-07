@@ -5,6 +5,8 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.net.URISyntaxException;
 
+import static carpet.utils.Translations.tr;
+
 public interface IEasyCommand {
 
     String getCommandName();
@@ -12,4 +14,13 @@ public interface IEasyCommand {
     Component clickButton ();
 
     void showEasyCommandInterface (ServerPlayer player) throws URISyntaxException;
+
+    default String getLabelText() {
+        return tr("sducarpet.easycommand.dialog." + getCommandName());
+    }
+
+    default String getHoverText() {
+        return "sducarpet.easycommand.dialog.open" + getLabelText();
+    }
+
 }
