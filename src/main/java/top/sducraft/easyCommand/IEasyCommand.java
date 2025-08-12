@@ -20,7 +20,7 @@ public interface IEasyCommand {
     }
 
     default String getHoverText() {
-        return "sducarpet.easycommand.dialog.open" + getLabelText();
+        return tr("sducarpet.easycommand.dialog.open") + getLabelText();
     }
 
 }

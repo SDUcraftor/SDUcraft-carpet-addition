@@ -12,7 +12,9 @@ import java.util.List;
  */
 public abstract class DialogBuilder<T extends DialogBuilder<T>> {
     protected final JsonObject root;
-    protected final List<JsonObject> bodyElements = new ArrayList<>();
+    // 我们将让子类完全负责元素的管理，父类不再需要这个列表。
+    // 为了避免混淆，可以将其注释或删除。
+    // protected final List<JsonObject> bodyElements = new ArrayList<>();
 
     protected DialogBuilder(String type) {
         this.root = new JsonObject();
@@ -22,25 +24,37 @@ public abstract class DialogBuilder<T extends DialogBuilder<T>> {
         this.setPauseGame(false);
     }
 
-    /**
-     * 设置对话框的标题。
-     * @param title 标题文本。
-     */
     public T setTitle(String title) {
         this.root.add("title", ComponentFactory.createText(title));
         return self();
     }
 
     /**
-     * 在对话框主体部分添加一行简单的文本。
-     * @param text 要添加的文本。
+     * [为了方便保留] 添加一行简单的文本。
+     * 这是一个便捷方法，内部调用 addBody。
+     * @deprecated 推荐使用 addBody(TextComponentBuilder) 以获得更多控制。
      */
+    @Deprecated
     public T addBodyText(String text) {
-        JsonObject plainMessage = new JsonObject();
-        plainMessage.addProperty("type", "plain_message");
-        plainMessage.add("contents", ComponentFactory.createText(text));
-        this.bodyElements.add(plainMessage);
-        return self();
+        return this.addBody(new TextComponentBuilder(text));
+    }
+
+    /**
+     * [抽象方法] 添加一个复杂的文本主体。
+     * 这个方法必须由子类来实现，因为只有子类知道如何存储元素。
+     * @param builder 一个配置好的 TextComponentBuilder。
+     */
+    public abstract T addBody(TextComponentBuilder builder);
+
+
+    public JsonObject build() {
+        // 父类的 build 方法现在只负责返回 root，因为所有构建逻辑都在子类中。
+        return root;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected T self() {
+        return (T) this;
     }
 
     /**
@@ -58,23 +72,5 @@ public abstract class DialogBuilder<T extends DialogBuilder<T>> {
 
     public void setPauseGame(boolean pause) {
         this.root.addProperty("pause", pause);
-    }
-
-    /**
-     * 构建最终的 JsonObject。
-     * @return 代表完整对话框的 JsonObject。
-     */
-    public JsonObject build() {
-        if (!bodyElements.isEmpty()) {
-            JsonArray bodyArray = new JsonArray();
-            bodyElements.forEach(bodyArray::add);
-            root.add("body", bodyArray);
-        }
-        return root;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected T self() {
-        return (T) this;
     }
 }

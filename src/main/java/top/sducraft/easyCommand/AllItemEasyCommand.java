@@ -45,5 +45,7 @@ public class AllItemEasyCommand implements IEasyCommand{
                         """),false);
         player.displayClientMessage(Component.literal("温馨提示:返回列表中很多元素可以通过直接 点击 获取详细信息").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)),false);
         displayAllItemInfo(player);
+
+
     }
 }

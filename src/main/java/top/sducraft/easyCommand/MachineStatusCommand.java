@@ -1,6 +1,7 @@
 package top.sducraft.easyCommand;
 
 import carpet.CarpetServer;
+import com.google.gson.JsonObject;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -11,6 +12,10 @@ import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import top.sducraft.config.rule.MachineStatusCommandConfig;
+import top.sducraft.util.SandMessage;
+import top.sducraft.util.dialog.MultiActionDialogBuilder;
+import top.sducraft.util.dialog.NoticeDialogBuilder;
+import top.sducraft.util.dialog.TextComponentBuilder;
 
 import java.util.Objects;
 
@@ -30,21 +35,19 @@ public class MachineStatusCommand implements IEasyCommand {
         return createCommandClickComponent("[机器状态查询]", "/easycommand machinestatus","点击进入机器状态查询界面");
     }
 
-    @Override
-    public void showEasyCommandInterface(ServerPlayer player) {
-        Component component = Component.literal("\n[machine指令介绍]\n").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
-//                        .withClickEvent(new ClickEvent.OpenUrl(new URI("https://mcdreforged.com/zh-CN/plugin/gamemode"))
-//                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看!!spec命令使用文档"))))
-                .append(Component.literal("""
-                        /machine status 查看当前机器状态
-                        /machine add <temp/perm> <name> <dimension> <blockPos> 添加机器
-                        /machine remove <temp/perm> <name> 删除机器>
-                        非临时机器会自动获取坐标处开关状态，临时机器默认为开，使用完毕请删除(服务器关闭后临时机器不会保存)
-                        """))
-                .append(Component.literal("注意事项:非op仅能添加/删除临时机器").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
-        player.displayClientMessage(component, false);
-    }
-
+//    @Override
+//    public void showEasyCommandInterface(ServerPlayer player) {
+//        Component component = Component.literal("\n[machine指令介绍]\n").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
+//                .append(Component.literal("""
+//                        /machine status 查看当前机器状态
+//                        /machine add <temp/perm> <name> <dimension> <blockPos> 添加机器
+//                        /machine remove <temp/perm> <name> 删除机器>
+//                        非临时机器会自动获取坐标处开关状态，临时机器默认为开，使用完毕请删除(服务器关闭后临时机器不会保存)
+//                        """))
+//                .append(Component.literal("注意事项:非op仅能添加/删除临时机器").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
+//        player.displayClientMessage(component, false);
+//    }
+//
     private static ServerLevel getDimension(MinecraftServer server, String dimension) {
         ServerLevel level = null;
         switch (dimension) {
@@ -53,6 +56,34 @@ public class MachineStatusCommand implements IEasyCommand {
             case "end"-> level = server.getLevel(ServerLevel.END);
         }
         return level;
+    }
+
+    @Override
+    public void showEasyCommandInterface(ServerPlayer player) {
+
+       NoticeDialogBuilder builder = new NoticeDialogBuilder();
+
+        builder.setTitle("Machine 指令介绍")
+                .setCanCloseWithEscape(true); // 确保玩家可以按 Esc 关闭
+
+        TextComponentBuilder commandsList = new TextComponentBuilder();
+        commandsList.append("/machine status").color("aqua").withWidth(1000).append(" 查看当前机器状态\n").color("white");
+        commandsList.append("/machine add <temp/perm> <name> <dimension> <blockPos>").color("aqua").append(" 添加机器\n").color("white");
+        commandsList.append("/machine remove <temp/perm> <name>").color("aqua").append(" 删除机器").color("white").onClickRunCommand("/help");
+
+        TextComponentBuilder description = new TextComponentBuilder(
+                "非临时机器会自动获取坐标处开关状态，临时机器默认为开，使用完毕请删除(服务器关闭后临时机器不会保存)"
+        ).color("#CCCCCC"); // 使用浅灰色
+
+        TextComponentBuilder notice = new TextComponentBuilder(
+                "注意事项: 非op仅能添加/删除临时机器"
+        ).color("gold").bold();
+
+        builder.addBody(commandsList);
+        builder.addBody(description);
+        builder.addBody(notice);
+
+        SandMessage.sandPlayerDialog(player, builder);
     }
 
     public static int showMachineStatus(ServerPlayer player){

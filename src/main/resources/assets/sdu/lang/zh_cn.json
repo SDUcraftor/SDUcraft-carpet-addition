@@ -73,5 +73,17 @@
   "sducarpet.command.chat3": "You are waiting for the last reply, please wait...",
   "sducarpet.command.chat4": "Request Exception:",
   "sducarpet.command.chat5": "切换模型为",
-  "sducarpet.command.chat6": "找不到模型 "
+  "sducarpet.command.chat6": "找不到模型 ",
+  "sducarpet.easycommand.dialog.open": "点击打开",
+  "sducarpet.easycommand.dialog.allitem": "全物品助手",
+  "sducarpet.easycommand.dialog.perpetualday": "永昼机",
+  "sducarpet.easycommand.dialog.fakepeace": "伪和平",
+  "sducarpet.easycommand.dialog.locationmarker": "路标管理",
+  "sducarpet.easycommand.dialog.machinestatus": "机器状态",
+  "sducarpet.easycommand.dialog.mirrormanager": "镜像服管理",
+  "sducarpet.easycommand.dialog.primebackup": "备份管理",
+  "sducarpet.easycommand.dialog.spectator": "观察者模式",
+  "sducarpet.easycommand.dialog.syncmatica": "共享投影材料助手",
+  "sducarpet.easycommand.dialog.tickratemanager": "游戏速度控制",
+  "sducarpet.easycommand.dialog.warning": "警告管理"
 }

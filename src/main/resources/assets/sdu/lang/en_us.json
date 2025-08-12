@@ -74,5 +74,17 @@
   "sducarpet.command.chat3": "You are waiting for the last reply, please wait...",
   "sducarpet.command.chat4": "Request Exception:",
   "sducarpet.command.chat5": "Successfully switched the model to",
-  "sducarpet.command.chat6": "Can not find model "
+  "sducarpet.command.chat6": "Can not find model ",
+  "sducarpet.easycommand.dialog.open":"click to open",
+  "sducarpet.easycommand.dialog.allitem":"allitem helper",
+  "sducarpet.easycommand.dialog.perpetualday":"perpetualday helper",
+  "sducarpet.easycommand.dialog.fakepeace":"fakepeace",
+  "sducarpet.easycommand.dialog.locationmarker":"locationmarker",
+  "sducarpet.easycommand.dialog.machinestatus":"machinestatus",
+  "sducarpet.easycommand.dialog.mirrormanager":"mirrormanager",
+  "sducarpet.easycommand.dialog.primebackup":"primebackup",
+  "sducarpet.easycommand.dialog.spectator":"spectator",
+  "sducarpet.easycommand.dialog.syncmatica":"syncmatica",
+  "sducarpet.easycommand.dialog.tickratemanager":"tickratemanager",
+  "sducarpet.easycommand.dialog.warning":"warning"
 }

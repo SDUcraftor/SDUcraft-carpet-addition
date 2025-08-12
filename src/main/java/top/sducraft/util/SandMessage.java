@@ -4,6 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import top.sducraft.util.dialog.DialogBuilder;
 
 
 public class SandMessage {
@@ -22,6 +23,16 @@ public class SandMessage {
                 for(ServerPlayer player : server.getPlayerList().getPlayers()){
                     sandCustomMessage(player, message, color);
                 }}
+        );
+    }
+
+    public static void sandPlayerDialog(ServerPlayer player, DialogBuilder<?> dialogBuilder) {
+        String jsonString = dialogBuilder.build().toString();
+        String command = "dialog show " + player.getGameProfile().getName() + " " + jsonString;
+        MinecraftServer server = player.getServer();
+        server.getCommands().performPrefixedCommand(
+                server.createCommandSourceStack(),
+                command
         );
     }
 

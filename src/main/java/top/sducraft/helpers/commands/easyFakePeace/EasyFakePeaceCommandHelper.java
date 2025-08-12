@@ -25,114 +25,19 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.CommandStorage;
 import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.config.rule.EasyFakePeaceConfig;
+import top.sducraft.util.dialog.ActionBuilder;
+import top.sducraft.util.dialog.MultiActionDialogBuilder;
+import top.sducraft.util.dialog.TextComponentBuilder;
 
 import static carpet.utils.Translations.tr;
 import static net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock.getConnectedDirection;
 import static top.sducraft.config.rule.EasyFakePeaceConfig.getFakePeaceStates;
 import static top.sducraft.helpers.rule.chunkLoadHelper.RegistTicket.addFakepeaceTicket;
+import static top.sducraft.util.MassageComponentCreate.createDescriptionClickComponent;
 import static top.sducraft.util.SandMessage.sandAllPlayerCustomMessage;
+import static top.sducraft.util.SandMessage.sandPlayerDialog;
 
 public class EasyFakePeaceCommandHelper {
-
-    public static void showPeacefulStatusDialog(ServerPlayer player) {
-
-        // 1. 在 Java 中动态构建 JSON 对象
-        JsonObject dialogJson = new JsonObject();
-        dialogJson.addProperty("type", "multi_action");
-        dialogJson.addProperty("columns", 2);
-
-        // 标题
-        JsonObject title = new JsonObject();
-        title.addProperty("text", "伪和平状态控制 (实时)");
-        dialogJson.add("title", title);
-
-        // 动态创建的按钮
-        JsonArray actions = new JsonArray();
-        // --- 主世界 ---
-        addDimensionButtons(actions, "主世界", "minecraft:overworld",
-                getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:overworld]"));
-        // --- 下界 ---
-        addDimensionButtons(actions, "下界", "minecraft:the_nether",
-                getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:the_nether]"));
-        // --- 末地 ---
-        addDimensionButtons(actions, "末地", "minecraft:the_end",
-                getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:the_end]"));
-
-        dialogJson.add("actions", actions);
-
-        // 返回按钮
-        JsonObject exitAction = new JsonObject();
-        JsonObject exitLabel = new JsonObject();
-        exitLabel.addProperty("text", "返回");
-        exitAction.add("label", exitLabel);
-        JsonObject exitActionDetails = new JsonObject();
-        exitActionDetails.addProperty("type", "show_dialog");
-        // 注意：返回按钮仍然需要打开一个已注册的dialog
-        exitActionDetails.addProperty("value", "sducarpet:fakepeace_main");
-        exitAction.add("action", exitActionDetails);
-        dialogJson.add("exit_action", exitAction);
-
-        // 2. 将 JSON 对象转换为字符串
-        String jsonString = dialogJson.toString();
-
-        // 3. 构建并执行 /dialog show 命令
-        String command = "dialog show " + player.getName().getString() + " " + jsonString;
-        MinecraftServer server = player.getServer();
-        server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), command);
-    }
-
-    private static void addDimensionButtons(JsonArray actionsArray, String dimensionId, String refreshCommand, boolean currentState) {
-        // --- 开启按钮 ---
-        JsonObject onButton = createActionButton(
-                "开启",
-                "/fakepeace " + dimensionId + " true",
-                refreshCommand,
-                currentState // 如果当前已开启，则禁用此按钮
-        );
-
-        // --- 关闭按钮 ---
-        JsonObject offButton = createActionButton(
-                "关闭",
-                "/fakepeace " + dimensionId + " false",
-                refreshCommand,
-                !currentState // 如果当前已关闭，则禁用此按钮
-        );
-
-        actionsArray.add(onButton);
-        actionsArray.add(offButton);
-    }
-
-    /**
-     * (私有辅助方法) 创建一个通用的操作按钮 JSON 对象。
-     * (已修正，使用正确的 "command" 键)
-     */
-    private static JsonObject createActionButton(String labelText, String actionCommand, String refreshCommand, boolean isDisabled) {
-        JsonObject button = new JsonObject();
-
-        JsonObject label = new JsonObject();
-        label.addProperty("text", labelText);
-        if (isDisabled) {
-            label.addProperty("color", "gray");
-            label.addProperty("italic", true);
-        }
-        button.add("label", label);
-
-        // 使用正确的结构: "action": { "type": "...", "command": "..." }
-        JsonObject action = new JsonObject();
-        action.addProperty("type", "run_command");
-        action.addProperty("command", actionCommand);
-        button.add("action", action);
-
-        // 点击后刷新对话框以显示最新状态
-        JsonObject afterAction = new JsonObject();
-        afterAction.addProperty("type", "run_command");
-        afterAction.addProperty("command", refreshCommand);
-        button.add("after_action", afterAction);
-
-        return button;
-    }
-
-
     public static int setFakePeaceState(CommandSourceStack source, ServerLevel dimension, boolean state) {
         String dimensionKey = dimension.dimension().toString();
         String dimensionName = null;
@@ -183,34 +88,49 @@ public class EasyFakePeaceCommandHelper {
     }
 
     public static void showFakePeaceStatus(ServerPlayer player) {
+
+//        Component component = createDescriptionClickComponent("\n[伪和平原理简介]在Minecraft中,一个维度的刷怪数量存在上限(粗略计算方法为生存模式玩家数量*70),所以只要提前准备足够数量的怪物就可以在某个维度实现'和平'的效果",
+//                "https://zh.minecraft.wiki/w/Tutorial:%E4%BC%AA%E5%92%8C%E5%B9%B3?variant=zh-cn",
+//                "点击查看伪和平原理详细介绍","注意事项:在开关伪和平前请告知其他玩家,以免发生意外,非必要不要关闭伪和平\n");
+//        player.displayClientMessage(component,false);
+//        showFakePeaceStatus(player);
+
         if(SDUcraftCarpetSettings.easyFakePeace) {
-            player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.fakepeacestatus")).withStyle(ChatFormatting.BOLD), false);
-            player.displayClientMessage(createStateText(tr("sducarpet.easycommand.fakepeacestatus1"), "minecraft:overworld", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:overworld]")), false);
-            player.displayClientMessage(createStateText(tr("sducarpet.easycommand.fakepeacestatus2"), "minecraft:the_nether", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:the_nether]")), false);
-            player.displayClientMessage(createStateText(tr("sducarpet.easycommand.fakepeacestatus3"), "minecraft:the_end", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:the_end]")), false);
+            MultiActionDialogBuilder dialogBuilder = new MultiActionDialogBuilder();
+
+            dialogBuilder.setTitle("伪和平助手")
+                    .setColumns(3)
+                    .addExitButton("关闭");
+
+            TextComponentBuilder text = new TextComponentBuilder();
+            text.append("伪和平原理简介:在Minecraft中,一个维度的刷怪数量存在上限(粗略计算方法为生存模式玩家数量*70)\n所以只要提前准备足够数量的怪物就可以在某个维度实现'和平'的效果").withWidth(500);
+            text.append("\n注意事项:在开关伪和平前请告知其他玩家,以免发生意外,非必要不要关闭伪和平").color("red");
+            dialogBuilder.addBody(text);
+
+            dialogBuilder.addAction(createStateText(tr("sducarpet.easycommand.fakepeacestatus1"), "minecraft:overworld", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:overworld]")));
+            dialogBuilder.addAction(createStateText(tr("sducarpet.easycommand.fakepeacestatus2"), "minecraft:the_nether", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:the_nether]")));
+            dialogBuilder.addAction(createStateText(tr("sducarpet.easycommand.fakepeacestatus3"), "minecraft:the_end", getFakePeaceStates("ResourceKey[minecraft:dimension / minecraft:the_end]")));
+
+            dialogBuilder.addAction(new ActionBuilder("伪和平介绍")
+                    .withTooltip("点击查看伪和平详细介绍")
+                    .asOpenUrl("https://zh.minecraft.wiki/w/Tutorial:%E4%BC%AA%E5%92%8C%E5%B9%B3?variant=zh-cn"));
+
+            sandPlayerDialog(player, dialogBuilder);
         }
     }
 
-    private static Component createStateText(String dimensionName, String dimensionKey, Boolean state) {
-        Component trueComponent;
-        Component falseComponent;
+    private static ActionBuilder createStateText(String dimensionName, String dimensionKey, Boolean state) {
+        ActionBuilder actionBuilder;
+        TextComponentBuilder text = new TextComponentBuilder();
         if (state) {
-            trueComponent = Component.literal("[true] ")
-                    .withStyle(Style.EMPTY.withBold(true).withUnderlined(true).withColor(ChatFormatting.AQUA));
-            falseComponent = Component.literal("[false]")
-                    .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/fakepeace " + dimensionKey + " false"))
-                            .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击关闭").append(dimensionName).append("伪和平")))
-                            .withColor(ChatFormatting.GRAY));
+            text.append("关闭" + dimensionName + "伪和平").color("green");
+            actionBuilder = ActionBuilder.withComplexLabel(text).asRunCommand("/fakepeace " + dimensionKey + " false").withTooltip("点击关闭" + dimensionName + "伪和平");
         } else {
-            trueComponent = Component.literal("[true] ")
-                    .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/fakepeace " + dimensionKey + " true"))
-                            .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击开启").append(dimensionName).append("伪和平")))
-                            .withColor(ChatFormatting.GRAY));
-            falseComponent = Component.literal("[false]")
-                    .withStyle(Style.EMPTY.withBold(true).withUnderlined(true).withColor(ChatFormatting.AQUA));
+            text.append("开启" + dimensionName + "伪和平").color("red");
+            actionBuilder = ActionBuilder.withComplexLabel(text).asRunCommand("/fakepeace " + dimensionKey + " true").withTooltip("点击开启" + dimensionName + "伪和平");
+
         }
-        return Component.literal(dimensionName + "伪和平  ")
-                .append(trueComponent)
-                .append(falseComponent);
+
+        return actionBuilder;
     }
 }

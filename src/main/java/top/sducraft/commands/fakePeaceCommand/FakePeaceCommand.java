@@ -8,9 +8,8 @@ import net.minecraft.commands.arguments.DimensionArgument;
 import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.helpers.commands.easyFakePeace.EasyFakePeaceCommandHelper;
 import java.util.Objects;
-
 import static top.sducraft.helpers.commands.easyFakePeace.EasyFakePeaceCommandHelper.showFakePeaceStatus;
-import static top.sducraft.helpers.commands.easyFakePeace.EasyFakePeaceCommandHelper.showPeacefulStatusDialog;
+
 
 public class FakePeaceCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -19,7 +18,6 @@ public class FakePeaceCommand {
                 .executes(context -> {
                     CommandSourceStack source = context.getSource();
                     showFakePeaceStatus(Objects.requireNonNull(source.getPlayer()));
-                    showPeacefulStatusDialog(Objects.requireNonNull(source.getPlayer()));
                     return 1;
                 })
                 .then(Commands.argument("dimension", DimensionArgument.dimension())
