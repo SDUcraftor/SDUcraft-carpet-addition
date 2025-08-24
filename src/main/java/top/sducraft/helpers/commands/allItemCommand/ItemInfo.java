@@ -5,10 +5,6 @@ import carpet.CarpetSettings;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -19,7 +15,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.Vec3;
@@ -29,7 +24,7 @@ import top.sducraft.util.DelayedEvents;
 import java.util.*;
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.allItemData.AllItemData.dataList;
-import static top.sducraft.easyCommand.MachineStatusCommand.getAllItemStatus;
+import static top.sducraft.easyCommand.MachineStatusEasyCommand.getAllItemStatus;
 
 public class ItemInfo {
     public static void displayItemInfo(String name, AllItemData.ItemData data, ServerPlayer player) {

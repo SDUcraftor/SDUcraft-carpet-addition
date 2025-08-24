@@ -1,7 +1,6 @@
 package top.sducraft.easyCommand;
 
 import carpet.CarpetServer;
-import com.google.gson.JsonObject;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -13,7 +12,6 @@ import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import top.sducraft.config.rule.MachineStatusCommandConfig;
 import top.sducraft.util.SandMessage;
-import top.sducraft.util.dialog.MultiActionDialogBuilder;
 import top.sducraft.util.dialog.NoticeDialogBuilder;
 import top.sducraft.util.dialog.TextComponentBuilder;
 
@@ -24,7 +22,7 @@ import static top.sducraft.config.rule.MachineStatusCommandConfig.permMachineLis
 import static top.sducraft.config.rule.MachineStatusCommandConfig.tempMachineList;
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 
-public class MachineStatusCommand implements IEasyCommand {
+public class MachineStatusEasyCommand implements IEasyCommand {
     @Override
     public String getCommandName() {
         return "machinestatus";

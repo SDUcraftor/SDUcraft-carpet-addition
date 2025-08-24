@@ -1,11 +1,6 @@
 package top.sducraft.easyCommand;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import top.sducraft.util.SandMessage;
 import top.sducraft.util.dialog.ActionBuilder;
 import top.sducraft.util.dialog.MultiActionDialogBuilder;
 
@@ -15,7 +10,8 @@ import static top.sducraft.util.SandMessage.sandPlayerDialog;
 
 public class EasyCommandHelper {
     public static List<IEasyCommand> EASYCOMMANDS =List.of(
-            new MachineStatusCommand(),
+            new MachineStatusEasyCommand(),
+            new FindItemEasyCommand(),
             new LocEasyCommand(),
             new EasyPerpetualDayEasyCommand(),
             new FakepeaceEasyCommand(),

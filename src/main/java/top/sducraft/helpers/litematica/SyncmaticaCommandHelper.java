@@ -1,9 +1,11 @@
 package top.sducraft.helpers.litematica;
 
+import carpet.CarpetServer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import java.util.*;
 import static carpet.utils.Translations.tr;
@@ -60,6 +62,14 @@ public class SyncmaticaCommandHelper {
             }
             player.displayClientMessage(pagination, false);
         }
+    }
+
+
+    public static void  tt(){
+        for (ServerLevel serverLevel : CarpetServer.minecraft_server.getAllLevels()){
+
+        }
+
     }
 
 }
