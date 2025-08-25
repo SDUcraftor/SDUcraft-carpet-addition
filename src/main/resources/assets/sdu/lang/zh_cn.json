@@ -85,5 +85,6 @@
   "sducarpet.easycommand.dialog.spectator": "观察者模式",
   "sducarpet.easycommand.dialog.syncmatica": "共享投影材料助手",
   "sducarpet.easycommand.dialog.tickratemanager": "游戏速度控制",
-  "sducarpet.easycommand.dialog.warning": "警告管理"
+  "sducarpet.easycommand.dialog.warning": "警告管理",
+  "sducarpet.easycommand.dialog.finditem": "finditem"
 }

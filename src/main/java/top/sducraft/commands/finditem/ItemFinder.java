@@ -19,15 +19,17 @@ import java.util.stream.Collectors;
 
 public class ItemFinder {
 
+    public record FoundPlayerInfo(Component playerName, BlockPos pos, int itemCount, double distanceSq) {}
     public record FoundContainerInfo(BlockPos pos, Component containerName, int itemCount, double distanceSq) {}
 
     public record FoundDroppedItemInfo(BlockPos pos, int itemCount, double distanceSq) {}
 
-    public record FindResult(List<FoundContainerInfo> containers, List<FoundDroppedItemInfo> droppedItems) {}
+    public record FindResult(List<FoundPlayerInfo> players, List<FoundContainerInfo> containers, List<FoundDroppedItemInfo> droppedItems) {}
 
     public static FindResult findItemsInArea(ServerPlayer player, Item targetItem, int radius) {
         net.minecraft.server.level.ServerLevel level = player.level();
         BlockPos playerPos = player.blockPosition();
+        List<FoundPlayerInfo> foundPlayers = new ArrayList<>();
         List<FoundContainerInfo> foundContainers = new ArrayList<>();
         List<FoundDroppedItemInfo> foundDroppedItems = new ArrayList<>();
 
@@ -57,7 +59,7 @@ public class ItemFinder {
             }
         }
 
-        // 创建一个用于实体搜索的包围盒
+        // 创建一个用于实体和玩家搜索的包围盒
         AABB searchBox = new AABB(playerPos).inflate(radius);
 
         // --- 2. 搜索实体容器 (例如: 箱子矿车, 运输船) ---
@@ -84,7 +86,30 @@ public class ItemFinder {
             }
         }
 
-        // --- 3. 搜索掉落物实体 ---
+        // --- 3. 搜索附近玩家的物品栏 ---
+        List<ServerPlayer> nearbyPlayers = level.getEntitiesOfClass(ServerPlayer.class, searchBox, p ->
+                !p.getUUID().equals(player.getUUID()) && !p.isRemoved()
+        );
+
+        for (ServerPlayer otherPlayer : nearbyPlayers) {
+            Container inventory = otherPlayer.getInventory();
+            int count = 0;
+            // 遍历整个物品栏以统计物品总数
+            for (int i = 0; i < inventory.getContainerSize(); i++) {
+                ItemStack itemStack = inventory.getItem(i);
+                if (!itemStack.isEmpty() && itemStack.is(targetItem)) {
+                    count += itemStack.getCount();
+                }
+            }
+
+            if (count > 0) {
+                // 找到了！添加玩家信息
+                double distSq = player.position().distanceToSqr(otherPlayer.position());
+                foundPlayers.add(new FoundPlayerInfo(otherPlayer.getDisplayName(), otherPlayer.blockPosition(), count, distSq));
+            }
+        }
+
+        // --- 4. 搜索掉落物实体 ---
         List<ItemEntity> itemEntities = level.getEntitiesOfClass(ItemEntity.class, searchBox, entity ->
                 !entity.isRemoved() && entity.getItem().is(targetItem)
         );
@@ -106,10 +131,11 @@ public class ItemFinder {
         }
 
 
-        // --- 4. 对结果进行排序 ---
+        // --- 5. 对结果进行排序 ---
+        foundPlayers.sort(Comparator.comparingDouble(FoundPlayerInfo::distanceSq));
         foundContainers.sort(Comparator.comparingDouble(FoundContainerInfo::distanceSq));
         foundDroppedItems.sort(Comparator.comparingDouble(FoundDroppedItemInfo::distanceSq));
 
-        return new FindResult(foundContainers, foundDroppedItems);
+        return new FindResult(foundPlayers, foundContainers, foundDroppedItems);
     }
 }
