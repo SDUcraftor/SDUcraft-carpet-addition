@@ -13,6 +13,7 @@
     "rule.netherPortalCooldown.EntityMixin",
     "rule.pearlTicketoptimization.ThrownEnderpearlMixin",
     "rule.projectileRaycastLength.ProjectileUtilMixin",
+    "rule.tickRateChangedMessage.CommandsMixin",
     "rule.tickRateChangedMessage.MinecraftServerMixin",
     "rule.tickRateChangedMessage.ServerTickRateManagerMixin",
     "rule.visualizers.hopperVisualizers.HopperBlockEntityMixin",

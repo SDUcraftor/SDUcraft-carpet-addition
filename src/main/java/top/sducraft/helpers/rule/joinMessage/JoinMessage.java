@@ -24,14 +24,10 @@ public abstract class JoinMessage {
                             .append(createSuggestClickComponent(" /easycommand ","/easycommand",null))
                             .append(Component.literal("""
                                 来获取良好的游戏内指令体验
-                                
-                                喜报:现已接入deepseek 使用/chat 发起聊天 添加参数 -think 可以同时返回思索部分
-                                
+                                新功能,使用/finditem <物品id> <范围> 可以搜索范围内的物品
                                 """))
                     ,false);
             sendTickRateChangeMessage(player);
         });
-
-
     }
 }

@@ -1,7 +1,10 @@
 package top.sducraft.commands.finditem;
 
+import carpet.patches.EntityPlayerMPFake;
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
@@ -9,8 +12,8 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -27,34 +30,42 @@ public class ItemFinder {
     public record FindResult(List<FoundPlayerInfo> players, List<FoundContainerInfo> containers, List<FoundDroppedItemInfo> droppedItems) {}
 
     public static FindResult findItemsInArea(ServerPlayer player, Item targetItem, int radius) {
-        net.minecraft.server.level.ServerLevel level = player.level();
+            net.minecraft.server.level.ServerLevel level = player.level();
         BlockPos playerPos = player.blockPosition();
         List<FoundPlayerInfo> foundPlayers = new ArrayList<>();
         List<FoundContainerInfo> foundContainers = new ArrayList<>();
         List<FoundDroppedItemInfo> foundDroppedItems = new ArrayList<>();
 
         // --- 1. 搜索方块实体容器 (例如: 箱子, 木桶) ---
-        for (BlockPos currentPos : BlockPos.betweenClosed(
-                playerPos.offset(-radius, -radius, -radius),
-                playerPos.offset(radius, radius, radius))) {
+        ServerChunkCache chunkSource = level.getChunkSource();
+        int playerChunkX = player.chunkPosition().x;
+        int playerChunkZ = player.chunkPosition().z;
+        // 将方块半径转换为区块半径，并额外+1以覆盖边缘情况
+        int chunkRadius = (radius >> 4) + 1;
 
-            BlockEntity blockEntity = level.getBlockEntity(currentPos);
-
-            if (blockEntity instanceof Container inventory) {
-                int count = 0;
-                // 遍历整个容器以统计物品总数
-                for (int i = 0; i < inventory.getContainerSize(); i++) {
-                    ItemStack itemStack = inventory.getItem(i);
-                    if (!itemStack.isEmpty() && itemStack.is(targetItem)) {
-                        count += itemStack.getCount();
-                    }
+        for (int cz = playerChunkZ - chunkRadius; cz <= playerChunkZ + chunkRadius; cz++) {
+            for (int cx = playerChunkX - chunkRadius; cx <= playerChunkX + chunkRadius; cx++) {
+                // 获取区块，但如果未加载则不强制加载，以避免产生新的区块加载卡顿
+                LevelChunk chunk = chunkSource.getChunk(cx, cz, false);
+                if (chunk == null) {
+                    continue;
                 }
 
-                if (count > 0) {
-                    // 找到了！添加容器信息
-                    Component name = level.getBlockState(currentPos).getBlock().getName();
-                    double distSq = playerPos.distSqr(currentPos);
-                    foundContainers.add(new FoundContainerInfo(currentPos.immutable(), name, count, distSq));
+                // 遍历这个区块中所有的方块实体
+                for (Map.Entry<BlockPos, BlockEntity> entry : chunk.getBlockEntities().entrySet()) {
+                    BlockPos bePos = entry.getKey();
+                    // 确保方块实体在球形搜索半径内
+                    if (bePos.distSqr(playerPos) > (long)radius * radius) {
+                        continue;
+                    }
+
+                    BlockEntity blockEntity = entry.getValue();
+                    if (blockEntity instanceof Container container) {
+                        int count = countItems(container, targetItem);
+                        if (count > 0) {
+                            foundContainers.add(new FoundContainerInfo(bePos.immutable(), blockEntity.getBlockState().getBlock().getName(), count, bePos.distSqr(playerPos)));
+                        }
+                    }
                 }
             }
         }
@@ -68,16 +79,7 @@ public class ItemFinder {
         );
 
         for (Entity entity : containerEntities) {
-            Container inventory = (Container) entity;
-            int count = 0;
-            // 遍历整个容器以统计物品总数
-            for (int i = 0; i < inventory.getContainerSize(); i++) {
-                ItemStack itemStack = inventory.getItem(i);
-                if (!itemStack.isEmpty() && itemStack.is(targetItem)) {
-                    count += itemStack.getCount();
-                }
-            }
-
+            int count = countItems((Container) entity, targetItem);
             if (count > 0) {
                 // 找到了！添加实体信息
                 Component name = entity.getName();
@@ -93,19 +95,15 @@ public class ItemFinder {
 
         for (ServerPlayer otherPlayer : nearbyPlayers) {
             Container inventory = otherPlayer.getInventory();
-            int count = 0;
-            // 遍历整个物品栏以统计物品总数
-            for (int i = 0; i < inventory.getContainerSize(); i++) {
-                ItemStack itemStack = inventory.getItem(i);
-                if (!itemStack.isEmpty() && itemStack.is(targetItem)) {
-                    count += itemStack.getCount();
-                }
-            }
-
+            int count = countItems(inventory, targetItem);
             if (count > 0) {
-                // 找到了！添加玩家信息
                 double distSq = player.position().distanceToSqr(otherPlayer.position());
-                foundPlayers.add(new FoundPlayerInfo(otherPlayer.getDisplayName(), otherPlayer.blockPosition(), count, distSq));
+                if (otherPlayer instanceof EntityPlayerMPFake player1) {
+                   foundPlayers.add(new FoundPlayerInfo(Component.empty().append(otherPlayer.getDisplayName()).append("(假人)"), otherPlayer.blockPosition(), count, distSq));
+                }
+                else {
+                    foundPlayers.add(new FoundPlayerInfo(otherPlayer.getDisplayName(), otherPlayer.blockPosition(), count, distSq));
+                }
             }
         }
 
@@ -137,5 +135,16 @@ public class ItemFinder {
         foundDroppedItems.sort(Comparator.comparingDouble(FoundDroppedItemInfo::distanceSq));
 
         return new FindResult(foundPlayers, foundContainers, foundDroppedItems);
+    }
+
+    private static int countItems(Container container, Item targetItem) {
+        int count = 0;
+        for (int i = 0; i < container.getContainerSize(); i++) {
+            ItemStack itemStack = container.getItem(i);
+            if (!itemStack.isEmpty() && itemStack.is(targetItem)) {
+                count += itemStack.getCount();
+            }
+        }
+        return count;
     }
 }
