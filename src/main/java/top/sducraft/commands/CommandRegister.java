@@ -8,6 +8,7 @@ import top.sducraft.commands.easyCommand.MachineStatusCommand;
 import top.sducraft.commands.easyCommand.WarningCommand;
 import top.sducraft.commands.fakePeaceCommand.FakePeaceCommand;
 import top.sducraft.commands.fakePeaceCommand.SetFakePeaceCommand;
+import top.sducraft.commands.finditem.FindItemAreaCommand;
 import top.sducraft.commands.finditem.FindItemCommand;
 import top.sducraft.commands.openAIChat.ChatCommand;
 import top.sducraft.commands.syncmaticaCommand.SyncmaticaCommand;
@@ -28,5 +29,5 @@ public class CommandRegister {
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {SyncmaticaCommand.register(dispatcher);}));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {FindItemCommand.register(dispatcher, registryAccess);}));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {ChatCommand.register(dispatcher);}));
-    }
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {FindItemAreaCommand.register(dispatcher);}));}
 }
