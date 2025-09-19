@@ -1,5 +1,7 @@
 package top.sducraft.commands.finditem;
 
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.ItemContainerContents;
 import carpet.patches.EntityPlayerMPFake;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -152,9 +154,37 @@ public class ItemFinder {
     private static int countItems(Container container, Item targetItem) {
         int count = 0;
         for (int i = 0; i < container.getContainerSize(); i++) {
-            ItemStack itemStack = container.getItem(i);
-            if (!itemStack.isEmpty() && itemStack.is(targetItem)) {
-                count += itemStack.getCount();
+            ItemStack stack = container.getItem(i);
+            if (stack.isEmpty()) {
+                continue;
+            }
+
+            // If the item itself is the target, count it.
+            if (stack.is(targetItem)) {
+                count += stack.getCount();
+            }
+
+            // If the item has a container component (like a shulker box), recursively count items inside.
+            ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
+            if (contents != null) {
+                count += countItemsInComponent(contents, targetItem, 5); // Depth limit to prevent stack overflow
+            }
+        }
+        return count;
+    }
+
+    private static int countItemsInComponent(ItemContainerContents contents, Item targetItem, int depth) {
+        if (depth <= 0) return 0;
+
+        int count = 0;
+        for (ItemStack innerStack : contents.nonEmptyItems()) {
+            if (innerStack.is(targetItem)) {
+                count += innerStack.getCount();
+            }
+            // Recursive call for shulker-in-shulker
+            ItemContainerContents innerContents = innerStack.get(DataComponents.CONTAINER);
+            if (innerContents != null) {
+                count += countItemsInComponent(innerContents, targetItem, depth - 1);
             }
         }
         return count;
@@ -189,15 +219,7 @@ public class ItemFinder {
 
                         if (containerFilter.matches(containerId)) {
                             Map<Item, Integer> foundItemsInContainer = new HashMap<>();
-                            for (int i = 0; i < container.getContainerSize(); i++) {
-                                ItemStack stack = container.getItem(i);
-                                if (stack.isEmpty()) continue;
-
-                                ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-                                if (itemFilter.matches(itemId.getPath())) {
-                                    foundItemsInContainer.merge(stack.getItem(), stack.getCount(), Integer::sum);
-                                }
-                            }
+                            findFilteredItemsInContainer(container, itemFilter, foundItemsInContainer);
 
                             if (!foundItemsInContainer.isEmpty()) {
                                 double distSq = bePos.distSqr(centerForDistance);
@@ -219,15 +241,7 @@ public class ItemFinder {
             if (containerFilter.matches(entityId.getPath())) {
                 Map<Item, Integer> foundItemsInContainer = new HashMap<>();
                 Container container = (Container) entity;
-                for (int i = 0; i < container.getContainerSize(); i++) {
-                    ItemStack stack = container.getItem(i);
-                    if (stack.isEmpty()) continue;
-
-                    ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-                    if (itemFilter.matches(itemId.getPath())) {
-                        foundItemsInContainer.merge(stack.getItem(), stack.getCount(), Integer::sum);
-                    }
-                }
+                findFilteredItemsInContainer(container, itemFilter, foundItemsInContainer);
                 if (!foundItemsInContainer.isEmpty()) {
                     double distSq = entity.position().distanceToSqr(centerForDistance.getX(), centerForDistance.getY(), centerForDistance.getZ());
                     results.add(new FoundFilteredItemInfo(entity.blockPosition(), entity.getName(), foundItemsInContainer, distSq));
@@ -237,5 +251,32 @@ public class ItemFinder {
 
         results.sort(Comparator.comparingDouble(FoundFilteredItemInfo::distanceSq));
         return results;
+    }
+
+    private static void findFilteredItemsInContainer(Container container, FilterParser.Filter itemFilter, Map<Item, Integer> foundItems) {
+        for (int i = 0; i < container.getContainerSize(); i++) {
+            findFilteredItemsInStack(container.getItem(i), itemFilter, foundItems, 5); // Depth limit
+        }
+    }
+
+    private static void findFilteredItemsInStack(ItemStack stack, FilterParser.Filter itemFilter, Map<Item, Integer> foundItems, int depth) {
+        if (stack.isEmpty() || depth <= 0) {
+            return;
+        }
+
+        // 1. Check if the stack itself matches the filter
+        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        if (itemFilter.matches(itemId.getPath())) {
+            foundItems.merge(stack.getItem(), stack.getCount(), Integer::sum);
+        }
+
+        // 2. If it has a container component, look inside
+        ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
+        if (contents != null) {
+            for (ItemStack innerStack : contents.nonEmptyItems()) {
+                // Recursive call
+                findFilteredItemsInStack(innerStack, itemFilter, foundItems, depth - 1);
+            }
+        }
     }
 }

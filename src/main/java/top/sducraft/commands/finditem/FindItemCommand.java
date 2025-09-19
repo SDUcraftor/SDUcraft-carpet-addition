@@ -139,11 +139,10 @@ public class FindItemCommand {
         // 添加掉落物群组
         processGroups(droppedItemGroups, displayInfos, displayStack, player, "dropped_item");
 
-        // 6. 排序并显示
         if (displayInfos.isEmpty()) {
             source.sendSuccess(() -> Component.literal("未找到 '").append(displayStack.getHoverName()).append("'物品。"), false);
         } else {
-            player.sendSystemMessage(Component.literal("--- 找到 '").append(displayStack.getHoverName()).append("' 的 ").append(String.valueOf(displayInfos.size())).append(" 个位置/群组 ---").withStyle(ChatFormatting.GOLD));
+            player.sendSystemMessage(Component.literal("--- 在" + displayInfos.size() + "个位置找到 ").append(displayStack.getHoverName()).append(" ---").withStyle(ChatFormatting.GOLD));
 
             displayInfos.sort(Comparator.comparingDouble(DisplayInfo::distanceSq));
             displayInfos.forEach(info -> player.sendSystemMessage(info.message()));
