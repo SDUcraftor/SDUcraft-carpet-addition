@@ -2,10 +2,12 @@ package top.sducraft.commands.finditem;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.arguments.UuidArgument;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -13,18 +15,22 @@ import net.minecraft.commands.arguments.item.ItemArgument;
 import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.phys.AABB;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.Map;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
@@ -49,6 +55,26 @@ public class FindItemCommand {
                 .then(Commands.literal("detail")
                         .then(Commands.argument("group_id", UuidArgument.uuid())
                                 .executes(FindItemCommand::executeDetail)
+                        )
+                )
+                .then(Commands.argument("pos1", BlockPosArgument.blockPos())
+                        .then(Commands.argument("pos2", BlockPosArgument.blockPos())
+                                .then(Commands.argument("itemfilter", StringArgumentType.string())
+                                        .executes(context -> executeFiltered(context.getSource(),
+                                                BlockPosArgument.getBlockPos(context, "pos1"),
+                                                BlockPosArgument.getBlockPos(context, "pos2"),
+                                                StringArgumentType.getString(context, "itemfilter"),
+                                                "*" // Default container filter
+                                        ))
+                                        .then(Commands.argument("containerfilter", StringArgumentType.string())
+                                                .executes(context -> executeFiltered(context.getSource(),
+                                                        BlockPosArgument.getBlockPos(context, "pos1"),
+                                                        BlockPosArgument.getBlockPos(context, "pos2"),
+                                                        StringArgumentType.getString(context, "itemfilter"),
+                                                        StringArgumentType.getString(context, "containerfilter")
+                                                ))
+                                        )
+                                )
                         )
                 )
         );
@@ -117,7 +143,7 @@ public class FindItemCommand {
         if (displayInfos.isEmpty()) {
             source.sendSuccess(() -> Component.literal("未找到 '").append(displayStack.getHoverName()).append("'物品。"), false);
         } else {
-            player.sendSystemMessage(Component.literal("--- 在"+displayInfos.size()+"个位置找到 ").append(displayStack.getHoverName()).append(" ---").withStyle(ChatFormatting.GOLD));
+            player.sendSystemMessage(Component.literal("--- 找到 '").append(displayStack.getHoverName()).append("' 的 ").append(String.valueOf(displayInfos.size())).append(" 个位置/群组 ---").withStyle(ChatFormatting.GOLD));
 
             displayInfos.sort(Comparator.comparingDouble(DisplayInfo::distanceSq));
             displayInfos.forEach(info -> player.sendSystemMessage(info.message()));
@@ -143,7 +169,7 @@ public class FindItemCommand {
 
         ItemStack displayStack = new ItemStack(net.minecraft.world.item.Items.STONE); // 占位符
 
-        player.sendSystemMessage(Component.literal("--- 详细信息 ---").withStyle(ChatFormatting.GOLD));
+        player.sendSystemMessage(Component.literal("--- 群组详细信息 ---").withStyle(ChatFormatting.GOLD));
         group.sort(Comparator.comparingDouble(MergedResult::distanceSq));
         for (MergedResult res : group) {
             player.sendSystemMessage(createSingleResultMessage(res, displayStack, player.getGameProfile().getName()));
@@ -240,5 +266,67 @@ public class FindItemCommand {
                                 .withHoverEvent(new HoverEvent.ShowText(Component.literal("显示群组内所有物品的详细信息")))
                         )
                 );
+    }
+
+    private static int executeFiltered(CommandSourceStack source, BlockPos pos1, BlockPos pos2, String itemFilterStr, String containerFilterStr) throws CommandSyntaxException {
+        ServerPlayer player = source.getPlayerOrException();
+        long startTime = System.nanoTime();
+
+        BlockPos min = new BlockPos(Math.min(pos1.getX(), pos2.getX()), Math.min(pos1.getY(), pos2.getY()), Math.min(pos1.getZ(), pos2.getZ()));
+        BlockPos max = new BlockPos(Math.max(pos1.getX(), pos2.getX()), Math.max(pos1.getY(), pos2.getY()), Math.max(pos1.getZ(), pos2.getZ()));
+        max = max.offset(1,1,1);
+        AABB searchBox = new AABB(new Vec3(min.getX(), min.getY(),min.getZ()), new Vec3(max.getX(), max.getY(),max.getZ()));
+
+        FilterParser.Filter itemFilter = FilterParser.parse(itemFilterStr);
+        FilterParser.Filter containerFilter = FilterParser.parse(containerFilterStr);
+
+        List<ItemFinder.FoundFilteredItemInfo> results = ItemFinder.findItemsWithFilters(player, searchBox, itemFilter, containerFilter);
+
+        if (results.isEmpty()) {
+            source.sendSuccess(() -> Component.literal("在指定区域和过滤器下未找到任何物品。"), false);
+        } else {
+            player.sendSystemMessage(Component.literal("--- 找到 " + results.size() + " 个符合条件的容器 ---").withStyle(ChatFormatting.GOLD));
+            for (ItemFinder.FoundFilteredItemInfo info : results) {
+                player.sendSystemMessage(createFilteredResultMessage(player, info));
+            }
+        }
+
+        long endTime = System.nanoTime();
+        double durationMs = (endTime - startTime) / 1_000_000.0;
+        source.sendSuccess(() -> Component.literal(String.format("搜索完成，耗时 %.2f 毫秒。", durationMs)), false);
+
+        return results.size();
+    }
+
+    private static Component createFilteredResultMessage(ServerPlayer player, ItemFinder.FoundFilteredItemInfo info) {
+        double distance = Math.sqrt(info.distanceSq());
+        BlockPos pos = info.containerPos();
+        String commandUser = player.getGameProfile().getName();
+        String command = String.format("/player %s look at %d %d %d", commandUser, pos.getX(), pos.getY(), pos.getZ());
+
+        MutableComponent message = Component.literal("- ")
+                .append(info.containerName().copy().withStyle(ChatFormatting.AQUA))
+                .append(Component.literal(String.format(" at [%d, %d, %d] (%.1fm)", pos.getX(), pos.getY(), pos.getZ(), distance)).withStyle(ChatFormatting.GRAY))
+                .append(Component.literal(" ").append(Component.literal("[点击查看]")
+                        .withStyle(Style.EMPTY
+                                .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击看向容器位置")))
+                                .withClickEvent(new ClickEvent.RunCommand(command))
+                                .withColor(ChatFormatting.GOLD))));
+
+        List<Map.Entry<Item, Integer>> sortedItems = new ArrayList<>(info.items().entrySet());
+        sortedItems.sort(Map.Entry.<Item, Integer>comparingByValue().reversed());
+
+        for (Map.Entry<Item, Integer> entry : sortedItems) {
+            Item item = entry.getKey();
+            int count = entry.getValue();
+            ItemStack displayStack = new ItemStack(item);
+
+            message.append(Component.literal("\n  - ").withStyle(ChatFormatting.DARK_GRAY))
+                    .append(Component.literal("x" + count + " ").withStyle(ChatFormatting.YELLOW))
+                    .append(item.getName(displayStack).copy().withStyle(ChatFormatting.WHITE)
+                            .withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowItem(displayStack)))
+                    );
+        }
+        return message;
     }
 }

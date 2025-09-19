@@ -2,6 +2,8 @@ package top.sducraft.commands.finditem;
 
 import carpet.patches.EntityPlayerMPFake;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import top.sducraft.config.findItemArea.FindItemAreaData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -17,6 +19,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,6 +29,7 @@ public class ItemFinder {
     public record FoundPlayerInfo(Component playerName, BlockPos pos, int itemCount, double distanceSq, String areaName) {}
     public record FoundContainerInfo(BlockPos pos, Component containerName, int itemCount, double distanceSq, String areaName) {}
     public record FoundDroppedItemInfo(BlockPos pos, int itemCount, double distanceSq, String areaName) {}
+    public record FoundFilteredItemInfo(BlockPos containerPos, Component containerName, Map<Item, Integer> items, double distanceSq) {}
 
     public record FindResult(List<FoundPlayerInfo> players, List<FoundContainerInfo> containers, List<FoundDroppedItemInfo> droppedItems) {}
 
@@ -154,5 +158,84 @@ public class ItemFinder {
             }
         }
         return count;
+    }
+
+    public static List<FoundFilteredItemInfo> findItemsWithFilters(ServerPlayer player, AABB searchBox, FilterParser.Filter itemFilter, FilterParser.Filter containerFilter) {
+        ServerLevel level = player.level();
+        BlockPos centerForDistance = player.blockPosition();
+        List<FoundFilteredItemInfo> results = new ArrayList<>();
+
+        ServerChunkCache chunkSource = level.getChunkSource();
+        int minChunkX = (int)Math.floor(searchBox.minX) >> 4;
+        int maxChunkX = (int)Math.floor(searchBox.maxX) >> 4;
+        int minChunkZ = (int)Math.floor(searchBox.minZ) >> 4;
+        int maxChunkZ = (int)Math.floor(searchBox.maxZ) >> 4;
+
+        for (int cz = minChunkZ; cz <= maxChunkZ; cz++) {
+            for (int cx = minChunkX; cx <= maxChunkX; cx++) {
+                LevelChunk chunk = chunkSource.getChunk(cx, cz, false);
+                if (chunk == null) continue;
+
+                for (Map.Entry<BlockPos, BlockEntity> entry : chunk.getBlockEntities().entrySet()) {
+                    BlockPos bePos = entry.getKey();
+                    if (!searchBox.contains(bePos.getX() + 0.5, bePos.getY() + 0.5, bePos.getZ() + 0.5)) {
+                        continue;
+                    }
+
+                    BlockEntity blockEntity = entry.getValue();
+                    if (blockEntity instanceof Container container) {
+                        ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(blockEntity.getBlockState().getBlock());
+                        String containerId = blockId.getPath();
+
+                        if (containerFilter.matches(containerId)) {
+                            Map<Item, Integer> foundItemsInContainer = new HashMap<>();
+                            for (int i = 0; i < container.getContainerSize(); i++) {
+                                ItemStack stack = container.getItem(i);
+                                if (stack.isEmpty()) continue;
+
+                                ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+                                if (itemFilter.matches(itemId.getPath())) {
+                                    foundItemsInContainer.merge(stack.getItem(), stack.getCount(), Integer::sum);
+                                }
+                            }
+
+                            if (!foundItemsInContainer.isEmpty()) {
+                                double distSq = bePos.distSqr(centerForDistance);
+                                results.add(new FoundFilteredItemInfo(bePos.immutable(), blockEntity.getBlockState().getBlock().getName(), foundItemsInContainer, distSq));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        List<Entity> containerEntities = level.getEntitiesOfClass(Entity.class, searchBox, entity ->
+                entity instanceof Container && !entity.isRemoved()
+        );
+
+        for (Entity entity : containerEntities) {
+            ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
+            if (containerFilter.matches(entityId.getPath())) {
+                Map<Item, Integer> foundItemsInContainer = new HashMap<>();
+                Container container = (Container) entity;
+                for (int i = 0; i < container.getContainerSize(); i++) {
+                    ItemStack stack = container.getItem(i);
+                    if (stack.isEmpty()) continue;
+
+                    ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+                    if (itemFilter.matches(itemId.getPath())) {
+                        foundItemsInContainer.merge(stack.getItem(), stack.getCount(), Integer::sum);
+                    }
+                }
+                if (!foundItemsInContainer.isEmpty()) {
+                    double distSq = entity.position().distanceToSqr(centerForDistance.getX(), centerForDistance.getY(), centerForDistance.getZ());
+                    results.add(new FoundFilteredItemInfo(entity.blockPosition(), entity.getName(), foundItemsInContainer, distSq));
+                }
+            }
+        }
+
+        results.sort(Comparator.comparingDouble(FoundFilteredItemInfo::distanceSq));
+        return results;
     }
 }
