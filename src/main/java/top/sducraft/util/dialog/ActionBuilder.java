@@ -55,6 +55,13 @@ public class ActionBuilder {
         return this;
     }
 
+    public ActionBuilder asSuggestCommand(String command) {
+        this.actionPayload = new JsonObject();
+        this.actionPayload.addProperty("type", "suggest_command");
+        this.actionPayload.addProperty("command", command);
+        return this;
+    }
+
     public ActionBuilder asOpenUrl(String url) {
         this.actionPayload = new JsonObject();
         this.actionPayload.addProperty("type", "open_url");

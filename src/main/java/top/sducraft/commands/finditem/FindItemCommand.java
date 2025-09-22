@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.commands.arguments.UuidArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.commands.CommandBuildContext;
@@ -22,6 +23,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import top.sducraft.helpers.commands.allItemCommand.SpawnDisplay;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import net.minecraft.world.phys.AABB;
@@ -55,6 +57,13 @@ public class FindItemCommand {
                 .then(Commands.literal("detail")
                         .then(Commands.argument("group_id", UuidArgument.uuid())
                                 .executes(FindItemCommand::executeDetail)
+                        )
+                )
+                .then(Commands.literal("action")
+                        .then(Commands.literal("lookandhighlight")
+                                .then(Commands.argument("pos", BlockPosArgument.blockPos())
+                                        .executes(FindItemCommand::executeLookHighlight)
+                                )
                         )
                 )
                 .then(Commands.argument("pos1", BlockPosArgument.blockPos())
@@ -176,6 +185,24 @@ public class FindItemCommand {
         return 1;
     }
 
+    private static int executeLookHighlight(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
+        BlockPos pos = BlockPosArgument.getBlockPos(context, "pos");
+
+        SpawnDisplay.spawnTempBlockDisplay(
+                player.level(),
+                pos,
+                player.level().getBlockState(pos),
+                0xFFFF00, // Yellow glow
+                "finditem_highlight",
+                300
+        );
+
+        player.lookAt(EntityAnchorArgument.Anchor.EYES,new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
+
+        return 1;
+    }
+
     private static List<List<MergedResult>> clusterResults(List<MergedResult> results, double groupingDistanceSq) {
         List<List<MergedResult>> groups = new ArrayList<>();
         if (results.isEmpty()) {
@@ -224,7 +251,7 @@ public class FindItemCommand {
     private static Component createSingleResultMessage(MergedResult res, ItemStack displayStack, String commandUser) {
         double distance = Math.sqrt(res.distanceSq());
         BlockPos pos = res.pos();
-        String command = String.format("/player %s look at %d %d %d", commandUser, pos.getX(), pos.getY(), pos.getZ());
+        String command = String.format("/finditem action lookandhighlight %d %d %d", pos.getX(), pos.getY(), pos.getZ());
         String areaString = String.join(", ", res.areaNames());
 
         return Component.literal("- [" + areaString + "] ").withStyle(ChatFormatting.AQUA)
@@ -301,12 +328,12 @@ public class FindItemCommand {
         double distance = Math.sqrt(info.distanceSq());
         BlockPos pos = info.containerPos();
         String commandUser = player.getGameProfile().getName();
-        String command = String.format("/player %s look at %d %d %d", commandUser, pos.getX(), pos.getY(), pos.getZ());
+        String command = String.format("/finditem action lookandhighlight %d %d %d", pos.getX(), pos.getY(), pos.getZ());
 
         MutableComponent message = Component.literal("- ")
                 .append(info.containerName().copy().withStyle(ChatFormatting.AQUA))
                 .append(Component.literal(String.format(" at [%d, %d, %d] (%.1fm)", pos.getX(), pos.getY(), pos.getZ(), distance)).withStyle(ChatFormatting.GRAY))
-                .append(Component.literal(" ").append(Component.literal("[点击查看]")
+                .append(Component.literal(" ").append(Component.literal("[点击看向目标]")
                         .withStyle(Style.EMPTY
                                 .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击看向容器位置")))
                                 .withClickEvent(new ClickEvent.RunCommand(command))

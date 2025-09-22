@@ -17,7 +17,7 @@ public class TextComponentBuilder {
      * 创建一个空的 TextComponentBuilder。
      */
     public TextComponentBuilder() {
-        // 空构造函数
+
     }
 
     /**
@@ -65,13 +65,15 @@ public class TextComponentBuilder {
      *
      * @param command 要执行的命令。
      */
-    public void onClickRunCommand(String command) {
+    public TextComponentBuilder onClickRunCommand(String command) {
         // [修正] 直接将 clickEvent 添加到 currentPart
         ensureCurrentPartExists();
         JsonObject clickEvent = new JsonObject();
         clickEvent.addProperty("action", "run_command");
+        // 修正: 文本组件的点击事件使用 'value' 字段
         clickEvent.addProperty("command", command);
         this.currentPart.add("click_event", clickEvent);
+        return this;
     }
 
     /**
@@ -87,19 +89,14 @@ public class TextComponentBuilder {
         this.currentPart.add("click_event", clickEvent);
         return this;
     }
-
-    /**
-     * [移除] 不再需要 getStyleObject() 方法。
-     */
-    // private JsonObject getStyleObject() { ... }
-
+    
     /**
      * [新增] 内部辅助方法，确保在应用样式前已经有文本片段存在。
      */
     private void ensureCurrentPartExists() {
-//        if (this.currentPart == null) {
-//            throw new IllegalStateException("You must call .append(text) before applying any styles.");
-//        }
+        if (this.currentPart == null) {
+            throw new IllegalStateException("You must call .append(text) before applying any styles or click events.");
+        }
     }
 
     public TextComponentBuilder withWidth(int width) {
@@ -127,7 +124,6 @@ public class TextComponentBuilder {
     }
 
     /**
-     * [新增] 构建核心的文本组件内容 (JsonElement)。
      * 这部分可以被用于任何需要文本组件的地方，例如按钮的 label。
      * @return 代表文本组件的 JsonObject 或 JsonArray。
      */

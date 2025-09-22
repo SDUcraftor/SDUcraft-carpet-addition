@@ -35,11 +35,24 @@ public class NoticeDialogBuilder extends DialogBuilder<NoticeDialogBuilder> {
      *
      * @param label 按钮上显示的文本。
      */
-    public void setConfirmationButton(String label) {
+    public NoticeDialogBuilder setConfirmationButton(String label) {
         JsonObject action = new JsonObject();
         action.add("label", ComponentFactory.createText(label));
         // notice 对话框的 action 是单个对象，直接添加到根对象
         this.root.add("action", action);
+        return this;
+    }
+
+    /**
+     * [新] 使用复杂的文本组件设置底部确认按钮。
+     * @param labelBuilder 一个配置好的 TextComponentBuilder 实例。
+     * @return 当前构建器实例，用于链式调用。
+     */
+    public NoticeDialogBuilder setConfirmationButton(TextComponentBuilder labelBuilder) {
+        JsonObject action = new JsonObject();
+        action.add("label", labelBuilder.buildContents());
+        this.root.add("action", action);
+        return this;
     }
 
     /**

@@ -167,7 +167,7 @@ public class ItemFinder {
             // If the item has a container component (like a shulker box), recursively count items inside.
             ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
             if (contents != null) {
-                count += countItemsInComponent(contents, targetItem, 5); // Depth limit to prevent stack overflow
+                count += countItemsInComponent(contents, targetItem, 2); // Depth limit to prevent stack overflow
             }
         }
         return count;
@@ -181,7 +181,7 @@ public class ItemFinder {
             if (innerStack.is(targetItem)) {
                 count += innerStack.getCount();
             }
-            // Recursive call for shulker-in-shulker
+
             ItemContainerContents innerContents = innerStack.get(DataComponents.CONTAINER);
             if (innerContents != null) {
                 count += countItemsInComponent(innerContents, targetItem, depth - 1);

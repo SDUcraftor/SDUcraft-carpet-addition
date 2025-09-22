@@ -33,19 +33,6 @@ public class MachineStatusEasyCommand implements IEasyCommand {
         return createCommandClickComponent("[机器状态查询]", "/easycommand machinestatus","点击进入机器状态查询界面");
     }
 
-//    @Override
-//    public void showEasyCommandInterface(ServerPlayer player) {
-//        Component component = Component.literal("\n[machine指令介绍]\n").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
-//                .append(Component.literal("""
-//                        /machine status 查看当前机器状态
-//                        /machine add <temp/perm> <name> <dimension> <blockPos> 添加机器
-//                        /machine remove <temp/perm> <name> 删除机器>
-//                        非临时机器会自动获取坐标处开关状态，临时机器默认为开，使用完毕请删除(服务器关闭后临时机器不会保存)
-//                        """))
-//                .append(Component.literal("注意事项:非op仅能添加/删除临时机器").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
-//        player.displayClientMessage(component, false);
-//    }
-//
     private static ServerLevel getDimension(MinecraftServer server, String dimension) {
         ServerLevel level = null;
         switch (dimension) {
@@ -71,7 +58,7 @@ public class MachineStatusEasyCommand implements IEasyCommand {
 
         TextComponentBuilder description = new TextComponentBuilder(
                 "非临时机器会自动获取坐标处开关状态，临时机器默认为开，使用完毕请删除(服务器关闭后临时机器不会保存)"
-        ).color("#CCCCCC"); // 使用浅灰色
+        ).color("#CCCCCC");
 
         TextComponentBuilder notice = new TextComponentBuilder(
                 "注意事项: 非op仅能添加/删除临时机器"

@@ -62,15 +62,18 @@ public abstract class DialogBuilder<T extends DialogBuilder<T>> {
      *
      * @param afterAction "close", "none", 或 "wait_for_response"。
      */
-    public void setAfterAction(String afterAction) {
+    public T setAfterAction(String afterAction) {
         this.root.addProperty("after_action", afterAction);
+        return self();
     }
 
-    public void setCanCloseWithEscape(boolean canClose) {
+    public T setCanCloseWithEscape(boolean canClose) {
         this.root.addProperty("can_close_with_escape", canClose);
+        return self();
     }
 
-    public void setPauseGame(boolean pause) {
+    public T setPauseGame(boolean pause) {
         this.root.addProperty("pause", pause);
+        return self();
     }
 }

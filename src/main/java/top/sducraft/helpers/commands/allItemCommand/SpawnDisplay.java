@@ -192,6 +192,23 @@ public class SpawnDisplay {
         level.addFreshEntity(display);
     }
 
+    public static void spawnTempBlockDisplay(ServerLevel level, BlockPos pos, BlockState blockState, int color, String tag, int durationTicks) {
+        Display.BlockDisplay display = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level);
+        display.setBlockState(blockState);
+        display.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
+        display.setGlowingTag(true);
+        display.getEntityData().set(Display.DATA_GLOW_COLOR_OVERRIDE_ID, color);
+        display.addTag(tag);
+        level.addFreshEntity(display);
+        if (durationTicks > 0) {
+            DelayedEvents.START_SERVER_TICK.register(durationTicks, s -> {
+                if (!display.isRemoved()) {
+                    display.discard();
+                }
+            });
+        }
+    }
+
     public static Item getItemByDescriptionId(String descriptionId) {
         for (Item item : BuiltInRegistries.ITEM) {
             if (new ItemStack(item).getDisplayName().getString().equals(descriptionId)) {
