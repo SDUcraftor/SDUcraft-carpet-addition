@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "carpet.SettingsManagerMixin",
+    "carpet.fix.ServerGamePacketListenerImplMixin",
     "rule.brittleDeepSlate.BlockBehaviorMixin",
     "rule.chickenJockeyGenerationOdds.ZombieMixin",
     "rule.disableNetherPortal.EntityMixin",
