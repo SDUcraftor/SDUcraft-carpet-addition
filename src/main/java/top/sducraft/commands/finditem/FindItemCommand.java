@@ -13,8 +13,8 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.item.ItemArgument;
-import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
@@ -37,21 +37,43 @@ import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
 public class FindItemCommand {
-    // 用于在合并前统一所有结果类型
+
     public record FoundInfo(String areaName, BlockPos pos, double distanceSq, Component name, int count, String type) {}
-    // 用于存储合并后的最终结果
+
     public record MergedResult(List<String> areaNames, BlockPos pos, double distanceSq, Component name, int count, String type) {}
-    // 用于对结果进行分组的键
+
     public record GroupingKey(BlockPos pos, String name, String type) {}
-    // 用于最终排序和显示
+
     private record DisplayInfo(Component message, double distanceSq) {}
+
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandBuildContext) {
         dispatcher.register(Commands.literal("finditem")
-                .then(Commands.argument("item", ItemArgument.item(commandBuildContext))
-                        .executes(context -> execute(context.getSource(), ItemArgument.getItem(context, "item"), 128)) // 默认半径 128
+                .then(Commands.argument("item", StringArgumentType.string())
+                        .suggests(((
+                                context, builder) -> ItemName.findItemSuggest(builder)
+                        ))
+                        .executes(context -> {
+                                    Item item = ItemName.getItem(StringArgumentType.getString(context, "item"));
+                                    if (item != null) {
+                                        execute(context.getSource(), item, 128);
+                                        return 1;
+                                    } else {
+                                        return 0;
+                                    }
+                                }
+                        )
                         .then(Commands.argument("radius", IntegerArgumentType.integer(1, 256))
-                                .executes(context -> execute(context.getSource(), ItemArgument.getItem(context, "item"), IntegerArgumentType.getInteger(context, "radius")))
+                                .executes(context -> {
+                                            Item item = ItemName.getItem(StringArgumentType.getString(context, "item"));
+                                            if (item != null) {
+                                                execute(context.getSource(), item, IntegerArgumentType.getInteger(context, "radius"));
+                                                return 1;
+                                            } else {
+                                                return 0;
+                                            }
+                                        }
+                                )
                         )
                 )
                 .then(Commands.literal("detail")
@@ -89,12 +111,11 @@ public class FindItemCommand {
         );
     }
 
-    private static int execute(@NotNull CommandSourceStack source, ItemInput targetItemInput, int radius) throws CommandSyntaxException {
+    private static int execute(@NotNull CommandSourceStack source, Item targetItemInput, int radius) throws CommandSyntaxException {
         ServerPlayer player = source.getPlayerOrException();
-        Item targetItem = targetItemInput.getItem();
-        ItemStack displayStack = targetItemInput.createItemStack(1, false);
+        ItemStack displayStack = new ItemStack(targetItemInput);
         long startTime = System.nanoTime();
-        ItemFinder.FindResult result = ItemFinder.findItemsInArea(player, targetItem, radius);
+        ItemFinder.FindResult result = ItemFinder.findItemsInArea(player, targetItemInput, radius);
 
         String commandUser = player.getGameProfile().getName();
 

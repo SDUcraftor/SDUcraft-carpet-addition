@@ -11,6 +11,7 @@ import net.minecraft.server.level.TicketType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.sducraft.commands.CommandRegister;
+import top.sducraft.commands.finditem.ItemName;
 import top.sducraft.config.LoadConfig;
 import top.sducraft.easyCommand.WarningEasyCommand;
 import top.sducraft.helpers.rule.dynamicViewDistance.DynamicViewDistance;
@@ -54,6 +55,7 @@ public class SDUcraftCarpetAdditionMod implements CarpetExtension, ModInitialize
     public void onGameStarted() {
         CarpetServer.settingsManager.parseSettingsClass(SDUcraftCarpetSettings.class);
         LOGGER.info("[SDU] Mod Loaded.");
+        ItemName.init();
     }
 
     @Override
