@@ -99,6 +99,11 @@ public class SDUcraftCarpetSettings {
 //    )
 //    public static boolean BlockEventVisualize = false;
 
+    @Rule(
+            categories = {sdu, FEATURE}
+    )
+    public static boolean unicodeArgumentsSupport = false;
+
     private static class NotifyPlayers<T> extends Validator<T> {
         @Override
         public T validate(@Nullable CommandSourceStack commandSourceStack, CarpetRule<T> carpetRule, T t, String s) {

@@ -19,6 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
+import top.sducraft.helpers.translation.allitem.ItemTranslation;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -265,8 +267,7 @@ public class ItemFinder {
         }
 
         // 1. Check if the stack itself matches the filter
-        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        if (itemFilter.matches(itemId.getPath())) {
+        if (itemFilter.itemMatches(stack.getItem())) {
             foundItems.merge(stack.getItem(), stack.getCount(), Integer::sum);
         }
 

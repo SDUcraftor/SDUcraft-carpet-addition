@@ -1,18 +1,29 @@
 package top.sducraft.commands.finditem;
 
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+
 import java.util.HashSet;
 import java.util.Set;
+
+import static top.sducraft.commands.finditem.ItemName.stripPrefix;
+import static top.sducraft.helpers.translation.allitem.ItemTranslation.translateItem;
 
 public class FilterParser {
     public record Filter(Set<String> included, Set<String> excluded) {
         public boolean matches(String name) {
             if (name == null) return false;
-            // If there are inclusion rules, it must match one of them.
             if (!included.isEmpty() && !included.contains(name)) {
                 return false;
             }
-            // It must not match any exclusion rules.
-            return !excluded.contains(name);
+            return !(excluded.contains(name));
+        }
+        public boolean itemMatches(Item item) {
+            if (item == null) return false;
+            if (!included.isEmpty() && !included.contains(stripPrefix(item.getDescriptionId())) && !included.contains(translateItem(item.getDescriptionId()))) {
+                return false;
+            }
+            return !(excluded.contains(stripPrefix(item.getDescriptionId())) || excluded.contains(translateItem(item.getDescriptionId())));
         }
     }
 

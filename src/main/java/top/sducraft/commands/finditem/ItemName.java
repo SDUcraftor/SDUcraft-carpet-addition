@@ -18,7 +18,7 @@ public class ItemName {
         }
     }
 
-    private static String stripPrefix(String key) {
+    static String stripPrefix(String key) {
         if (key.startsWith("item.minecraft.")) {
             return key.substring("item.minecraft.".length());
         } else if (key.startsWith("block.minecraft.")) {

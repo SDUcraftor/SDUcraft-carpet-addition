@@ -17,6 +17,7 @@
     "rule.tickRateChangedMessage.CommandsMixin",
     "rule.tickRateChangedMessage.MinecraftServerMixin",
     "rule.tickRateChangedMessage.ServerTickRateManagerMixin",
+    "rule.unicodeArgumentsSupport.StringReaderMixin",
     "rule.visualizers.hopperVisualizers.HopperBlockEntityMixin",
     "rule.visualizers.hopperVisualizers.HopperBlockMixin"
   ],

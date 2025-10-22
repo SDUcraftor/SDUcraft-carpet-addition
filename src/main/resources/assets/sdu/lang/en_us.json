@@ -29,6 +29,8 @@
   "carpet.rule.tntTeleportThroughNetherPortal.name": "TNT teleport through nether portal",
   "carpet.rule.dynamicViewDistance.desc": "Dynamic adjust view distance according to mspt",
   "carpet.rule.dynamicViewDistance.name": "dynamicViewDistance",
+  "carpet.rule.unicodeArgumentsSupport.desc": "根据mspt动态调整视距",
+  "carpet.rule.unicodeArgumentsSupport.name": "动态视距",
   "sducarpet.easycommand.fakepeacestatus": "fakepeace status :",
   "sducarpet.easycommand.fakepeacestatus1": "overworld",
   "sducarpet.easycommand.fakepeacestatus2": "the nether",
@@ -61,7 +63,6 @@
   "sducarpet.easycommand.warningcommand7": "There are no warnings,use \"/warning add \"to add warning",
   "sducarpet.easycommand.warningcommand8": " /warning list View all warnings\n /warning add <name> <dimension> <blockPos> <text> Add warnings\n /warning rel <name> Remove warning \n/warning set <name> <true/false> Turn on/off warning\n",
   "sducarpet.easycommand.warningcommand9": "Note: Using /warning list will provide a quick settings panel",
-
   "sducarpet.easycommand.allitemcommand": "Wrong type, enter item or bulk",
   "sducarpet.easycommand.allitemcommand1": "The input coordinates must be arranged in a straight line along the X or Z axis",
   "sducarpet.easycommand.allitemcommand2": "Item not found ",
