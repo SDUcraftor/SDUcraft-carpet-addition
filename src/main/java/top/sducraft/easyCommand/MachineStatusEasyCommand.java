@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import top.sducraft.config.rule.MachineStatusCommandConfig;
-import top.sducraft.util.SandMessage;
+import top.sducraft.util.Message;
 import top.sducraft.util.dialog.NoticeDialogBuilder;
 import top.sducraft.util.dialog.TextComponentBuilder;
 
@@ -68,7 +68,7 @@ public class MachineStatusEasyCommand implements IEasyCommand {
         builder.addBody(description);
         builder.addBody(notice);
 
-        SandMessage.sandPlayerDialog(player, builder);
+        Message.sandPlayerDialog(player, builder);
     }
 
     public static int showMachineStatus(ServerPlayer player){

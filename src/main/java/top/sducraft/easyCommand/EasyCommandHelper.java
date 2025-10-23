@@ -6,7 +6,7 @@ import top.sducraft.util.dialog.MultiActionDialogBuilder;
 
 import java.util.List;
 
-import static top.sducraft.util.SandMessage.sandPlayerDialog;
+import static top.sducraft.util.Message.sandPlayerDialog;
 
 public class EasyCommandHelper {
     public static List<IEasyCommand> EASYCOMMANDS =List.of(

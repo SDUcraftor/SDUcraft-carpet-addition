@@ -6,8 +6,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import top.sducraft.util.dialog.DialogBuilder;
 
+import static carpet.utils.Translations.tr;
 
-public class SandMessage {
+
+public class Message {
     public static void sandCustomMessage(ServerPlayer player, String message, ChatFormatting color) {
             player.displayClientMessage(Component.literal(message).withStyle(color),false);
     }
@@ -34,6 +36,10 @@ public class SandMessage {
                 server.createCommandSourceStack(),
                 command
         );
+    }
+
+    public static Component translateComponent (String text) {
+        return Component.literal(tr(text));
     }
 
 //    public static void sandPlayerCustomMessage(ServerPlayer player, List component,String changeCommand ,int page) {

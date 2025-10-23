@@ -9,7 +9,7 @@ import top.sducraft.util.dialog.TextComponentBuilder;
 import java.net.URISyntaxException;
 
 import static top.sducraft.util.MassageComponentCreate.*;
-import static top.sducraft.util.SandMessage.sandPlayerDialog;
+import static top.sducraft.util.Message.sandPlayerDialog;
 
 public class EasyPerpetualDayEasyCommand implements IEasyCommand {
     @Override

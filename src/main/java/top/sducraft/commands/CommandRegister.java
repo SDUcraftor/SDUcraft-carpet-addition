@@ -11,6 +11,8 @@ import top.sducraft.commands.fakePeaceCommand.SetFakePeaceCommand;
 import top.sducraft.commands.finditem.FindItemAreaCommand;
 import top.sducraft.commands.finditem.FindItemCommand;
 import top.sducraft.commands.openAIChat.ChatCommand;
+import top.sducraft.commands.setSignUrl.OpenUrlCommand;
+import top.sducraft.commands.setSignUrl.SetSignUrlCommand;
 import top.sducraft.commands.syncmaticaCommand.SyncmaticaCommand;
 import top.sducraft.commands.tickRateChangedMessageCommand.TickRateChangeMessageCommand;
 import top.sducraft.commands.tickRateChangedMessageCommand.TickResetCommand;
@@ -29,5 +31,7 @@ public class CommandRegister {
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {SyncmaticaCommand.register(dispatcher);}));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {FindItemCommand.register(dispatcher, registryAccess);}));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {ChatCommand.register(dispatcher);}));
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {SetSignUrlCommand.register(dispatcher);}));
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {OpenUrlCommand.register(dispatcher);}));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {FindItemAreaCommand.register(dispatcher);}));}
 }

@@ -1,28 +1,15 @@
 package top.sducraft.helpers.commands.easyFakePeace;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dialog.Dialog;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.CommandStorage;
 import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.config.rule.EasyFakePeaceConfig;
 import top.sducraft.util.dialog.ActionBuilder;
@@ -33,9 +20,8 @@ import static carpet.utils.Translations.tr;
 import static net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock.getConnectedDirection;
 import static top.sducraft.config.rule.EasyFakePeaceConfig.getFakePeaceStates;
 import static top.sducraft.helpers.rule.chunkLoadHelper.RegistTicket.addFakepeaceTicket;
-import static top.sducraft.util.MassageComponentCreate.createDescriptionClickComponent;
-import static top.sducraft.util.SandMessage.sandAllPlayerCustomMessage;
-import static top.sducraft.util.SandMessage.sandPlayerDialog;
+import static top.sducraft.util.Message.sandAllPlayerCustomMessage;
+import static top.sducraft.util.Message.sandPlayerDialog;
 
 public class EasyFakePeaceCommandHelper {
     public static int setFakePeaceState(CommandSourceStack source, ServerLevel dimension, boolean state) {

@@ -8,7 +8,7 @@ import top.sducraft.util.dialog.MultiActionDialogBuilder;
 import java.net.URISyntaxException;
 
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
-import static top.sducraft.util.SandMessage.sandPlayerDialog;
+import static top.sducraft.util.Message.sandPlayerDialog;
 
 public class FindItemEasyCommand implements IEasyCommand {
     @Override
