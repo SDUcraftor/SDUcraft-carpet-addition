@@ -48,10 +48,10 @@ public class EasyPerpetualDayEasyCommand implements IEasyCommand {
 
         dialogBuilder.addAction(new ActionBuilder("开启永昼机")
                 .withTooltip("点击开启永昼机")
-                .asSuggestCommand("!!bot tags sleep spawn"));
+                .asRunCommand("!!bot tags sleep spawn"));
         dialogBuilder.addAction(new ActionBuilder("关闭永昼机")
                 .withTooltip("点击关闭永昼机")
-                .asSuggestCommand("!!bot tags sleep kill"));
+                .asRunCommand("!!bot tags sleep kill"));
         dialogBuilder.addAction(new ActionBuilder("永昼机介绍")
                 .withTooltip("点击查看永昼机详细介绍")
                 .asOpenUrl("https://www.bilibili.com/video/BV1rq4y1E7mE/?vd_source=5817b45e0aefe917b84852b8ee9019da"));
