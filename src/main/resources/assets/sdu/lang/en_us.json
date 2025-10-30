@@ -31,6 +31,8 @@
   "carpet.rule.dynamicViewDistance.name": "dynamicViewDistance",
   "carpet.rule.unicodeArgumentsSupport.desc": "根据mspt动态调整视距",
   "carpet.rule.unicodeArgumentsSupport.name": "动态视距",
+  "carpet.rule.projectileDeflectLog.desc": "Logs projectile deflection events",
+  "carpet.rule.projectileDeflectLog.name": "Projectile Deflection Logging",
   "sducarpet.easycommand.fakepeacestatus": "fakepeace status :",
   "sducarpet.easycommand.fakepeacestatus1": "overworld",
   "sducarpet.easycommand.fakepeacestatus2": "the nether",

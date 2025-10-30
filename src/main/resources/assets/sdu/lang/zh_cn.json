@@ -31,6 +31,8 @@
   "carpet.rule.dynamicViewDistance.name": "动态视距",
   "carpet.rule.unicodeArgumentsSupport.desc": "根据mspt动态调整视距",
   "carpet.rule.unicodeArgumentsSupport.name": "动态视距",
+  "carpet.rule.projectileDeflectLog.desc": "记录投掷物反射",
+  "carpet.rule.projectileDeflectLog.name": "记录玩家反射投掷物到日志中",
   "sducarpet.easycommand.fakepeacestatus": "当前伪和平状态 :",
   "sducarpet.easycommand.fakepeacestatus1": "主世界",
   "sducarpet.easycommand.fakepeacestatus2": "地 狱",

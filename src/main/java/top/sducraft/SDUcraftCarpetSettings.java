@@ -104,6 +104,11 @@ public class SDUcraftCarpetSettings {
     )
     public static boolean unicodeArgumentsSupport = false;
 
+    @Rule(
+            categories = {sdu}
+    )
+    public static boolean projectileDeflectLog = false;
+
     private static class NotifyPlayers<T> extends Validator<T> {
         @Override
         public T validate(@Nullable CommandSourceStack commandSourceStack, CarpetRule<T> carpetRule, T t, String s) {

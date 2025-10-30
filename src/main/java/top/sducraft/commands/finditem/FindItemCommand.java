@@ -12,15 +12,18 @@ import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.item.ItemArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import top.sducraft.helpers.commands.allItemCommand.SpawnDisplay;
@@ -33,6 +36,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
@@ -108,10 +112,20 @@ public class FindItemCommand {
                                 )
                         )
                 )
+                .then(Commands.literal("clear").executes(context -> {
+                    MinecraftServer server = context.getSource().getServer();
+                    for (ServerLevel serverLevel : server.getAllLevels()){
+                     List<Display.BlockDisplay> blockDisplays = new ArrayList<>();
+                     Predicate<Display.BlockDisplay> predicate = marker -> marker.getTags().contains("finditem_highlight");
+                     serverLevel.getEntities(EntityType.BLOCK_DISPLAY, predicate, blockDisplays);
+                     blockDisplays.forEach(Entity::discard);
+                    }
+                    return 1;
+                }))
         );
     }
 
-    private static int execute(@NotNull CommandSourceStack source, Item targetItemInput, int radius) throws CommandSyntaxException {
+    private static void execute(@NotNull CommandSourceStack source, Item targetItemInput, int radius) throws CommandSyntaxException {
         ServerPlayer player = source.getPlayerOrException();
         ItemStack displayStack = new ItemStack(targetItemInput);
         long startTime = System.nanoTime();
@@ -183,7 +197,6 @@ public class FindItemCommand {
         long endTime = System.nanoTime();
         double durationMs = (endTime - startTime) / 1_000_000.0;
         source.sendSuccess(() -> Component.literal(String.format("搜索完成，耗时 %.2f 毫秒。", durationMs)), false);
-        return displayInfos.size();
     }
 
     private static int executeDetail(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
@@ -259,7 +272,7 @@ public class FindItemCommand {
         String commandUser = player.getGameProfile().getName();
         for (List<MergedResult> group : groups) {
             if (group.size() == 1) {
-                MergedResult single = group.get(0);
+                MergedResult single = group.getFirst();
                 displayInfos.add(new DisplayInfo(createSingleResultMessage(single, displayStack, commandUser), single.distanceSq()));
             } else {
                 UUID groupId = FindItemResultCache.cacheGroup(player.getUUID(), group);

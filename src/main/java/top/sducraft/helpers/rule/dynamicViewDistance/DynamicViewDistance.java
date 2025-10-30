@@ -42,6 +42,7 @@ public class DynamicViewDistance {
             currentVD = newVD;
             lastUpdateTime = now;
                         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                            if (!player.hasPermissions(2)) continue;
                             player.displayClientMessage(Component.literal("VD -> " + newVD + " (MSPT~" + String.format("%.1f", mspt) + ")"), false);
                         }
         }
