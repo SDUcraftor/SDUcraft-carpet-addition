@@ -34,7 +34,7 @@ public abstract class MinecraftServerMixin {
                 if (changerName != null) {
                     for (ServerPlayer player : playerList.getPlayers()) {
                         if (player.getName().getString().equals(changerName)) {
-                            player.displayClientMessage(Component.literal("检测到游戏速度改变成功，可以使用 ").append(Component.literal("/leavemessage").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withClickEvent(new ClickEvent.RunCommand( "/leavemessage ")))).append(" 指令进行留言"), false);
+                            player.displayClientMessage(Component.literal("检测到游戏速度改变成功，可以使用 ").append(Component.literal("/leavemessage").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withClickEvent(new ClickEvent.RunCommand("/leavemessage ")))).append(" 指令进行留言"), false);
                         } else {
                             player.displayClientMessage(Component.literal(changerName).withStyle(ChatFormatting.YELLOW).append(Component.literal(" 改变了游戏速度。").withStyle(ChatFormatting.WHITE)), false);
                         }

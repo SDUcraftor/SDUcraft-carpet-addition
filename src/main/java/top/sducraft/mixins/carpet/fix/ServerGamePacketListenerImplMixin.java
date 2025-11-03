@@ -2,7 +2,6 @@ package top.sducraft.mixins.carpet.fix;
 
 import carpet.CarpetSettings;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

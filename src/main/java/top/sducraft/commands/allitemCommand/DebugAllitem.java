@@ -16,7 +16,10 @@ import top.sducraft.config.allItemData.AllItemData;
 import top.sducraft.helpers.commands.allItemCommand.SpawnDisplay;
 import top.sducraft.util.DelayedEvents;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.allItemData.AllItemData.dataList;
@@ -40,7 +43,7 @@ public class DebugAllitem {
                                             for (BlockPos pos : data.storePos) {
                                                 if (level.getBlockEntity(pos) instanceof Container) {
                                                     BlockState state = level.getBlockState(pos);
-                                                    spawnBlockDisplay(level, pos, state, 0x00FF00,"allitem_debug");
+                                                    spawnBlockDisplay(level, pos, state, 0x00FF00, "allitem_debug");
                                                 }
                                             }
                                         }
@@ -58,21 +61,21 @@ public class DebugAllitem {
 
                                                 Set<BlockPos> store = data.storePos;
                                                 store.addAll(data.chestPos);
-                                                for (BlockPos pos : store){
-                                                    if (level.getBlockEntity(pos) instanceof Container) spawnBlockDisplay(context.getSource().getServer().overworld(), pos, context.getSource().getServer().overworld().getBlockState(pos), 0x00FF00, "allitem_debug");
+                                                for (BlockPos pos : store) {
+                                                    if (level.getBlockEntity(pos) instanceof Container)
+                                                        spawnBlockDisplay(context.getSource().getServer().overworld(), pos, context.getSource().getServer().overworld().getBlockState(pos), 0x00FF00, "allitem_debug");
                                                 }
-                                                context.getSource().sendSuccess(() -> Component.literal(tr("已生成")+StringArgumentType.getString(context, "item")+("展示实体")), false);
-                                            }
-                                            else {
+                                                context.getSource().sendSuccess(() -> Component.literal(tr("已生成") + StringArgumentType.getString(context, "item") + ("展示实体")), false);
+                                            } else {
                                                 context.getSource().sendFailure(Component.literal(tr("未找到物品")));
                                             }
                                             return 0;
                                         })))
                         .then(Commands.literal("chest")
                                 .executes(context -> {
-                                    for (Map.Entry<String, AllItemData.ItemData> entry :  dataList.entrySet()) {
+                                    for (Map.Entry<String, AllItemData.ItemData> entry : dataList.entrySet()) {
                                         AllItemData.ItemData data = entry.getValue();
-                                        spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM,"allitem_debug");
+                                        spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM, "allitem_debug");
                                     }
                                     return 1;
                                 })
@@ -81,10 +84,9 @@ public class DebugAllitem {
                                         .executes(context -> {
                                             AllItemData.ItemData data = AllItemData.search(StringArgumentType.getString(context, "item"));
                                             if (data != null) {
-                                                spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM,"allitem_debug");
-                                                context.getSource().sendSuccess(() -> Component.literal(tr("已生成")+StringArgumentType.getString(context, "item")+("展示实体")), false);
-                                            }
-                                            else {
+                                                spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM, "allitem_debug");
+                                                context.getSource().sendSuccess(() -> Component.literal(tr("已生成") + StringArgumentType.getString(context, "item") + ("展示实体")), false);
+                                            } else {
                                                 context.getSource().sendFailure(Component.literal(tr("未找到物品")));
                                             }
                                             return 0;
@@ -94,13 +96,13 @@ public class DebugAllitem {
                                     ServerPlayer player = context.getSource().getPlayerOrException();
                                     ServerLevel level = player.level();
 
-                                    for (Map.Entry<String, AllItemData.ItemData> entry :  dataList.entrySet()) {
+                                    for (Map.Entry<String, AllItemData.ItemData> entry : dataList.entrySet()) {
                                         AllItemData.ItemData data = entry.getValue();
 
                                         Set<BlockPos> store = new HashSet<>(data.storePos != null ? data.storePos : Set.of());
-                                        spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM,"allitem_debug");
+                                        spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM, "allitem_debug");
 
-                                        for (BlockPos pos :store) {
+                                        for (BlockPos pos : store) {
                                             if (level.getBlockEntity(pos) instanceof Container) {
                                                 BlockState state = level.getBlockState(pos);
                                                 spawnBlockDisplay(level, pos, state, 0x00FF00, "allitem_debug");
@@ -113,9 +115,9 @@ public class DebugAllitem {
                         )
                         .then(Commands.literal("stop")
                                 .executes(context -> {
-                                    for (ServerLevel level : context.getSource().getServer().getAllLevels()){
+                                    for (ServerLevel level : context.getSource().getServer().getAllLevels()) {
                                         for (Entity entity : level.getEntities().getAll()) {
-                                            if(entity!=null && entity.getTags().contains("allitem_debug")) {
+                                            if (entity != null && entity.getTags().contains("allitem_debug")) {
                                                 DelayedEvents.START_SERVER_TICK.register(1, s -> entity.discard());
                                             }
                                         }

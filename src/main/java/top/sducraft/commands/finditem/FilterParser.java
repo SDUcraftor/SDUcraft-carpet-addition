@@ -1,7 +1,6 @@
 package top.sducraft.commands.finditem;
 
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +17,7 @@ public class FilterParser {
             }
             return !(excluded.contains(name));
         }
+
         public boolean itemMatches(Item item) {
             if (item == null) return false;
             if (!included.isEmpty() && !included.contains(stripPrefix(item.getDescriptionId())) && !included.contains(translateItem(item.getDescriptionId()))) {

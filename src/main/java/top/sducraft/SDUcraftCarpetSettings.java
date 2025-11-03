@@ -12,23 +12,23 @@ import static carpet.api.settings.RuleCategory.FEATURE;
 import static top.sducraft.helpers.visualizers.Visualizers.updateVisualizers;
 
 public class SDUcraftCarpetSettings {
-    public static final String sdu= "SDU";
+    public static final String sdu = "SDU";
     public static final String Visualize = "Visualize";
 
     @Rule(categories = {sdu})
     public static boolean brittleDeepSlate = false;
 
-    @Rule(  categories = {sdu},
+    @Rule(categories = {sdu},
             options = {"true", "false"},
             validators = NotifyPlayers.class)
     public static boolean tickRateChangedMessage = false;
 
-    @Rule(  categories = {sdu},
+    @Rule(categories = {sdu},
             options = {"true", "false"},
             validators = NotifyPlayers.class)
     public static boolean easyFakePeace = false;
 
-    @Rule(  categories = {sdu},
+    @Rule(categories = {sdu},
             options = {"true", "false"},
             validators = NotifyPlayers.class)
     public static boolean easyCommand = false;
@@ -54,7 +54,7 @@ public class SDUcraftCarpetSettings {
 
     @Rule(
             validators = Validators.NonNegativeNumber.class,
-            options = {"0","0.05","1"},
+            options = {"0", "0.05", "1"},
             strict = false,
             categories = {sdu}
     )
@@ -62,7 +62,7 @@ public class SDUcraftCarpetSettings {
 
     @Rule(
             validators = Validators.NonNegativeNumber.class,
-            options = {"0","0.05","1"},
+            options = {"0", "0.05", "1"},
             strict = false,
             categories = {sdu}
     )
@@ -70,7 +70,7 @@ public class SDUcraftCarpetSettings {
 
     @Rule(
             validators = Validators.NonNegativeNumber.class,
-            options = {"0","100","200","400"},
+            options = {"0", "100", "200", "400"},
             strict = false,
             categories = {sdu}
     )
@@ -109,6 +109,11 @@ public class SDUcraftCarpetSettings {
     )
     public static boolean projectileDeflectLog = false;
 
+    @Rule(
+            categories = {sdu}
+    )
+    public static boolean commandLog = false;
+
     private static class NotifyPlayers<T> extends Validator<T> {
         @Override
         public T validate(@Nullable CommandSourceStack commandSourceStack, CarpetRule<T> carpetRule, T t, String s) {
@@ -122,7 +127,7 @@ public class SDUcraftCarpetSettings {
     private static class UpdateVisualizer<T> extends Validator<T> {
         @Override
         public T validate(@Nullable CommandSourceStack commandSourceStack, CarpetRule<T> carpetRule, T t, String s) {
-            if (commandSourceStack!= null) {
+            if (commandSourceStack != null) {
                 updateVisualizers(commandSourceStack.getServer());
             }
             return t;

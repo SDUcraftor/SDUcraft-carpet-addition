@@ -13,7 +13,7 @@ import java.net.URISyntaxException;
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.displayAllItemInfo;
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 
-public class AllItemEasyCommand implements IEasyCommand{
+public class AllItemEasyCommand implements IEasyCommand {
     @Override
     public String getCommandName() {
         return "allitem";
@@ -21,7 +21,7 @@ public class AllItemEasyCommand implements IEasyCommand{
 
     @Override
     public Component clickButton() {
-        return createCommandClickComponent("[全物品助手]", "/easycommand allitem","点击进入全物品助手");
+        return createCommandClickComponent("[全物品助手]", "/easycommand allitem", "点击进入全物品助手");
     }
 
     @Override
@@ -35,15 +35,15 @@ public class AllItemEasyCommand implements IEasyCommand{
                         """));
         player.displayClientMessage(component, false);
         player.displayClientMessage(Component.literal("""
-                        /allitem search <item> 搜索指定物品位置(支持中英文搜索)并高亮展示,让玩家看向目标位置
-                        /allitem info <item> 返回指定物品的信息
-                        /allitem info <type>
-                            lack 返回缺货物品列表
-                            full 返回即将爆仓的物品列表
-                            custom 返回常规物品列表
-                            all 返回全部物品列表
-                        """),false);
-        player.displayClientMessage(Component.literal("温馨提示:返回列表中很多元素可以通过直接 点击 获取详细信息").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)),false);
+                /allitem search <item> 搜索指定物品位置(支持中英文搜索)并高亮展示,让玩家看向目标位置
+                /allitem info <item> 返回指定物品的信息
+                /allitem info <type>
+                    lack 返回缺货物品列表
+                    full 返回即将爆仓的物品列表
+                    custom 返回常规物品列表
+                    all 返回全部物品列表
+                """), false);
+        player.displayClientMessage(Component.literal("温馨提示:返回列表中很多元素可以通过直接 点击 获取详细信息").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)), false);
         displayAllItemInfo(player);
 
 

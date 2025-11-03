@@ -11,20 +11,21 @@ import static carpet.utils.Translations.tr;
 
 public class Message {
     public static void sandCustomMessage(ServerPlayer player, String message, ChatFormatting color) {
-            player.displayClientMessage(Component.literal(message).withStyle(color),false);
+        player.displayClientMessage(Component.literal(message).withStyle(color), false);
     }
 
     public static void sandAllPlayerCustomMessage(MinecraftServer server, String message, ChatFormatting color) {
-        for(ServerPlayer player : server.getPlayerList().getPlayers()){
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             sandCustomMessage(player, message, color);
         }
     }
 
-    public static void sandAllPlayerCustomMessage(MinecraftServer server, String message, ChatFormatting color,int delay) {
+    public static void sandAllPlayerCustomMessage(MinecraftServer server, String message, ChatFormatting color, int delay) {
         DelayedEvents.START_SERVER_TICK.register(delay, server1 -> {
-                for(ServerPlayer player : server.getPlayerList().getPlayers()){
-                    sandCustomMessage(player, message, color);
-                }}
+                    for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                        sandCustomMessage(player, message, color);
+                    }
+                }
         );
     }
 
@@ -38,7 +39,7 @@ public class Message {
         );
     }
 
-    public static Component translateComponent (String text) {
+    public static Component translateComponent(String text) {
         return Component.literal(tr(text));
     }
 

@@ -6,17 +6,13 @@ import com.google.gson.reflect.TypeToken;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.storage.LevelResource;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import static top.sducraft.config.rule.MachineStatusCommandConfig.permMachineList;
 
 public class QqInformationCollector {
     public static File dataFile;
@@ -47,7 +43,8 @@ public class QqInformationCollector {
         try {
             if (dataFile.exists()) {
                 FileReader reader = new FileReader(dataFile);
-                Type type = new TypeToken<List<qqData>>() {}.getType();
+                Type type = new TypeToken<List<qqData>>() {
+                }.getType();
                 qqDataList = new Gson().fromJson(reader, type);
                 reader.close();
             }
@@ -66,7 +63,7 @@ public class QqInformationCollector {
         }
     }
 
-    public static void addData(ServerPlayer player , int qqNumber){
+    public static void addData(ServerPlayer player, int qqNumber) {
         String name = player.getName().getString();
         String uuid = player.getStringUUID();
 

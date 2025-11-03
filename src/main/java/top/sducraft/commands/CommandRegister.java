@@ -27,11 +27,12 @@ public class CommandRegister {
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> TickResetCommand.register(dispatcher)));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> WarningCommand.register(dispatcher)));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> AllItemCommand.register(dispatcher)));
-        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {DebugAllitem.register(dispatcher);}));
-        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {SyncmaticaCommand.register(dispatcher);}));
-        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {FindItemCommand.register(dispatcher, registryAccess);}));
-        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {ChatCommand.register(dispatcher);}));
-        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {SetSignUrlCommand.register(dispatcher);}));
-        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {OpenUrlCommand.register(dispatcher);}));
-        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {FindItemAreaCommand.register(dispatcher);}));}
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> DebugAllitem.register(dispatcher)));
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> SyncmaticaCommand.register(dispatcher)));
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> FindItemCommand.register(dispatcher, registryAccess)));
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> ChatCommand.register(dispatcher)));
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> SetSignUrlCommand.register(dispatcher)));
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> OpenUrlCommand.register(dispatcher)));
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> FindItemAreaCommand.register(dispatcher)));
+    }
 }

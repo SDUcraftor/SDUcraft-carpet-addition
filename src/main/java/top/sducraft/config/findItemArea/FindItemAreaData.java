@@ -50,7 +50,8 @@ public class FindItemAreaData {
     private static void loadConfig() {
         try (FileReader reader = new FileReader(configFile)) {
             if (configFile.exists()) {
-                Type type = new TypeToken<HashMap<String, AreaData>>() {}.getType();
+                Type type = new TypeToken<HashMap<String, AreaData>>() {
+                }.getType();
                 Map<String, AreaData> loadedData = new Gson().fromJson(reader, type);
                 if (loadedData != null) {
                     areas.clear();

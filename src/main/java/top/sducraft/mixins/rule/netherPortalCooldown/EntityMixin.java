@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import top.sducraft.SDUcraftCarpetSettings;
 
-@Mixin (Entity.class)
+@Mixin(Entity.class)
 public abstract class EntityMixin {
     @Inject(method = "getDimensionChangingDelay", at = @At("HEAD"), cancellable = true)
     public void getPortalWaitTime(CallbackInfoReturnable<Integer> cir) {

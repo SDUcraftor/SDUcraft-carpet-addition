@@ -33,6 +33,8 @@
   "carpet.rule.unicodeArgumentsSupport.name": "动态视距",
   "carpet.rule.projectileDeflectLog.desc": "Logs projectile deflection events",
   "carpet.rule.projectileDeflectLog.name": "Projectile Deflection Logging",
+  "carpet.rule.commandLog.desc": "Logs executed commands",
+  "carpet.rule.commandLog.name": "Command Logging",
   "sducarpet.easycommand.fakepeacestatus": "fakepeace status :",
   "sducarpet.easycommand.fakepeacestatus1": "overworld",
   "sducarpet.easycommand.fakepeacestatus2": "the nether",

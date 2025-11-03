@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.LevelResource;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -47,7 +48,8 @@ public class MachineStatusCommandConfig {
         try {
             if (configFile.exists()) {
                 FileReader reader = new FileReader(configFile);
-                Type type = new TypeToken<List<Machine>>() {}.getType();
+                Type type = new TypeToken<List<Machine>>() {
+                }.getType();
                 permMachineList = new Gson().fromJson(reader, type);
                 reader.close();
             }
@@ -66,39 +68,37 @@ public class MachineStatusCommandConfig {
         }
     }
 
-    public static void addPermMachine(String name,BlockPos pos,String dimension) {
-        permMachineList.add(new Machine(name,pos, dimension));
+    public static void addPermMachine(String name, BlockPos pos, String dimension) {
+        permMachineList.add(new Machine(name, pos, dimension));
         saveConfig();
     }
 
-    public static void addTempMachine(String name,BlockPos pos,String dimension) {
-        tempMachineList.add(new Machine( name,pos,dimension));
+    public static void addTempMachine(String name, BlockPos pos, String dimension) {
+        tempMachineList.add(new Machine(name, pos, dimension));
     }
 
     public static void delPermMachine(String name, ServerPlayer player) {
-        if(Objects.equals(name, "all"))
-        {
+        if (Objects.equals(name, "all")) {
             permMachineList.clear();
-            player.displayClientMessage(Component.literal("已删除所有机器"),false);
-        }
-        else {
-            if(permMachineList.removeIf(machine -> machine.name.equals(name))){
-                player.displayClientMessage(Component.literal("已删除"+name),false);
-            };
+            player.displayClientMessage(Component.literal("已删除所有机器"), false);
+        } else {
+            if (permMachineList.removeIf(machine -> machine.name.equals(name))) {
+                player.displayClientMessage(Component.literal("已删除" + name), false);
+            }
+            ;
         }
         saveConfig();
     }
 
-    public static void delTempMachine(String name,ServerPlayer player) {
-        if(Objects.equals(name, "all"))
-        {
+    public static void delTempMachine(String name, ServerPlayer player) {
+        if (Objects.equals(name, "all")) {
             tempMachineList.clear();
-            player.displayClientMessage(Component.literal("已删除所有临时机器"),false);
-        }
-        else {
-            if(tempMachineList.removeIf(machine -> machine.name.equals(name))){
-                player.displayClientMessage(Component.literal("已删除"+name),false);
-            };
+            player.displayClientMessage(Component.literal("已删除所有临时机器"), false);
+        } else {
+            if (tempMachineList.removeIf(machine -> machine.name.equals(name))) {
+                player.displayClientMessage(Component.literal("已删除" + name), false);
+            }
+            ;
         }
         saveConfig();
     }

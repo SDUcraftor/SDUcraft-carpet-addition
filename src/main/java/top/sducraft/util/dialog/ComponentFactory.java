@@ -6,6 +6,7 @@ public class ComponentFactory {
 
     /**
      * Creates a simple text component.
+     *
      * @param text The text to display.
      * @return A JsonObject representing the text component.
      */
@@ -17,6 +18,7 @@ public class ComponentFactory {
 
     /**
      * Creates a translatable text component.
+     *
      * @param translateKey The translation key (e.g., "gui.cancel").
      * @return A JsonObject representing the translatable component.
      */

@@ -44,26 +44,26 @@ public class EasyFakePeaceCommandHelper {
         }
         BlockPos pos = EasyFakePeaceConfig.getFakePeaceCoordinates(dimensionKey);
         if (pos == null) {
-            source.sendFailure(Component.literal(dimensionName+"伪和平还没人做啊啊啊啊"));
+            source.sendFailure(Component.literal(dimensionName + "伪和平还没人做啊啊啊啊"));
             return 1;
         }
         if (targetDimension != null) {
-            addFakepeaceTicket(targetDimension,new ChunkPos(pos));
+            addFakepeaceTicket(targetDimension, new ChunkPos(pos));
         }
-        if (source!=null && targetDimension!=null) {
+        if (source != null && targetDimension != null) {
             BlockState blockState = targetDimension.getBlockState(pos);
             if (blockState.getBlock() instanceof LeverBlock) {
                 targetDimension.setBlock(pos, blockState.setValue(LeverBlock.POWERED, state), 3);
                 targetDimension.updateNeighborsAt(pos, blockState.getBlock());
-                targetDimension.updateNeighborsAt(pos.relative(getConnectedDirection(blockState).getOpposite()),blockState.getBlock());
+                targetDimension.updateNeighborsAt(pos.relative(getConnectedDirection(blockState).getOpposite()), blockState.getBlock());
                 EasyFakePeaceConfig.setFakePeaceState(dimensionKey, state);
-                        if (dimensionName != null) {
-                            if (state) {
-                                sandAllPlayerCustomMessage(source.getServer(),dimensionName+tr("sducarpet.easycommand.fakepeace1"),ChatFormatting.WHITE);
-                            } else {
-                                sandAllPlayerCustomMessage(source.getServer(),dimensionName+tr("sducarpet.easycommand.fakepeace2"),ChatFormatting.WHITE);
-                                sandAllPlayerCustomMessage(source.getServer(),dimensionName+tr("sducarpet.easycommand.fakepeace3"),ChatFormatting.WHITE,300);
-                            }
+                if (dimensionName != null) {
+                    if (state) {
+                        sandAllPlayerCustomMessage(source.getServer(), dimensionName + tr("sducarpet.easycommand.fakepeace1"), ChatFormatting.WHITE);
+                    } else {
+                        sandAllPlayerCustomMessage(source.getServer(), dimensionName + tr("sducarpet.easycommand.fakepeace2"), ChatFormatting.WHITE);
+                        sandAllPlayerCustomMessage(source.getServer(), dimensionName + tr("sducarpet.easycommand.fakepeace3"), ChatFormatting.WHITE, 300);
+                    }
                 }
             } else {
                 source.sendFailure(Component.literal("该位置的方块不是拉杆！"));
@@ -81,7 +81,7 @@ public class EasyFakePeaceCommandHelper {
 //        player.displayClientMessage(component,false);
 //        showFakePeaceStatus(player);
 
-        if(SDUcraftCarpetSettings.easyFakePeace) {
+        if (SDUcraftCarpetSettings.easyFakePeace) {
             MultiActionDialogBuilder dialogBuilder = new MultiActionDialogBuilder();
 
             dialogBuilder.setTitle("伪和平助手")

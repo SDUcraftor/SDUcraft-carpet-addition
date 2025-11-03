@@ -7,7 +7,9 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.DimensionArgument;
 import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.helpers.commands.easyFakePeace.EasyFakePeaceCommandHelper;
+
 import java.util.Objects;
+
 import static top.sducraft.helpers.commands.easyFakePeace.EasyFakePeaceCommandHelper.showFakePeaceStatus;
 
 

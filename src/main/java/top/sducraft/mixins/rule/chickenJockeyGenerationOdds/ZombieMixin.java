@@ -13,24 +13,23 @@ import top.sducraft.SDUcraftCarpetSettings;
 @Mixin(Zombie.class)
 public abstract class ZombieMixin {
 
-   @ModifyConstant(method = "finalizeSpawn",constant = @Constant(doubleValue = 0.05,ordinal = 1))
-   public double finalizeSpawn1(double constant){
-      return SDUcraftCarpetSettings.chickenJockeyGenerationOdds;
-   }
+    @ModifyConstant(method = "finalizeSpawn", constant = @Constant(doubleValue = 0.05, ordinal = 1))
+    public double finalizeSpawn1(double constant) {
+        return SDUcraftCarpetSettings.chickenJockeyGenerationOdds;
+    }
 
-   @ModifyConstant(method = "finalizeSpawn",constant = @Constant(doubleValue = 0.05,ordinal = 0))
-   public double finalizeSpawn2(double constant){
-      if(SDUcraftCarpetSettings.chickenJockeyGenerationOdds!=0.05){
-         return 0;
-      }
-      else {
-         return constant;
-      }
-   }
+    @ModifyConstant(method = "finalizeSpawn", constant = @Constant(doubleValue = 0.05, ordinal = 0))
+    public double finalizeSpawn2(double constant) {
+        if (SDUcraftCarpetSettings.chickenJockeyGenerationOdds != 0.05) {
+            return 0;
+        } else {
+            return constant;
+        }
+    }
 
-   @Inject(method = "getSpawnAsBabyOdds",at=@At("HEAD"), cancellable = true)
-   private static void getSpawnAsBabyOdds(RandomSource randomSource, CallbackInfoReturnable<Boolean> cir) {
-      cir.setReturnValue(randomSource.nextFloat()< SDUcraftCarpetSettings.babyZombieOdds);
-   }
+    @Inject(method = "getSpawnAsBabyOdds", at = @At("HEAD"), cancellable = true)
+    private static void getSpawnAsBabyOdds(RandomSource randomSource, CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(randomSource.nextFloat() < SDUcraftCarpetSettings.babyZombieOdds);
+    }
 
 }

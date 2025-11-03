@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import static top.sducraft.config.allItemData.AllItemData.dataList;
 
 public class SpawnDisplay {
@@ -38,10 +39,10 @@ public class SpawnDisplay {
         }
     }
 
-    public static void spawnItemDisplay(AllItemData.ItemData data , DisplayType type, String tag) {
+    public static void spawnItemDisplay(AllItemData.ItemData data, DisplayType type, String tag) {
         ServerLevel level = CarpetServer.minecraft_server.overworld();
         DisplayInfo info = datadisplayinfoMap.get(data);
-        spawnItemDisplay(level,info.displayPos,info.item, 0xFFFF00, type, tag );
+        spawnItemDisplay(level, info.displayPos, info.item, 0xFFFF00, type, tag);
     }
 
     public enum DisplayType {
@@ -85,10 +86,10 @@ public class SpawnDisplay {
             for (BlockPos chestPos : data.chestPos) {
                 for (Direction dir : Direction.values()) {
                     BlockPos neighbor = chestPos.relative(dir);
-                    int score = level.isEmptyBlock(neighbor)? 10 : 0 ;
+                    int score = level.isEmptyBlock(neighbor) ? 10 : 0;
                     int airCount = countAirInCube7x3x7(level, neighbor);
                     int correlation = calculateCorrelation(neighbor, referencePositions);
-                    score += airCount + 3*correlation;
+                    score += airCount + 3 * correlation;
                     if (score > bestScore || (score == bestScore && isPreferredDirection(neighbor, bestCandidate))) {
                         bestScore = score;
                         bestCandidate = neighbor;
@@ -106,7 +107,7 @@ public class SpawnDisplay {
         int correlation = 0;
         for (BlockPos ref : referenceList) {
             if (pos.getY() == ref.getY()) {
-                if( pos.getX() == ref.getX() || pos.getZ() == ref.getZ()) correlation++;
+                if (pos.getX() == ref.getX() || pos.getZ() == ref.getZ()) correlation++;
             }
         }
         return correlation;
@@ -119,7 +120,7 @@ public class SpawnDisplay {
         return a.getZ() < b.getZ();
     }
 
-    private static void spawnItemDisplay(ServerLevel level, BlockPos pos, Item item, int color,DisplayType type,String tag) {
+    private static void spawnItemDisplay(ServerLevel level, BlockPos pos, Item item, int color, DisplayType type, String tag) {
         Display.ItemDisplay display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, level);
         display.setPos(Vec3.atCenterOf(pos));
         display.setItemStack(new ItemStack(item));
@@ -148,13 +149,12 @@ public class SpawnDisplay {
                     rotation
             );
             display.setTransformation(transform);
-        }
-        else {
+        } else {
             display.getEntityData().set(Display.DATA_SCALE_ID, new Vector3f(0.5F));
         }
         level.addFreshEntity(display);
-        if (type.equals(DisplayType.TEMP)){
-            DelayedEvents.START_SERVER_TICK.register(600 , s -> display.discard());
+        if (type.equals(DisplayType.TEMP)) {
+            DelayedEvents.START_SERVER_TICK.register(600, s -> display.discard());
         }
     }
 

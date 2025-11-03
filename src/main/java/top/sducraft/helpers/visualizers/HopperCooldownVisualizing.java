@@ -1,7 +1,6 @@
 package top.sducraft.helpers.visualizers;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
@@ -11,9 +10,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
-import net.minecraft.world.level.storage.ValueOutput;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 import static com.mojang.text2speech.Narrator.LOGGER;
@@ -64,10 +65,10 @@ public class HopperCooldownVisualizing {
     }
 
     public static void clearVisualizers(MinecraftServer server) {
-            visualizers.clear();
-            clearLevelVisualizers(server.overworld());
-            clearLevelVisualizers(server.getLevel(Level.NETHER));
-            clearLevelVisualizers(server.getLevel(Level.END));
+        visualizers.clear();
+        clearLevelVisualizers(server.overworld());
+        clearLevelVisualizers(server.getLevel(Level.NETHER));
+        clearLevelVisualizers(server.getLevel(Level.END));
     }
 
     public static void clearLevelVisualizers(ServerLevel level) {

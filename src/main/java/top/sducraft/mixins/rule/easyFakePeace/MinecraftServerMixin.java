@@ -10,9 +10,9 @@ import static top.sducraft.helpers.rule.fakePeaceHelper.FakePeaceHelper.loadChun
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
-    @Inject(method = "onTickRateChanged",at=@At("HEAD"))
+    @Inject(method = "onTickRateChanged", at = @At("HEAD"))
     private void onTickRateChanged(CallbackInfo info) {
-        MinecraftServer server = (MinecraftServer)(Object)this;
+        MinecraftServer server = (MinecraftServer) (Object) this;
         loadChunkOnInitialize(server);
     }
 }

@@ -1,13 +1,11 @@
 package top.sducraft.util.dialog;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 一个抽象的对话框构建器基类。
  * 它使用“奇异的递归模板模式” (CRTP) 来在继承体系中实现流畅的链式调用。
+ *
  * @param <T> 具体的构建器子类类型。
  */
 public abstract class DialogBuilder<T extends DialogBuilder<T>> {
@@ -32,6 +30,7 @@ public abstract class DialogBuilder<T extends DialogBuilder<T>> {
     /**
      * [为了方便保留] 添加一行简单的文本。
      * 这是一个便捷方法，内部调用 addBody。
+     *
      * @deprecated 推荐使用 addBody(TextComponentBuilder) 以获得更多控制。
      */
     @Deprecated
@@ -42,6 +41,7 @@ public abstract class DialogBuilder<T extends DialogBuilder<T>> {
     /**
      * [抽象方法] 添加一个复杂的文本主体。
      * 这个方法必须由子类来实现，因为只有子类知道如何存储元素。
+     *
      * @param builder 一个配置好的 TextComponentBuilder。
      */
     public abstract T addBody(TextComponentBuilder builder);

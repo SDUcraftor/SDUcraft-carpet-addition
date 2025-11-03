@@ -21,7 +21,7 @@ public class SpectatorEasyCommand implements IEasyCommand {
 
     @Override
     public Component clickButton() {
-        return createCommandClickComponent("[旁观者模式]","/easycommand spectator","点击查看!!spec命令介绍");
+        return createCommandClickComponent("[旁观者模式]", "/easycommand spectator", "点击查看!!spec命令介绍");
     }
 
     @Override
@@ -34,7 +34,7 @@ public class SpectatorEasyCommand implements IEasyCommand {
 
         player.displayClientMessage(component, false);
         player.displayClientMessage(Component.empty()
-                .append(createSuggestClickComponent("[切换游戏模式] ","!!spec","点击切换游戏模式"))
-                .append(createSuggestClickComponent(" [tp]","!!tp",null)), false);
+                .append(createSuggestClickComponent("[切换游戏模式] ", "!!spec", "点击切换游戏模式"))
+                .append(createSuggestClickComponent(" [tp]", "!!tp", null)), false);
     }
 }

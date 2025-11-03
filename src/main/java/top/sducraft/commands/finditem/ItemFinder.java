@@ -1,48 +1,55 @@
 package top.sducraft.commands.finditem;
 
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.ItemContainerContents;
 import carpet.patches.EntityPlayerMPFake;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import top.sducraft.config.findItemArea.FindItemAreaData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
-import top.sducraft.helpers.translation.allitem.ItemTranslation;
+import top.sducraft.config.findItemArea.FindItemAreaData;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ItemFinder {
 
-    public record FoundPlayerInfo(Component playerName, BlockPos pos, int itemCount, double distanceSq, String areaName) {}
-    public record FoundContainerInfo(BlockPos pos, Component containerName, int itemCount, double distanceSq, String areaName) {}
-    public record FoundDroppedItemInfo(BlockPos pos, int itemCount, double distanceSq, String areaName) {}
-    public record FoundFilteredItemInfo(BlockPos containerPos, Component containerName, Map<Item, Integer> items, double distanceSq) {}
+    public record FoundPlayerInfo(Component playerName, BlockPos pos, int itemCount, double distanceSq,
+                                  String areaName) {
+    }
 
-    public record FindResult(List<FoundPlayerInfo> players, List<FoundContainerInfo> containers, List<FoundDroppedItemInfo> droppedItems) {}
+    public record FoundContainerInfo(BlockPos pos, Component containerName, int itemCount, double distanceSq,
+                                     String areaName) {
+    }
+
+    public record FoundDroppedItemInfo(BlockPos pos, int itemCount, double distanceSq, String areaName) {
+    }
+
+    public record FoundFilteredItemInfo(BlockPos containerPos, Component containerName, Map<Item, Integer> items,
+                                        double distanceSq) {
+    }
+
+    public record FindResult(List<FoundPlayerInfo> players, List<FoundContainerInfo> containers,
+                             List<FoundDroppedItemInfo> droppedItems) {
+    }
 
     private static void performSearchInBox(ServerLevel level, BlockPos centerForDistance, AABB searchBox, Item targetItem, String areaName, List<FoundContainerInfo> foundContainers, List<FoundDroppedItemInfo> foundDroppedItems) {
         ServerChunkCache chunkSource = level.getChunkSource();
-        int minChunkX = (int)searchBox.minX >> 4;
-        int maxChunkX = (int)searchBox.maxX >> 4;
-        int minChunkZ = (int)searchBox.minZ >> 4;
-        int maxChunkZ = (int)searchBox.maxZ >> 4;
+        int minChunkX = (int) searchBox.minX >> 4;
+        int maxChunkX = (int) searchBox.maxX >> 4;
+        int minChunkZ = (int) searchBox.minZ >> 4;
+        int maxChunkZ = (int) searchBox.maxZ >> 4;
 
         for (int cz = minChunkZ; cz <= maxChunkZ; cz++) {
             for (int cx = minChunkX; cx <= maxChunkX; cx++) {
@@ -128,9 +135,8 @@ public class ItemFinder {
             if (count > 0) {
                 double distSq = player.position().distanceToSqr(otherPlayer.position());
                 if (otherPlayer instanceof EntityPlayerMPFake player1) {
-                   foundPlayers.add(new FoundPlayerInfo(Component.empty().append(otherPlayer.getDisplayName()).append("(假人)"), otherPlayer.blockPosition(), count, distSq, playerAreaName));
-                }
-                else {
+                    foundPlayers.add(new FoundPlayerInfo(Component.empty().append(otherPlayer.getDisplayName()).append("(假人)"), otherPlayer.blockPosition(), count, distSq, playerAreaName));
+                } else {
                     foundPlayers.add(new FoundPlayerInfo(otherPlayer.getDisplayName(), otherPlayer.blockPosition(), count, distSq, playerAreaName));
                 }
             }
@@ -198,10 +204,10 @@ public class ItemFinder {
         List<FoundFilteredItemInfo> results = new ArrayList<>();
 
         ServerChunkCache chunkSource = level.getChunkSource();
-        int minChunkX = (int)Math.floor(searchBox.minX) >> 4;
-        int maxChunkX = (int)Math.floor(searchBox.maxX) >> 4;
-        int minChunkZ = (int)Math.floor(searchBox.minZ) >> 4;
-        int maxChunkZ = (int)Math.floor(searchBox.maxZ) >> 4;
+        int minChunkX = (int) Math.floor(searchBox.minX) >> 4;
+        int maxChunkX = (int) Math.floor(searchBox.maxX) >> 4;
+        int minChunkZ = (int) Math.floor(searchBox.minZ) >> 4;
+        int maxChunkZ = (int) Math.floor(searchBox.maxZ) >> 4;
 
         for (int cz = minChunkZ; cz <= maxChunkZ; cz++) {
             for (int cx = minChunkX; cx <= maxChunkX; cx++) {

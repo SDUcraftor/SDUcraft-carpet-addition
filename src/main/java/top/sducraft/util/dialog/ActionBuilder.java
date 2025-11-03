@@ -15,6 +15,7 @@ public class ActionBuilder {
 
     /**
      * 私有构造函数，强制使用静态工厂方法来创建实例。
+     *
      * @param labelElement 已经构建好的、代表标签的 JsonElement。
      */
     private ActionBuilder(com.google.gson.JsonElement labelElement) {
@@ -29,6 +30,7 @@ public class ActionBuilder {
 
     /**
      * [新] 使用一个 TextComponentBuilder 来创建一个带有复杂样式的 ActionBuilder。
+     *
      * @param labelBuilder 一个已经配置好的 TextComponentBuilder 实例。
      */
     public static ActionBuilder withComplexLabel(TextComponentBuilder labelBuilder) {

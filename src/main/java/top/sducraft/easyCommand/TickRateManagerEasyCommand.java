@@ -23,7 +23,7 @@ public class TickRateManagerEasyCommand implements IEasyCommand {
 
     @Override
     public Component clickButton() {
-        return createCommandClickComponent("[游戏速度控制]", "/easycommand tickratemanager","点击进入游戏界面控制界面");
+        return createCommandClickComponent("[游戏速度控制]", "/easycommand tickratemanager", "点击进入游戏界面控制界面");
     }
 
     @Override
@@ -33,10 +33,10 @@ public class TickRateManagerEasyCommand implements IEasyCommand {
                         .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看tick命令完整介绍"))))
                 .append(Component.literal("Minecraft的绝大多数计算逻辑都在一个游戏循环内执行，执行一次这个循环就被称为执行了一次游戏刻(GameTick)作为单位时缩写为gt.在默认情况下,每秒会进行20个游戏刻,每秒最多运行游戏刻的次数可以使用tick指令进行修改.特别的,SDUcraft中开启了tickcommandcarpet化,这将使得加速游戏时的命令变为/tick warp\n"))
                 .append(Component.literal("注意事项:在更改游戏速度前请先与其他玩家沟通,在更改游戏速度后可以使用").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE))
-                .append(Component.literal(" /leavemessage ").withStyle(Style.EMPTY
-                        .withClickEvent(new ClickEvent.RunCommand("/leavemessage"))
-                        .withColor(ChatFormatting.AQUA)))
-                .append(Component.literal("指令进行留言")).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
+                        .append(Component.literal(" /leavemessage ").withStyle(Style.EMPTY
+                                .withClickEvent(new ClickEvent.RunCommand("/leavemessage"))
+                                .withColor(ChatFormatting.AQUA)))
+                        .append(Component.literal("指令进行留言")).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
 
         ServerTickRateManager tickRateManager = Objects.requireNonNull(player.getServer()).tickRateManager();
         Component tickrate = Component.literal("当前游戏速度:")
@@ -46,8 +46,8 @@ public class TickRateManagerEasyCommand implements IEasyCommand {
         player.displayClientMessage(component, false);
         player.displayClientMessage(tickrate, false);
         player.displayClientMessage(Component.empty()
-                .append(createSuggestClickComponent("[加速游戏]","/tick warp","使用/tick warp <time>来加速指定时间内的游戏速度,默认单位为gt"))
-                .append(createSuggestClickComponent("[暂停游戏]","/tick freeze","冻结当前游戏"))
-                .append(createSuggestClickComponent("[一键恢复正常游戏速度]","/tick reset","重置游戏速度")), false);
+                .append(createSuggestClickComponent("[加速游戏]", "/tick warp", "使用/tick warp <time>来加速指定时间内的游戏速度,默认单位为gt"))
+                .append(createSuggestClickComponent("[暂停游戏]", "/tick freeze", "冻结当前游戏"))
+                .append(createSuggestClickComponent("[一键恢复正常游戏速度]", "/tick reset", "重置游戏速度")), false);
     }
 }

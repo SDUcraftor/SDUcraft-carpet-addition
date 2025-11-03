@@ -6,6 +6,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import top.sducraft.config.chat.ChatAIConfig;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -14,9 +15,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.*;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+
 import static carpet.utils.Translations.tr;
 
 public class OpenaiChat {
@@ -58,7 +62,7 @@ public class OpenaiChat {
 
         JsonArray messagesJsonArray = new JsonArray();
         JsonObject systemMessage = new JsonObject();
-        if(!nosystemprompt) {
+        if (!nosystemprompt) {
             systemMessage.addProperty("role", "system");
             systemMessage.addProperty("content", cfg.systemPrompt);
             messagesJsonArray.add(systemMessage);
@@ -114,7 +118,8 @@ public class OpenaiChat {
                     if (content.contains("<think>")) {
                         inReasoning = true;
                         content = content.replace("<think>", "");
-                        if(wantThink)player.displayClientMessage(Component.literal("\nthink:").withColor(0x808080), false);
+                        if (wantThink)
+                            player.displayClientMessage(Component.literal("\nthink:").withColor(0x808080), false);
                     }
                     if (content.contains("</think>")) {
                         inReasoning = false;
@@ -124,7 +129,7 @@ public class OpenaiChat {
 
                     if (inReasoning) {
                         reasoningBuffer.append(content);
-                        if (wantThink && content.matches(".*[。.!？?]\\s*$") ) {
+                        if (wantThink && content.matches(".*[。.!？?]\\s*$")) {
                             String chunk = reasoningBuffer.toString();
                             reasoningBuffer.setLength(0);
                             player.getServer().execute(() ->
@@ -156,14 +161,14 @@ public class OpenaiChat {
 
     public static CompletableFuture<Suggestions> suggestArgument(SuggestionsBuilder builder) {
         String suggestions = builder.getInput().replaceAll("/chat ", "");
-        if (!builder.getInput().contains("-think")){
+        if (!builder.getInput().contains("-think")) {
             builder.suggest("-think " + suggestions);
         }
-        if (!builder.getInput().contains("-nosystemprompt")){
-            builder.suggest("-nosystemprompt "  + suggestions);
+        if (!builder.getInput().contains("-nosystemprompt")) {
+            builder.suggest("-nosystemprompt " + suggestions);
         }
-        if (!builder.getInput().contains("-think") &&  !builder.getInput().contains("-nosystemprompt")){
-            builder.suggest("-nosystemprompt -think " + suggestions );
+        if (!builder.getInput().contains("-think") && !builder.getInput().contains("-nosystemprompt")) {
+            builder.suggest("-nosystemprompt -think " + suggestions);
         }
 
         return builder.buildFuture();

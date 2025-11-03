@@ -1,23 +1,19 @@
 package top.sducraft.commands.finditem;
 
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.commands.arguments.UuidArgument;
-import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.commands.arguments.UuidArgument;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,29 +22,30 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import top.sducraft.helpers.commands.allItemCommand.SpawnDisplay;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import net.minecraft.world.phys.AABB;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
-import java.util.Map;
+import top.sducraft.helpers.commands.allItemCommand.SpawnDisplay;
+
+import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FindItemCommand {
 
-    public record FoundInfo(String areaName, BlockPos pos, double distanceSq, Component name, int count, String type) {}
+    public record FoundInfo(String areaName, BlockPos pos, double distanceSq, Component name, int count, String type) {
+    }
 
-    public record MergedResult(List<String> areaNames, BlockPos pos, double distanceSq, Component name, int count, String type) {}
+    public record MergedResult(List<String> areaNames, BlockPos pos, double distanceSq, Component name, int count,
+                               String type) {
+    }
 
-    public record GroupingKey(BlockPos pos, String name, String type) {}
+    public record GroupingKey(BlockPos pos, String name, String type) {
+    }
 
-    private record DisplayInfo(Component message, double distanceSq) {}
+    private record DisplayInfo(Component message, double distanceSq) {
+    }
 
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandBuildContext) {
@@ -114,11 +111,11 @@ public class FindItemCommand {
                 )
                 .then(Commands.literal("clear").executes(context -> {
                     MinecraftServer server = context.getSource().getServer();
-                    for (ServerLevel serverLevel : server.getAllLevels()){
-                     List<Display.BlockDisplay> blockDisplays = new ArrayList<>();
-                     Predicate<Display.BlockDisplay> predicate = marker -> marker.getTags().contains("finditem_highlight");
-                     serverLevel.getEntities(EntityType.BLOCK_DISPLAY, predicate, blockDisplays);
-                     blockDisplays.forEach(Entity::discard);
+                    for (ServerLevel serverLevel : server.getAllLevels()) {
+                        List<Display.BlockDisplay> blockDisplays = new ArrayList<>();
+                        Predicate<Display.BlockDisplay> predicate = marker -> marker.getTags().contains("finditem_highlight");
+                        serverLevel.getEntities(EntityType.BLOCK_DISPLAY, predicate, blockDisplays);
+                        blockDisplays.forEach(Entity::discard);
                     }
                     return 1;
                 }))
@@ -144,7 +141,7 @@ public class FindItemCommand {
                         .map(info -> new FoundInfo(info.areaName(), info.pos(), info.distanceSq(), info.containerName().copy().withStyle(ChatFormatting.AQUA), info.itemCount(), "container")),
                 result.droppedItems().stream()
                         .map(info -> new FoundInfo(info.areaName(), info.pos(), info.distanceSq(), Component.literal("掉落物").withStyle(ChatFormatting.AQUA), info.itemCount(), "dropped_item"))
-                ).flatMap(s -> s);
+        ).flatMap(s -> s);
 
         // 2. 按位置、名称和类型对结果进行分组，合并区域名称
         List<MergedResult> mergedResults = new ArrayList<>(rawResultsStream.collect(
@@ -232,7 +229,7 @@ public class FindItemCommand {
                 300
         );
 
-        player.lookAt(EntityAnchorArgument.Anchor.EYES,new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
+        player.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
 
         return 1;
     }
@@ -334,8 +331,8 @@ public class FindItemCommand {
 
         BlockPos min = new BlockPos(Math.min(pos1.getX(), pos2.getX()), Math.min(pos1.getY(), pos2.getY()), Math.min(pos1.getZ(), pos2.getZ()));
         BlockPos max = new BlockPos(Math.max(pos1.getX(), pos2.getX()), Math.max(pos1.getY(), pos2.getY()), Math.max(pos1.getZ(), pos2.getZ()));
-        max = max.offset(1,1,1);
-        AABB searchBox = new AABB(new Vec3(min.getX(), min.getY(),min.getZ()), new Vec3(max.getX(), max.getY(),max.getZ()));
+        max = max.offset(1, 1, 1);
+        AABB searchBox = new AABB(new Vec3(min.getX(), min.getY(), min.getZ()), new Vec3(max.getX(), max.getY(), max.getZ()));
 
         FilterParser.Filter itemFilter = FilterParser.parse(itemFilterStr);
         FilterParser.Filter containerFilter = FilterParser.parse(containerFilterStr);

@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.LevelResource;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -26,7 +27,7 @@ public class WarningConfig {
         public String text;
         public boolean status;
 
-        public warning(String name,BlockPos pos,String dimension,String text, boolean status) {
+        public warning(String name, BlockPos pos, String dimension, String text, boolean status) {
             this.pos = pos;
             this.name = name;
             this.dimension = dimension;
@@ -49,7 +50,8 @@ public class WarningConfig {
         try {
             if (configFile.exists()) {
                 FileReader reader = new FileReader(configFile);
-                Type type = new TypeToken<List<warning>>() {}.getType();
+                Type type = new TypeToken<List<warning>>() {
+                }.getType();
                 warningList = new Gson().fromJson(reader, type);
                 reader.close();
             }
@@ -68,13 +70,13 @@ public class WarningConfig {
         }
     }
 
-    public static boolean addWarning(String name,String dimension, BlockPos pos, String text, Boolean status) {
+    public static boolean addWarning(String name, String dimension, BlockPos pos, String text, Boolean status) {
         for (warning warning : warningList) {
-            if (Objects.equals(warning.name, name)){
+            if (Objects.equals(warning.name, name)) {
                 return false;
             }
         }
-        warningList.add(new warning(name,pos,dimension,text, Boolean.TRUE.equals(status)));
+        warningList.add(new warning(name, pos, dimension, text, Boolean.TRUE.equals(status)));
         saveConfig();
         return true;
     }

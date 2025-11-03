@@ -1,6 +1,7 @@
 package top.sducraft.helpers.chat;
 
 import net.minecraft.server.level.ServerPlayer;
+
 import java.util.*;
 
 public class ChatMemory {

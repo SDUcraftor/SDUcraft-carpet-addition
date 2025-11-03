@@ -30,15 +30,15 @@ public class MachineStatusEasyCommand implements IEasyCommand {
 
     @Override
     public Component clickButton() {
-        return createCommandClickComponent("[机器状态查询]", "/easycommand machinestatus","点击进入机器状态查询界面");
+        return createCommandClickComponent("[机器状态查询]", "/easycommand machinestatus", "点击进入机器状态查询界面");
     }
 
     private static ServerLevel getDimension(MinecraftServer server, String dimension) {
         ServerLevel level = null;
         switch (dimension) {
-            case "overworld"-> level = server.getLevel(ServerLevel.OVERWORLD);
-            case "nether"-> level = server.getLevel(ServerLevel.NETHER);
-            case "end"-> level = server.getLevel(ServerLevel.END);
+            case "overworld" -> level = server.getLevel(ServerLevel.OVERWORLD);
+            case "nether" -> level = server.getLevel(ServerLevel.NETHER);
+            case "end" -> level = server.getLevel(ServerLevel.END);
         }
         return level;
     }
@@ -46,7 +46,7 @@ public class MachineStatusEasyCommand implements IEasyCommand {
     @Override
     public void showEasyCommandInterface(ServerPlayer player) {
 
-       NoticeDialogBuilder builder = new NoticeDialogBuilder();
+        NoticeDialogBuilder builder = new NoticeDialogBuilder();
 
         builder.setTitle("Machine 指令介绍")
                 .setCanCloseWithEscape(true); // 确保玩家可以按 Esc 关闭
@@ -71,14 +71,13 @@ public class MachineStatusEasyCommand implements IEasyCommand {
         Message.sandPlayerDialog(player, builder);
     }
 
-    public static int showMachineStatus(ServerPlayer player){
+    public static int showMachineStatus(ServerPlayer player) {
         boolean bl1 = tempMachineList.isEmpty();
         boolean bl2 = permMachineList.isEmpty();
-        if (bl1 && bl2){
-            player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.machinestatus1")),false);
+        if (bl1 && bl2) {
+            player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.machinestatus1")), false);
             return 0;
-        }
-        else {
+        } else {
             player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.machinestatus4")).append(Component.literal(tr("sducarpet.easycommand.machinestatus5")).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN))).append(Component.literal(tr("sducarpet.easycommand.machinestatus6"))).append(Component.literal(tr("sducarpet.easycommand.machinestatus7")).withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))).append(Component.literal(tr("sducarpet.easycommand.machinestatus8"))), false);
             if (!bl1) {
                 player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.machinestatus2")), false);
@@ -111,11 +110,11 @@ public class MachineStatusEasyCommand implements IEasyCommand {
         }
     }
 
-    public static boolean getAllItemStatus(){
-        for(MachineStatusCommandConfig.Machine machine : permMachineList) {
+    public static boolean getAllItemStatus() {
+        for (MachineStatusCommandConfig.Machine machine : permMachineList) {
             if (Objects.equals(machine.name, "全物品")) {
                 BlockState blockState = getDimension(CarpetServer.minecraft_server, machine.dimension).getBlockState(machine.pos);
-                if((blockState.getBlock() instanceof LeverBlock && blockState.getValue(LeverBlock.POWERED)) || (blockState.getBlock() instanceof RedstoneLampBlock && blockState.getValue(RedstoneLampBlock.LIT))) {
+                if ((blockState.getBlock() instanceof LeverBlock && blockState.getValue(LeverBlock.POWERED)) || (blockState.getBlock() instanceof RedstoneLampBlock && blockState.getValue(RedstoneLampBlock.LIT))) {
                     return true;
                 }
             }

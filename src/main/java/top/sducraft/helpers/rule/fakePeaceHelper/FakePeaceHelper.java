@@ -14,7 +14,7 @@ public class FakePeaceHelper {
     private static int tickCounter = 0;
 
     public static void loadChunkOnInitialize(MinecraftServer server) {
-        if(SDUcraftCarpetSettings.easyFakePeace) {
+        if (SDUcraftCarpetSettings.easyFakePeace) {
             ServerLevel overworld = server.getLevel(Level.OVERWORLD);
             ServerLevel nether = server.getLevel(Level.NETHER);
             ServerLevel end = server.getLevel(Level.END);
@@ -30,22 +30,19 @@ public class FakePeaceHelper {
         }
     }
 
-    private static ServerLevel getTargetDimension (MinecraftServer server,ServerLevel level) {
+    private static ServerLevel getTargetDimension(MinecraftServer server, ServerLevel level) {
         if (level == server.getLevel(Level.OVERWORLD)) {
             return server.getLevel(Level.NETHER);
-        }
-        else if (level == server.getLevel(Level.NETHER)) {
+        } else if (level == server.getLevel(Level.NETHER)) {
             return server.getLevel(Level.OVERWORLD);
-        }
-        else if (level == server.getLevel(Level.END)) {
+        } else if (level == server.getLevel(Level.END)) {
             return server.getLevel(Level.END);
-        }
-        else {
+        } else {
             return level;
         }
     }
 
-    private static void loadchunk(MinecraftServer server, ServerLevel dimension){
+    private static void loadchunk(MinecraftServer server, ServerLevel dimension) {
         if (SDUcraftCarpetSettings.easyFakePeace) {
             String dimensionKey = dimension.dimension().toString();
             ServerLevel targetDimension = getTargetDimension(server, dimension);

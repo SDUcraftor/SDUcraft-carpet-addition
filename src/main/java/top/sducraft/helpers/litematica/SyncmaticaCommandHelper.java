@@ -7,7 +7,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import java.util.*;
+
+import java.util.List;
+
 import static carpet.utils.Translations.tr;
 
 public class SyncmaticaCommandHelper {
@@ -34,7 +36,7 @@ public class SyncmaticaCommandHelper {
             LoadSyncmatica.Litematica l = list.get(i);
             String owner = l.owner != null ? l.owner.name : "unknown";
             player.displayClientMessage(Component.literal(tr("name: "))
-                    .append(Component.literal( l.file_name).withColor(0x00FFFF))
+                    .append(Component.literal(l.file_name).withColor(0x00FFFF))
                     .append(Component.literal(tr(" owner: ")))
                     .append(Component.literal(owner).withColor(0xFFFF00)), false);
         }
@@ -65,8 +67,8 @@ public class SyncmaticaCommandHelper {
     }
 
 
-    public static void  tt(){
-        for (ServerLevel serverLevel : CarpetServer.minecraft_server.getAllLevels()){
+    public static void tt() {
+        for (ServerLevel serverLevel : CarpetServer.minecraft_server.getAllLevels()) {
 
         }
 

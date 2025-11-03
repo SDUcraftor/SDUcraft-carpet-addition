@@ -2,8 +2,8 @@ package top.sducraft.mixins.carpet;
 
 import carpet.api.settings.SettingsManager;
 import carpet.utils.Messenger;
-import net.fabricmc.loader.api.FabricLoader;
 import carpet.utils.TranslationKeys;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.CommandSourceStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,13 +14,13 @@ import static carpet.utils.Translations.tr;
 
 @Mixin(SettingsManager.class)
 public class SettingsManagerMixin {
-    @Inject(method = "listAllSettings", at = @At(value = "INVOKE",target = "Lcarpet/utils/Translations;tr(Ljava/lang/String;)Ljava/lang/String;",ordinal = 1,shift = At.Shift.AFTER),remap = false)
+    @Inject(method = "listAllSettings", at = @At(value = "INVOKE", target = "Lcarpet/utils/Translations;tr(Ljava/lang/String;)Ljava/lang/String;", ordinal = 1, shift = At.Shift.AFTER), remap = false)
     private void listAllSettings(CommandSourceStack source, CallbackInfoReturnable<Integer> cir) {
         String mod_version = FabricLoader.getInstance()
                 .getModContainer("sducraft-carpet-addition")
                 .map(modContainer -> modContainer.getMetadata().getVersion().getFriendlyString())
                 .orElse("UNKNOWN");
-        Messenger.m(source, "g "+"Carpet SDUcraft Addition"+" "+ tr(TranslationKeys.VERSION) + ": " + mod_version);
+        Messenger.m(source, "g " + "Carpet SDUcraft Addition" + " " + tr(TranslationKeys.VERSION) + ": " + mod_version);
     }
 
 }

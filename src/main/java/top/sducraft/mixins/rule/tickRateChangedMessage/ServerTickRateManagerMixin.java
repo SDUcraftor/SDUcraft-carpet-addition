@@ -11,20 +11,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import top.sducraft.SDUcraftCarpetSettings;
 
 @Mixin(ServerTickRateManager.class)
-public abstract class ServerTickRateManagerMixin extends TickRateManager  {
+public abstract class ServerTickRateManagerMixin extends TickRateManager {
 
-    @Shadow public abstract void setTickRate(float f);
+    @Shadow
+    public abstract void setTickRate(float f);
 
-    @Inject(method = "requestGameToSprint",at=@At("HEAD"))
+    @Inject(method = "requestGameToSprint", at = @At("HEAD"))
     private void RequestGameToSprint(int i, CallbackInfoReturnable<Boolean> cir) {
-        if(SDUcraftCarpetSettings.tickRateChangedMessage) {
+        if (SDUcraftCarpetSettings.tickRateChangedMessage) {
             this.setTickRate(20.0F);
         }
     }
 
-    @Inject(method = "setFrozen",at=@At("HEAD"))
+    @Inject(method = "setFrozen", at = @At("HEAD"))
     private void setFrozen(boolean bl, CallbackInfo ci) {
-        if(SDUcraftCarpetSettings.tickRateChangedMessage) {
+        if (SDUcraftCarpetSettings.tickRateChangedMessage) {
             this.setTickRate(20.0F);
         }
     }

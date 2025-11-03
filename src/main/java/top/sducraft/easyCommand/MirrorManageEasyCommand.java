@@ -21,7 +21,7 @@ public class MirrorManageEasyCommand implements IEasyCommand {
 
     @Override
     public Component clickButton() {
-        return createCommandClickComponent("[镜像服管理]", "/easycommand mirrormanager","点击进入镜像服管理界面");
+        return createCommandClickComponent("[镜像服管理]", "/easycommand mirrormanager", "点击进入镜像服管理界面");
     }
 
     @Override

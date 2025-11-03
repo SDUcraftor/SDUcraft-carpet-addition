@@ -14,6 +14,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Type;
 import java.util.*;
+
 import static top.sducraft.helpers.commands.allItemCommand.SpawnDisplay.generateDisplaysInfo;
 import static top.sducraft.helpers.translation.allitem.ItemTranslation.translateItem;
 
@@ -49,11 +50,12 @@ public class AllItemData {
         try {
             if (configFile.exists()) {
                 FileReader reader = new FileReader(configFile);
-                Type type = new TypeToken<HashMap<String, ItemData>>() {}.getType();
+                Type type = new TypeToken<HashMap<String, ItemData>>() {
+                }.getType();
                 dataList = new Gson().fromJson(reader, type);
                 reader.close();
                 updateNameToDataMap();
-                DelayedEvents.START_SERVER_TICK.register(20, s ->generateDisplaysInfo(CarpetServer.minecraft_server.overworld()));
+                DelayedEvents.START_SERVER_TICK.register(20, s -> generateDisplaysInfo(CarpetServer.minecraft_server.overworld()));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,27 +72,28 @@ public class AllItemData {
             e.printStackTrace();
         }
     }
+
     // ✅ 添加物品
-    public static void addItem(String key,String type,BlockPos pos,HashSet<BlockPos> storePos) {
+    public static void addItem(String key, String type, BlockPos pos, HashSet<BlockPos> storePos) {
         ItemData data = dataList.get(key);
         if (data != null) {
             data.storePos.add(pos);
         } else {
             HashSet<BlockPos> set = new HashSet<>();
             set.add(pos);
-            dataList.put(key, new ItemData(type,set,storePos));
+            dataList.put(key, new ItemData(type, set, storePos));
         }
         saveConfig();
     }
 
-    public static void addItem(String key,String type,HashSet<BlockPos> storePos,HashSet<BlockPos> chestPos) {
+    public static void addItem(String key, String type, HashSet<BlockPos> storePos, HashSet<BlockPos> chestPos) {
         ItemData data = dataList.get(key);
-            if (data != null) {
-                data.storePos.addAll(storePos);
-                data.chestPos.addAll(chestPos);
-            } else {
-                dataList.put(key, new ItemData(type, storePos, chestPos));
-            }
+        if (data != null) {
+            data.storePos.addAll(storePos);
+            data.chestPos.addAll(chestPos);
+        } else {
+            dataList.put(key, new ItemData(type, storePos, chestPos));
+        }
         saveConfig();
     }
 
@@ -104,20 +107,20 @@ public class AllItemData {
 
         for (Map.Entry<String, ItemData> entry : chineseNameToData.entrySet()) {
             if (entry.getKey().toLowerCase().contains(keyword)) {
-                    result.add(entry.getKey());
+                result.add(entry.getKey());
             }
         }
 
         for (Map.Entry<String, ItemData> entry : englishNameToData.entrySet()) {
             if (entry.getKey().toLowerCase().contains(keyword)) {
-                    result.add(entry.getKey());
+                result.add(entry.getKey());
             }
         }
 
         return result;
     }
 
-    public static ItemData search(String keyword){
+    public static ItemData search(String keyword) {
         ItemData byChinese = chineseNameToData.get(keyword);
         if (byChinese != null) return byChinese;
         return englishNameToData.get(keyword);

@@ -20,7 +20,7 @@ public class LocEasyCommand implements IEasyCommand {
 
     @Override
     public Component clickButton() {
-        return createCommandClickComponent("[服务器路标]", "/easycommand locationmarker","点击进入服务器路标界面");
+        return createCommandClickComponent("[服务器路标]", "/easycommand locationmarker", "点击进入服务器路标界面");
     }
 
     @Override
@@ -34,7 +34,7 @@ public class LocEasyCommand implements IEasyCommand {
                 .append(Component.literal("!!loc").withStyle(Style.EMPTY
                         .withClickEvent(new ClickEvent.SuggestCommand("!!loc"))
                         .withColor(ChatFormatting.AQUA)))
-                .append(" 以获取详细信息"),false);
+                .append(" 以获取详细信息"), false);
     }
 
 }

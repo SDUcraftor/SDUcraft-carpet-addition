@@ -8,20 +8,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.Item;
 import net.querz.nbt.io.NBTDeserializer;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.ListTag;
 import top.sducraft.config.allItemData.AllItemData;
 import top.sducraft.helpers.commands.allItemCommand.SpawnDisplay;
 import top.sducraft.helpers.translation.allitem.ItemTranslation;
+
 import java.io.File;
 import java.util.*;
 
 import static carpet.utils.Translations.tr;
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.countItemInWorld;
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.getCountString;
-import static top.sducraft.helpers.commands.allItemCommand.SpawnDisplay.*;
+import static top.sducraft.helpers.commands.allItemCommand.SpawnDisplay.spawnBlockDisplay;
+import static top.sducraft.helpers.commands.allItemCommand.SpawnDisplay.spawnItemDisplay;
 
 public class MaterialListManenger {
     public static Map<String, Integer> missingMaterials = new HashMap<>();
@@ -60,7 +61,7 @@ public class MaterialListManenger {
 
                     CompoundTag entry = palette.get(paletteIndex);
                     String name = entry.getString("Name");
-                    if(name.equals("minecraft:air")) continue;
+                    if (name.equals("minecraft:air")) continue;
                     name = name.replaceFirst("wall_", "");
                     name = name.replaceFirst("lava_", "");
                     name = name.replaceFirst("_wire", "");
@@ -68,7 +69,7 @@ public class MaterialListManenger {
                     if (name.startsWith("minecraft:") && name.length() > 10) {
                         name = name.substring(10);
                     }
-                    if(CarpetSettings.language.equals("zh_cn")){
+                    if (CarpetSettings.language.equals("zh_cn")) {
                         name = "block.minecraft." + name;
                         name = ItemTranslation.translateItem(name);
                         name = name.replace("block.minecraft.redstone", "红石粉");
@@ -87,19 +88,19 @@ public class MaterialListManenger {
         lackMaterials.clear();
 
         if (player != null) {
-        ServerLevel level = player.getServer().overworld();
-        int totalCount = 0;
-        int lackCount = 0;
-        int missingCount = 0;
+            ServerLevel level = player.getServer().overworld();
+            int totalCount = 0;
+            int lackCount = 0;
+            int missingCount = 0;
             for (Map.Entry<String, Integer> entry : blockCounts.entrySet()) {
-                totalCount ++;
+                totalCount++;
                 String descriptionId = entry.getKey();
                 int requiredCount = entry.getValue();
                 AllItemData.ItemData data = AllItemData.search(descriptionId);
                 if (data != null) {
                     int availableCount = countItemInWorld(data);
                     if (availableCount < requiredCount) {
-                        lackCount ++;
+                        lackCount++;
                         for (BlockPos pos : data.chestPos) {
                             spawnBlockDisplay(level, pos, level.getBlockState(pos), 0xFF0000, "material");
                         }
@@ -111,7 +112,7 @@ public class MaterialListManenger {
                         spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM, "material");
                     }
                 } else {
-                    missingCount ++;
+                    missingCount++;
                     missingMaterials.put(descriptionId, requiredCount);
                 }
             }
@@ -121,7 +122,7 @@ public class MaterialListManenger {
                             .append(Component.literal(String.valueOf(lackCount)).withColor(0xFFFF00)).append(Component.literal(tr("\nUse \"/syncmatica material lack\" to display complete list of lack materials")))
                             .append(Component.literal(tr("\nmissing material species:")))
                             .append(Component.literal(String.valueOf(missingCount)).withColor(0xFF0000)).append(Component.literal(tr("\nUse \"/syncmatica material missing\" to display complete list of lack materials")))
-            , false);
+                    , false);
         }
     }
 

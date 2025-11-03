@@ -11,14 +11,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import top.sducraft.SDUcraftCarpetSettings;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin
-{
+public abstract class EntityMixin {
 
-    @Shadow @Nullable public PortalProcessor portalProcess;
+    @Shadow
+    @Nullable
+    public PortalProcessor portalProcess;
 
-    @Inject(method = "handlePortal",at=@At("HEAD"))
+    @Inject(method = "handlePortal", at = @At("HEAD"))
     protected void handleNetherPortal(CallbackInfo ci) {
-        if(SDUcraftCarpetSettings.disableNetherPortal) {
+        if (SDUcraftCarpetSettings.disableNetherPortal) {
             this.portalProcess = null;
         }
     }

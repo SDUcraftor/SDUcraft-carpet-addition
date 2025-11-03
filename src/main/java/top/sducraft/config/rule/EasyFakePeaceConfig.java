@@ -3,9 +3,10 @@ package top.sducraft.config.rule;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -22,6 +23,7 @@ public class EasyFakePeaceConfig {
         int y;
         int z;
         boolean state;
+
         public FakePeaceData(int x, int y, int z, boolean state) {
             this.x = x;
             this.y = y;
@@ -46,7 +48,8 @@ public class EasyFakePeaceConfig {
         try {
             if (configFile.exists()) {
                 FileReader reader = new FileReader(configFile);
-                Type type = new TypeToken<Map<String, FakePeaceData>>() {}.getType();
+                Type type = new TypeToken<Map<String, FakePeaceData>>() {
+                }.getType();
                 fakePeaceData = new Gson().fromJson(reader, type);
                 reader.close();
             }
@@ -54,6 +57,7 @@ public class EasyFakePeaceConfig {
             e.printStackTrace();
         }
     }
+
     // 保存配置文件
     public static void saveConfig() {
         try {
@@ -81,8 +85,8 @@ public class EasyFakePeaceConfig {
         return false;
     }
 
-    public static int setFakePeaceCoordinates(String dimension, int x,int y ,int z) {
-        FakePeaceData data = new FakePeaceData(x, y,z, false);
+    public static int setFakePeaceCoordinates(String dimension, int x, int y, int z) {
+        FakePeaceData data = new FakePeaceData(x, y, z, false);
         fakePeaceData.put(dimension, data);
         saveConfig();
         return 1;

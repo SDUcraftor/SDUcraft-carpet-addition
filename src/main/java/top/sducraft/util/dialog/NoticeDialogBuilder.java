@@ -1,6 +1,8 @@
 package top.sducraft.util.dialog;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class NoticeDialogBuilder extends DialogBuilder<NoticeDialogBuilder> {
 
     /**
      * [实现] 实现父类的抽象方法，添加一个复杂的文本主体。
+     *
      * @param builder 一个配置好的 TextComponentBuilder。
      */
     @Override
@@ -45,6 +48,7 @@ public class NoticeDialogBuilder extends DialogBuilder<NoticeDialogBuilder> {
 
     /**
      * [新] 使用复杂的文本组件设置底部确认按钮。
+     *
      * @param labelBuilder 一个配置好的 TextComponentBuilder 实例。
      * @return 当前构建器实例，用于链式调用。
      */

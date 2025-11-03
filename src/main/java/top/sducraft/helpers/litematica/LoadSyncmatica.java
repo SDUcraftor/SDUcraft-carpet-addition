@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.server.MinecraftServer;
+
 import java.io.File;
 import java.io.FileReader;
 import java.lang.reflect.Type;
@@ -23,10 +24,12 @@ public class LoadSyncmatica {
         public String rotation;
         public String mirror;
         public Owner owner;
+
         public static class Origin {
             public List<Integer> position;
             public String dimension;
         }
+
         public static class Owner {
             public UUID uuid;
             public String name;

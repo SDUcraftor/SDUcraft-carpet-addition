@@ -10,10 +10,9 @@ import net.minecraft.server.level.ServerPlayer;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.displayAllItemInfo;
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 
-public class SyncmaticaEasyCommand implements IEasyCommand{
+public class SyncmaticaEasyCommand implements IEasyCommand {
     @Override
     public String getCommandName() {
         return "syncmatica";
@@ -21,7 +20,7 @@ public class SyncmaticaEasyCommand implements IEasyCommand{
 
     @Override
     public Component clickButton() {
-        return createCommandClickComponent("[材料列表助手]", "/easycommand syncmatica","材料列表助手");
+        return createCommandClickComponent("[材料列表助手]", "/easycommand syncmatica", "材料列表助手");
     }
 
     @Override
@@ -35,10 +34,10 @@ public class SyncmaticaEasyCommand implements IEasyCommand{
                         """));
         player.displayClientMessage(component, false);
         player.displayClientMessage(Component.literal("""
-                        /syncmatica list <page> 显示当前共享投影列表
-                        /syncmatica material <syncmatica> 加载指定投影的材料列表
-                        /asyncmatica clear 清除当前材料列表
-                        """),false);
-        player.displayClientMessage(Component.literal("温馨提示:返回列表中很多元素可以通过直接 点击 获取详细信息").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)),false);
+                /syncmatica list <page> 显示当前共享投影列表
+                /syncmatica material <syncmatica> 加载指定投影的材料列表
+                /asyncmatica clear 清除当前材料列表
+                """), false);
+        player.displayClientMessage(Component.literal("温馨提示:返回列表中很多元素可以通过直接 点击 获取详细信息").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)), false);
     }
 }

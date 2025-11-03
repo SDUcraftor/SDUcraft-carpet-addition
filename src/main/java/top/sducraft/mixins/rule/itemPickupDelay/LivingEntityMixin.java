@@ -13,10 +13,12 @@ import top.sducraft.SDUcraftCarpetSettings;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements TraceableEntity {
 
-    public LivingEntityMixin(EntityType<?> entityType, Level level) {super(entityType, level);}
+    public LivingEntityMixin(EntityType<?> entityType, Level level) {
+        super(entityType, level);
+    }
 
-   @ModifyArg(method = "createItemStackToDrop", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;setPickUpDelay(I)V"))
-    private int drop (int i ){
-       return SDUcraftCarpetSettings.itemPickUpDelay;
-   }
+    @ModifyArg(method = "createItemStackToDrop", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;setPickUpDelay(I)V"))
+    private int drop(int i) {
+        return SDUcraftCarpetSettings.itemPickUpDelay;
+    }
 }

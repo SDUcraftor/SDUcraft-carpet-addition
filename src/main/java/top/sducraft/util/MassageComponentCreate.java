@@ -21,7 +21,7 @@ public class MassageComponentCreate {
             description = Component.empty().append(description).withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Component.literal(hoverText))));
         }
         if (tips != null) {
-            description = Component.empty().append(description).append(Component.literal("\n"+tips));
+            description = Component.empty().append(description).append(Component.literal("\n" + tips));
         }
         return description;
     }
@@ -49,15 +49,13 @@ public class MassageComponentCreate {
     }
 
     public static int getDimensionColor(String dimension) {
-            if (dimension.equals("overworld")) {
-                return 0x006400;
-            }
-            else if (dimension.equals("the_nether")) {
-                return 0x8B0000;
-            }
-            else {
-                return 0x800080;
-            }
+        if (dimension.equals("overworld")) {
+            return 0x006400;
+        } else if (dimension.equals("the_nether")) {
+            return 0x8B0000;
+        } else {
+            return 0x800080;
+        }
     }
 
 

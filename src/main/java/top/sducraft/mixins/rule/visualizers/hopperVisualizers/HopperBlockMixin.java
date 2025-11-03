@@ -25,7 +25,7 @@ public class HopperBlockMixin extends Block {
 
     @Override
     public @NotNull BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        if(level instanceof ServerLevel && SDUcraftCarpetSettings.hopperCooldownVisualize) {
+        if (level instanceof ServerLevel && SDUcraftCarpetSettings.hopperCooldownVisualize) {
             HopperCooldownVisualizing.removeVisualizer(blockPos);
         }
         return super.playerWillDestroy(level, blockPos, blockState, player);
@@ -33,7 +33,7 @@ public class HopperBlockMixin extends Block {
 
     @Override
     public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
-        if(level instanceof ServerLevel && SDUcraftCarpetSettings.hopperCooldownVisualize) {
+        if (level instanceof ServerLevel && SDUcraftCarpetSettings.hopperCooldownVisualize) {
             HopperCooldownVisualizing.setVisualizer((ServerLevel) level, blockPos, -1);
         }
         super.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack);

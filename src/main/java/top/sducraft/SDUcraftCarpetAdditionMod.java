@@ -20,16 +20,17 @@ import top.sducraft.helpers.visualizers.Visualizers;
 import top.sducraft.util.DelayedEvents;
 
 import java.util.Map;
+
 import static carpet.utils.Translations.getTranslationFromResourcePath;
 import static top.sducraft.helpers.commands.allItemCommand.SearchAllItem.deleteAllItemDisplay;
 import static top.sducraft.helpers.rule.joinMessage.JoinMessage.showJoinMessage;
-import static top.sducraft.util.DelayedEvents.*;
+import static top.sducraft.util.DelayedEvents.START_SERVER_TICK;
 
 
 public class SDUcraftCarpetAdditionMod implements CarpetExtension, ModInitializer {
     public static String MOD_ID = "SDU-carpet";
     public final static Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final TicketType FAKE_PEACE_TICKET_TYPE =TicketType.register("fakepeace", 100L, false, TicketType.TicketUse.LOADING_AND_SIMULATION);
+    public static final TicketType FAKE_PEACE_TICKET_TYPE = TicketType.register("fakepeace", 100L, false, TicketType.TicketUse.LOADING_AND_SIMULATION);
 
     static {
         CarpetServer.manageExtension(new SDUcraftCarpetAdditionMod());
@@ -44,10 +45,14 @@ public class SDUcraftCarpetAdditionMod implements CarpetExtension, ModInitialize
         ServerTickEvents.START_SERVER_TICK.register(DynamicViewDistance::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(WarningEasyCommand::warnPlayer);
         DelayedEvents.init();
-        START_SERVER_TICK.register(10, server -> { deleteAllItemDisplay(CarpetServer.minecraft_server);});
+        START_SERVER_TICK.register(10, server -> {
+            deleteAllItemDisplay(CarpetServer.minecraft_server);
+        });
         CommandRegister.registerCommands();
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            if(!(handler.getPlayer() instanceof FakePlayer)) {showJoinMessage(handler.getPlayer());}
+            if (!(handler.getPlayer() instanceof FakePlayer)) {
+                showJoinMessage(handler.getPlayer());
+            }
         });
     }
 
@@ -60,7 +65,7 @@ public class SDUcraftCarpetAdditionMod implements CarpetExtension, ModInitialize
 
     @Override
     public Map<String, String> canHasTranslations(String lang) {
-        Map<String, String> langdict = getTranslationFromResourcePath(String.format("assets/sdu/lang/%s.json",lang));
+        Map<String, String> langdict = getTranslationFromResourcePath(String.format("assets/sdu/lang/%s.json", lang));
         if (langdict == null)
             langdict = getTranslationFromResourcePath("assets/sdu/lang/en_us.json");
         return langdict;

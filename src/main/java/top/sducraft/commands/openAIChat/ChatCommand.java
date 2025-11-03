@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import top.sducraft.config.chat.ChatAIConfig;
 import top.sducraft.helpers.chat.ChatMemory;
+
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.chat.ChatAIConfig.configList;
 import static top.sducraft.config.chat.ChatAIConfig.setActiveConfig;
@@ -15,44 +16,44 @@ import static top.sducraft.helpers.chat.OpenaiChat.suggestArgument;
 import static top.sducraft.helpers.chat.OpenaiChat.tryStartChat;
 
 public class ChatCommand {
-            public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
-                            commandDispatcher.register(Commands.literal("chat")
-                                    .then(Commands.literal("clear")
-                                            .executes(context -> {
-                                                ServerPlayer player = context.getSource().getPlayer();
-                                                if (player != null) {
-                                                    ChatMemory.clear(player);
-                                                    context.getSource().sendSuccess(() -> Component.literal(tr("sducarpet.command.chat1")), false);
-                                                    return 1;
-                                                }
-                                                context.getSource().sendFailure(Component.literal(tr("sducarpet.command.chat2")));
-                                                return 0;
-                                            }))
-                                    .then(Commands.literal("model")
-                                            .then(Commands.argument("model", StringArgumentType.greedyString())
-                                                    .suggests((context, builder) -> {
-                                                        for (ChatAIConfig.APIConfig cfg: configList){
-                                                            builder.suggest(cfg.model);
-                                                        }
-                                                        return  builder.buildFuture();
-                                                    })
-                                                    .executes(context -> {
-                                                        if(setActiveConfig(StringArgumentType.getString(context, "model"),context.getSource().getPlayer().getUUID())) {
-                                                            context.getSource().sendSuccess(() -> Component.literal(tr("sducarpet.command.chat5") + StringArgumentType.getString(context, "model")), false);
-                                                            return 1;
-                                                        }
-                                                        context.getSource().sendFailure(Component.literal(tr("sducarpet.command.chat6")));
-                                                        return 0;
-                                                    })))
-                                    .then(Commands.argument("content", StringArgumentType.greedyString())
-                                            .suggests((context, builder) -> suggestArgument(builder))
-                                            .executes(context -> {
-                                                ServerPlayer player = context.getSource().getPlayer();
-                                                if (player != null) {
-                                                    tryStartChat(StringArgumentType.getString(context,"content"),player);
-                                                    return 1;
-                                                }
-                                                return 0;
-                                            })));
-            }
+    public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
+        commandDispatcher.register(Commands.literal("chat")
+                .then(Commands.literal("clear")
+                        .executes(context -> {
+                            ServerPlayer player = context.getSource().getPlayer();
+                            if (player != null) {
+                                ChatMemory.clear(player);
+                                context.getSource().sendSuccess(() -> Component.literal(tr("sducarpet.command.chat1")), false);
+                                return 1;
+                            }
+                            context.getSource().sendFailure(Component.literal(tr("sducarpet.command.chat2")));
+                            return 0;
+                        }))
+                .then(Commands.literal("model")
+                        .then(Commands.argument("model", StringArgumentType.greedyString())
+                                .suggests((context, builder) -> {
+                                    for (ChatAIConfig.APIConfig cfg : configList) {
+                                        builder.suggest(cfg.model);
+                                    }
+                                    return builder.buildFuture();
+                                })
+                                .executes(context -> {
+                                    if (setActiveConfig(StringArgumentType.getString(context, "model"), context.getSource().getPlayer().getUUID())) {
+                                        context.getSource().sendSuccess(() -> Component.literal(tr("sducarpet.command.chat5") + StringArgumentType.getString(context, "model")), false);
+                                        return 1;
+                                    }
+                                    context.getSource().sendFailure(Component.literal(tr("sducarpet.command.chat6")));
+                                    return 0;
+                                })))
+                .then(Commands.argument("content", StringArgumentType.greedyString())
+                        .suggests((context, builder) -> suggestArgument(builder))
+                        .executes(context -> {
+                            ServerPlayer player = context.getSource().getPlayer();
+                            if (player != null) {
+                                tryStartChat(StringArgumentType.getString(context, "content"), player);
+                                return 1;
+                            }
+                            return 0;
+                        })));
+    }
 }

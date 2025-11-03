@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static top.sducraft.SDUcraftCarpetSettings.unicodeArgumentsSupport;
 
-@Mixin(value = StringReader.class,remap = false)
+@Mixin(value = StringReader.class, remap = false)
 public class StringReaderMixin {
 
     @Inject(method = "isAllowedInUnquotedString(C)Z", at = @At("RETURN"), cancellable = true)

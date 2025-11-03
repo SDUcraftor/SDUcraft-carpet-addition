@@ -8,6 +8,7 @@
     "carpet.fix.ServerGamePacketListenerImplMixin",
     "rule.brittleDeepSlate.BlockBehaviorMixin",
     "rule.chickenJockeyGenerationOdds.ZombieMixin",
+    "rule.commandLog.CommandsLogMixin",
     "rule.disableNetherPortal.EntityMixin",
     "rule.easyFakePeace.MinecraftServerMixin",
     "rule.finditem.DisableVisualizerEntitySave",

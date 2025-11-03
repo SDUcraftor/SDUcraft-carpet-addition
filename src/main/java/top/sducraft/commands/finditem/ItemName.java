@@ -4,17 +4,21 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+
 import static top.sducraft.helpers.translation.allitem.ItemTranslation.translateItem;
 
 public class ItemName {
-    public static final Map<Item,Map.Entry<String,String>> ItemNames = new HashMap<>();
+    public static final Map<Item, Map.Entry<String, String>> ItemNames = new HashMap<>();
 
     public static void init() {
-        for (Item item : BuiltInRegistries.ITEM){
+        for (Item item : BuiltInRegistries.ITEM) {
             String translationKey = item.getDescriptionId();
-            ItemNames.put(item,Map.entry(stripPrefix(translationKey),translateItem(translationKey)));
+            ItemNames.put(item, Map.entry(stripPrefix(translationKey), translateItem(translationKey)));
         }
     }
 

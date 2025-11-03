@@ -14,16 +14,16 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.config.rule.WarningConfig;
+
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.rule.WarningConfig.warningList;
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 import static top.sducraft.util.MassageComponentCreate.getDimensionColor;
 
-public class WarningEasyCommand implements IEasyCommand{
-    private static int tickcount = 0 ;
+public class WarningEasyCommand implements IEasyCommand {
+    private static int tickcount = 0;
 
     @Override
     public String getCommandName() {
@@ -32,7 +32,7 @@ public class WarningEasyCommand implements IEasyCommand{
 
     @Override
     public Component clickButton() {
-        return createCommandClickComponent("[警告系统]", "/easycommand warning","点击进入警告配置界面");
+        return createCommandClickComponent("[警告系统]", "/easycommand warning", "点击进入警告配置界面");
     }
 
     @Override
@@ -60,7 +60,7 @@ public class WarningEasyCommand implements IEasyCommand{
                             .withColor(getDimensionColor(warning.dimension)))
                     .append(Component.literal(" \"" + warning.text + "\"  "));
             Component buttons = createWarningStateText(warning);
-            body =Component.empty().append(body).append(info).append(buttons);
+            body = Component.empty().append(body).append(info).append(buttons);
         }
         player.displayClientMessage(Component.empty().append(header).append(body), false);
     }
@@ -126,10 +126,10 @@ public class WarningEasyCommand implements IEasyCommand{
                     for (WarningConfig.warning warning : warningList) {
                         if (warning.status) {
                             if (player.level().dimension().location().getPath().equals(warning.dimension) && Math.abs(player.getX() - warning.pos.getX()) <= 250 && Math.abs(player.getZ() - warning.pos.getZ()) <= 250) {
-                                  ClientboundSetTitleTextPacket titleTextPacket = new ClientboundSetTitleTextPacket(Component.literal(tr("sducarpet.easycommand.fakepeacewarn1")).withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                                  player.connection.send(titleTextPacket);
-                                  player.sendSystemMessage(Component.literal(warning.text+" ").append(Component.literal(tr("sducarpet.easycommand.warningcommand11")).withColor(0xFF5555)).append(Component.literal("("+warning.pos.toShortString()+")")).append(Component.literal(warning.dimension).withColor(getDimensionColor(warning.dimension))), true);
-                                  drawDirectionArrow(player, warning.pos);
+                                ClientboundSetTitleTextPacket titleTextPacket = new ClientboundSetTitleTextPacket(Component.literal(tr("sducarpet.easycommand.fakepeacewarn1")).withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                                player.connection.send(titleTextPacket);
+                                player.sendSystemMessage(Component.literal(warning.text + " ").append(Component.literal(tr("sducarpet.easycommand.warningcommand11")).withColor(0xFF5555)).append(Component.literal("(" + warning.pos.toShortString() + ")")).append(Component.literal(warning.dimension).withColor(getDimensionColor(warning.dimension))), true);
+                                drawDirectionArrow(player, warning.pos);
                             }
                         }
                     }
@@ -145,12 +145,12 @@ public class WarningEasyCommand implements IEasyCommand{
         double dist = Math.hypot(dx, dz);
         double dirX = dx / dist;
         double dirZ = dz / dist;
-        double startBack   = -41.0;
-        double endFront    = 45.0;
-        double step        = 15.0;
-        double shaftLen    = 8.0;
-        double headLen     = 3.0;
-        double headAngle   = Math.PI / 4;
+        double startBack = -41.0;
+        double endFront = 45.0;
+        double step = 15.0;
+        double shaftLen = 8.0;
+        double headLen = 3.0;
+        double headAngle = Math.PI / 4;
         ParticleOptions particle = new DustParticleOptions(
                 1, 1.0f
         );
@@ -160,7 +160,7 @@ public class WarningEasyCommand implements IEasyCommand{
                 Vec3 p = base.add(dirX * t, 0, dirZ * t);
                 level.sendParticles(particle, p.x, p.y, p.z, 1, 0, 0, 0, 0);
             }
-            Vec3 tip  = base.add(dirX * shaftLen, 0, dirZ * shaftLen);
+            Vec3 tip = base.add(dirX * shaftLen, 0, dirZ * shaftLen);
             Vec3 back = new Vec3(-dirX, 0, -dirZ);
             double cosAng = Math.cos(headAngle);
             double sinAng = Math.sin(headAngle);

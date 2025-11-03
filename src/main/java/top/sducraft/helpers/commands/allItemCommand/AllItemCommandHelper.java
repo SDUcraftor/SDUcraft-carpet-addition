@@ -7,19 +7,20 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
+
 import java.util.HashSet;
 import java.util.Objects;
+
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.allItemData.AllItemData.addItem;
 import static top.sducraft.config.allItemData.AllItemData.delItem;
 
 public class AllItemCommandHelper {
-    public static int addItemToData(String type,BlockPos startPos,BlockPos endPos,BlockPos startStorePos,BlockPos endStorePos,BlockPos startChestPos,BlockPos endChestPos ,CommandSourceStack sourceStack){
-        if(!Objects.equals(type, "item") && !Objects.equals(type, "bulk")) {
+    public static int addItemToData(String type, BlockPos startPos, BlockPos endPos, BlockPos startStorePos, BlockPos endStorePos, BlockPos startChestPos, BlockPos endChestPos, CommandSourceStack sourceStack) {
+        if (!Objects.equals(type, "item") && !Objects.equals(type, "bulk")) {
             sourceStack.sendFailure(Component.literal(tr("sducarpet.easycommand.allitemcommand")));
             return 0;
-        }
-        else {
+        } else {
             int dx = Integer.compare(endPos.getX(), startPos.getX());
             int dz = Integer.compare(endPos.getZ(), startPos.getZ());
             if ((dx != 0 && dz != 0) || (dx == 0 && dz == 0)) {
@@ -36,7 +37,7 @@ public class AllItemCommandHelper {
                     for (int i = 0; i < hopper.getContainerSize(); i++) {
                         ItemStack stack = hopper.getItem(i);
 //                        if (!stack.isEmpty()&& !stack.hasTag()) {
-                            if (!stack.isEmpty()) {
+                        if (!stack.isEmpty()) {
                             firstItem = stack;
                             break;
                         }
@@ -44,7 +45,7 @@ public class AllItemCommandHelper {
 
                     if (!firstItem.isEmpty()) {
                         String key = firstItem.getDisplayName().getString();
-                        addItem(key,type,getAlignedPositions(current, startStorePos, endStorePos, alignX),getAlignedPositions(current, startChestPos, endChestPos, alignX));
+                        addItem(key, type, getAlignedPositions(current, startStorePos, endStorePos, alignX), getAlignedPositions(current, startChestPos, endChestPos, alignX));
                     }
                 }
 
@@ -56,7 +57,7 @@ public class AllItemCommandHelper {
         }
     }
 
-    public static int deleteItemFromData(BlockPos startpos , BlockPos endpos, CommandSourceStack sourceStack){
+    public static int deleteItemFromData(BlockPos startpos, BlockPos endpos, CommandSourceStack sourceStack) {
         int dx = Integer.compare(endpos.getX(), startpos.getX());
         int dz = Integer.compare(endpos.getZ(), startpos.getZ());
         if ((dx != 0 && dz != 0) || (dx == 0 && dz == 0)) {
@@ -71,7 +72,7 @@ public class AllItemCommandHelper {
                 ItemStack firstItem = ItemStack.EMPTY;
                 for (int i = 0; i < hopper.getContainerSize(); i++) {
                     ItemStack stack = hopper.getItem(i);
-                    if (!stack.isEmpty()&& stack.getTags() != null) {
+                    if (!stack.isEmpty() && stack.getTags() != null) {
                         firstItem = stack;
                         break;
                     }

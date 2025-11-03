@@ -10,10 +10,9 @@ import net.minecraft.server.level.ServerPlayer;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.displayAllItemInfo;
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 
-public class PrimeBackupEasyCommand implements IEasyCommand{
+public class PrimeBackupEasyCommand implements IEasyCommand {
     @Override
     public String getCommandName() {
         return "primebackup";
@@ -21,7 +20,7 @@ public class PrimeBackupEasyCommand implements IEasyCommand{
 
     @Override
     public Component clickButton() {
-        return createCommandClickComponent("[备份系统]", "/easycommand primebackup","点击进入备份");
+        return createCommandClickComponent("[备份系统]", "/easycommand primebackup", "点击进入备份");
     }
 
     @Override
@@ -33,6 +32,6 @@ public class PrimeBackupEasyCommand implements IEasyCommand{
                         一个强大的 MCDR 备份插件，一套先进的 Minecraft 存档备份解决方案
                         """));
         player.displayClientMessage(component, false);
-        player.displayClientMessage(Component.literal("输入 !!pb 或点击上方按钮获取更多详细信息"),false);
+        player.displayClientMessage(Component.literal("输入 !!pb 或点击上方按钮获取更多详细信息"), false);
     }
 }

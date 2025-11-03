@@ -1,7 +1,6 @@
 package top.sducraft.helpers.rule.dynamicViewDistance;
 
 import carpet.CarpetServer;
-import carpet.mixins.Player_fakePlayersMixin;
 import carpet.patches.EntityPlayerMPFake;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -15,8 +14,8 @@ public class DynamicViewDistance {
 
     private static final long UPDATE_INTERVAL_MS = 100000;
 
-    private static final int[] thresholds = {25, 40 };
-    private static final int[] vdLevels = {14 ,10, 8};
+    private static final int[] thresholds = {25, 40};
+    private static final int[] vdLevels = {14, 10, 8};
 
     private static final int HYSTERESIS_MS = 10;      // 滞回余量
     private static final double EMA_ALPHA = 0.2;     // 平滑系数（0-1，越小越平滑）
@@ -41,20 +40,23 @@ public class DynamicViewDistance {
             server.getPlayerList().setViewDistance(newVD);
             currentVD = newVD;
             lastUpdateTime = now;
-                        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-                            if (!player.hasPermissions(2)) continue;
-                            player.displayClientMessage(Component.literal("VD -> " + newVD + " (MSPT~" + String.format("%.1f", mspt) + ")"), false);
-                        }
+            for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                if (!player.hasPermissions(2)) continue;
+                player.displayClientMessage(Component.literal("VD -> " + newVD + " (MSPT~" + String.format("%.1f", mspt) + ")"), false);
+            }
         }
     }
 
     private static int calculateTargetViewDistance(double mspt) {
-
-       for (ServerPlayer player : CarpetServer.minecraft_server.getPlayerList().getPlayers()) {
-           if (!(player instanceof EntityPlayerMPFake)) {
-               playerCounter++;
-           }
-       }
+        playerCounter = 0;
+        for (ServerPlayer player : CarpetServer.minecraft_server.getPlayerList().getPlayers()) {
+            if (!(player instanceof EntityPlayerMPFake)) {
+                playerCounter++;
+            }
+            if (playerCounter >= 15) {
+                return 8;
+            }
+        }
 
 
         int currentIdx = indexOfVD(currentVD);
@@ -67,7 +69,7 @@ public class DynamicViewDistance {
 
         if (currentIdx < vdLevels.length - 1) {
             int upper = thresholds[currentIdx];
-            if (mspt >= upper ) {
+            if (mspt >= upper) {
                 return vdLevels[currentIdx + 1];
             }
         }
@@ -99,9 +101,9 @@ public class DynamicViewDistance {
                 smoothedMspt = EMA_ALPHA * instantMspt + (1.0 - EMA_ALPHA) * smoothedMspt;
             }
 
-                updateViewDistance(server);
+            updateViewDistance(server);
             tickCounter = 0;
-            }
-        tickCounter++;
         }
+        tickCounter++;
+    }
 }

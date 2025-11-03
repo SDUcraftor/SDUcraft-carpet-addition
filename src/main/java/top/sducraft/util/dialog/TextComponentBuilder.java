@@ -22,6 +22,7 @@ public class TextComponentBuilder {
 
     /**
      * 创建一个包含初始文本的 TextComponentBuilder。
+     *
      * @param initialText 初始的文本片段。
      */
     public TextComponentBuilder(String initialText) {
@@ -30,6 +31,7 @@ public class TextComponentBuilder {
 
     /**
      * 添加一个新的文本片段。后续的样式方法将应用于此片段。
+     *
      * @param text 要添加的文本。
      */
     public TextComponentBuilder append(String text) {
@@ -42,6 +44,7 @@ public class TextComponentBuilder {
 
     /**
      * 为当前文本片段设置颜色。
+     *
      * @param color 颜色的名称 (例如 "red", "gold") 或十六进制代码 (例如 "#FF55FF")。
      */
     public TextComponentBuilder color(String color) {
@@ -78,6 +81,7 @@ public class TextComponentBuilder {
 
     /**
      * 为当前文本片段设置点击事件，用于打开一个URL。
+     *
      * @param url 要打开的链接。
      */
     public TextComponentBuilder onClickOpenUrl(String url) {
@@ -89,7 +93,7 @@ public class TextComponentBuilder {
         this.currentPart.add("click_event", clickEvent);
         return this;
     }
-    
+
     /**
      * [新增] 内部辅助方法，确保在应用样式前已经有文本片段存在。
      */
@@ -106,8 +110,10 @@ public class TextComponentBuilder {
         }
         return this;
     }
+
     /**
      * 构建用于 'plain_message' 主体元素的完整 JsonObject。
+     *
      * @return 代表完整 'plain_message' 主体元素的 JsonObject。
      */
     public JsonObject build() {
@@ -125,6 +131,7 @@ public class TextComponentBuilder {
 
     /**
      * 这部分可以被用于任何需要文本组件的地方，例如按钮的 label。
+     *
      * @return 代表文本组件的 JsonObject 或 JsonArray。
      */
     public com.google.gson.JsonElement buildContents() {

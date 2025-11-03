@@ -11,9 +11,9 @@ public interface IEasyCommand {
 
     String getCommandName();
 
-    Component clickButton ();
+    Component clickButton();
 
-    void showEasyCommandInterface (ServerPlayer player) throws URISyntaxException;
+    void showEasyCommandInterface(ServerPlayer player) throws URISyntaxException;
 
     default String getLabelText() {
         return tr("sducarpet.easycommand.dialog." + getCommandName());
