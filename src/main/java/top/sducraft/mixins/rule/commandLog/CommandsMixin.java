@@ -22,7 +22,7 @@ public abstract class CommandsMixin {
                 return;
             }
             var source = context.getSource();
-            String name = "UnknownSource";
+            String name;
             try {
                 if (source.getEntity() != null) {
                     name = source.getEntity().toString();

@@ -9,6 +9,7 @@
     "rule.brittleDeepSlate.BlockBehaviorMixin",
     "rule.chickenJockeyGenerationOdds.ZombieMixin",
     "rule.commandLog.CommandsMixin",
+    "rule.CreeperExplodeLog.CreeperMixin",
     "rule.disableNetherPortal.EntityMixin",
     "rule.easyFakePeace.MinecraftServerMixin",
     "rule.finditem.DisableVisualizerEntitySave",

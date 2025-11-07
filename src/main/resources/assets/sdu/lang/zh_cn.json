@@ -35,6 +35,8 @@
   "carpet.rule.projectileDeflectLog.name": "记录玩家反射投掷物到日志中",
   "carpet.rule.commandLog.desc": "记录执行的指令",
   "carpet.rule.commandLog.name": "命令执行日志",
+  "carpet.rule.creeperLog.desc": "记录苦力怕爆炸事件",
+  "carpet.rule.creeperLog.name": "苦力怕日志",
   "sducarpet.easycommand.fakepeacestatus": "当前伪和平状态 :",
   "sducarpet.easycommand.fakepeacestatus1": "主世界",
   "sducarpet.easycommand.fakepeacestatus2": "地 狱",

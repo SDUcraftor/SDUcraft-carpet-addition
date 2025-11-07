@@ -35,6 +35,8 @@
   "carpet.rule.projectileDeflectLog.name": "Projectile Deflection Logging",
   "carpet.rule.commandLog.desc": "Logs executed commands",
   "carpet.rule.commandLog.name": "Command Logging",
+  "carpet.rule.creeperLog.desc": "Logs creeper explosion events",
+  "carpet.rule.creeperLog.name": "Creeper log",
   "sducarpet.easycommand.fakepeacestatus": "fakepeace status :",
   "sducarpet.easycommand.fakepeacestatus1": "overworld",
   "sducarpet.easycommand.fakepeacestatus2": "the nether",

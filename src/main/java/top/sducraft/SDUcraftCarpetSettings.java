@@ -114,6 +114,11 @@ public class SDUcraftCarpetSettings {
     )
     public static boolean commandLog = false;
 
+    @Rule(
+            categories = {sdu}
+    )
+    public static boolean creeperLog = false;
+
     private static class NotifyPlayers<T> extends Validator<T> {
         @Override
         public T validate(@Nullable CommandSourceStack commandSourceStack, CarpetRule<T> carpetRule, T t, String s) {
