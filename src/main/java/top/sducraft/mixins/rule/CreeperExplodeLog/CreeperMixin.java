@@ -1,17 +1,15 @@
 package top.sducraft.mixins.rule.CreeperExplodeLog;
 
-import carpet.CarpetServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,8 +19,8 @@ import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.helpers.rule.CreeperLogHelper.CreeperLogHelper;
 import top.sducraft.util.ISelf;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 @Mixin(Creeper.class)
 public abstract class CreeperMixin extends Mob implements ISelf<Creeper> {
@@ -32,110 +30,118 @@ public abstract class CreeperMixin extends Mob implements ISelf<Creeper> {
     }
 
     @Unique
-    private final static Logger LOGGER = LogManager.getLogger("CreeperLog");
+    private static final Logger LOGGER = LogManager.getLogger("CreeperLog");
 
     @Unique
-    private final List<CreeperLogHelper.CreeperLogEntry> creeperLogs = new ArrayList<>();
-    @Unique
-    private final List<CreeperLogHelper.CreeperDamageLogEntry> creeperDamageLogs = new ArrayList<>();
+    private static final int MAX_POSITION_LOG_TICKS = 600;
 
     @Unique
-    public void logPeriodicData(long gameTime, Creeper creeper,@Nullable ServerPlayer targetPlayer) {
-        if (targetPlayer != null) {
-            creeperLogs.add(new CreeperLogHelper.CreeperLogEntry(gameTime, targetPlayer.getName().getString(), creeper.position(), targetPlayer.position()));
-        }
-        else {
-            creeperLogs.add(new CreeperLogHelper.CreeperLogEntry(gameTime, "No Target", creeper.position(),null));
-        }
-        creeperLogs.removeIf(entry -> gameTime - entry.gameTime() > 400);
-    }
+    private static final int MAX_DAMAGE_LOG_TICKS = 1000;
+
+    @Unique
+    private final Deque<CreeperLogHelper.CreeperLogEntry> creeperLogs = new ArrayDeque<>();
+
+    @Unique
+    private final Deque<CreeperLogHelper.CreeperDamageLogEntry> creeperDamageLogs = new ArrayDeque<>();
 
     @Unique
     private boolean startLog = false;
 
+    @Unique
+    private static String formatVec3(Vec3 vec) {
+        return String.format("%.2f, %.2f, %.2f", vec.x, vec.y, vec.z);
+    }
+
+    @Unique
+    private void logPeriodicData(long gameTime, ServerPlayer targetPlayer) {
+        String playerName = targetPlayer != null ? targetPlayer.getName().getString() : "No Target";
+        Vec3 playerPosition = targetPlayer != null ? targetPlayer.position() : null;
+        creeperLogs.addLast(new CreeperLogHelper.CreeperLogEntry(gameTime, playerName, SduCarpet$self().position(), playerPosition));
+
+        while (!creeperLogs.isEmpty() && gameTime - creeperLogs.peekFirst().gameTime() > MAX_POSITION_LOG_TICKS) {
+            creeperLogs.removeFirst();
+        }
+    }
+
     @Override
     public boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float f) {
         if (SDUcraftCarpetSettings.creeperLog && damageSource.getEntity() instanceof ServerPlayer player) {
-            creeperDamageLogs.removeIf(entry -> serverLevel.getGameTime() - entry.gameTime() > 1000);
-            creeperDamageLogs.add(new CreeperLogHelper.CreeperDamageLogEntry(serverLevel.getGameTime(), player.getName().getString(), SduCarpet$self().position(), player.position()));
+            long gameTime = serverLevel.getGameTime();
+
+            creeperDamageLogs.addLast(new CreeperLogHelper.CreeperDamageLogEntry(gameTime, player.getName().getString(), SduCarpet$self().position(), damageSource.getSourcePosition()));
+
+            while (!creeperDamageLogs.isEmpty() && gameTime - creeperDamageLogs.peekFirst().gameTime() > MAX_DAMAGE_LOG_TICKS) {
+                creeperDamageLogs.removeFirst();
+            }
         }
         return super.hurtServer(serverLevel, damageSource, f);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {
-        if (SDUcraftCarpetSettings.creeperLog) {
-            if (!startLog && this.getTarget() != null) {
-                startLog = true;
-            }
-            long gameTime = CarpetServer.minecraft_server.overworld().getGameTime();
-            if (!startLog || gameTime % 5 !=0) return;
-            if (this.getTarget() instanceof ServerPlayer player) {
-                logPeriodicData(CarpetServer.minecraft_server.overworld().getGameTime(), SduCarpet$self(), player);
-            }
-            else {
-                    logPeriodicData(CarpetServer.minecraft_server.overworld().getGameTime(), SduCarpet$self(), null);
-            }
-
+        if (!SDUcraftCarpetSettings.creeperLog) return;
+        if (!(this.level() instanceof ServerLevel serverLevel)) return;
+        if (!startLog && this.getTarget() != null) {
+            startLog = true;
         }
+
+        if (!startLog) return;
+
+        long gameTime = serverLevel.getGameTime();
+        if (gameTime % 5 != 0) return;
+
+        ServerPlayer targetPlayer = this.getTarget() instanceof ServerPlayer player ? player : null;
+        logPeriodicData(gameTime, targetPlayer);
     }
 
     @Inject(method = "explodeCreeper", at = @At("HEAD"))
     private void onExplodeCreeper(CallbackInfo ci) {
-        if(!SDUcraftCarpetSettings.creeperLog) return;
+        if (!SDUcraftCarpetSettings.creeperLog) return;
 
+        Vec3 explosionPos = SduCarpet$self().position();
         LOGGER.info("=== Creeper Explosion Report ===");
-        LOGGER.info("Explosion Position: {}", SduCarpet$self().position());
+        LOGGER.info("Explosion Position: [{}]", formatVec3(explosionPos));
 
-        LOGGER.info("--- Position Tracking (last 20 seconds) ---");
+        LOGGER.info("--- Position Tracking (last 30 seconds) ---");
         if (creeperLogs.isEmpty()) {
             LOGGER.info("No position data recorded");
         } else {
-            creeperLogs.stream()
-                .sorted((a, b) -> Long.compare(a.gameTime(), b.gameTime()))
-                .forEach(entry -> {
-                    if (entry.targetPlayerPosition() != null) {
-                        LOGGER.info("Time: {} | Target: {} | Creeper Pos: [{}, {}, {}] | Player Pos: [{}, {}, {}]",
-                            entry.gameTime(),
-                            entry.PlayerName(),
-                            String.format("%.2f", entry.creeperPosition().x),
-                            String.format("%.2f", entry.creeperPosition().y),
-                            String.format("%.2f", entry.creeperPosition().z),
-                            String.format("%.2f", entry.targetPlayerPosition().x),
-                            String.format("%.2f", entry.targetPlayerPosition().y),
-                            String.format("%.2f", entry.targetPlayerPosition().z)
-                        );
-                    }
-                    else {
-                        LOGGER.info("Time: {} | Target: {} | Creeper Pos: [{}, {}, {}] | Player Pos: N/A",
-                            entry.gameTime(),
-                            entry.PlayerName(),
-                            String.format("%.2f", entry.creeperPosition().x),
-                            String.format("%.2f", entry.creeperPosition().y),
-                            String.format("%.2f", entry.creeperPosition().z)
-                        );
-                    }
-                });
+            for (CreeperLogHelper.CreeperLogEntry entry : creeperLogs) {
+                Vec3 creeperPos = entry.creeperPosition();
+                Vec3 playerPos = entry.targetPlayerPosition();
+
+                if (playerPos != null) {
+                    LOGGER.info("Time: {} | Target: {} | Creeper Pos: [{}] | Player Pos: [{}]",
+                        entry.gameTime(),
+                        entry.PlayerName(),
+                        formatVec3(creeperPos),
+                        formatVec3(playerPos)
+                    );
+                } else {
+                    LOGGER.info("Time: {} | Target: {} | Creeper Pos: [{}] | Player Pos: N/A",
+                        entry.gameTime(),
+                        entry.PlayerName(),
+                        formatVec3(creeperPos)
+                    );
+                }
+            }
         }
 
-        LOGGER.info("--- Damage History (last 20 seconds) ---");
+        LOGGER.info("--- Damage History (last 50 seconds) ---");
         if (creeperDamageLogs.isEmpty()) {
             LOGGER.info("No damage events recorded");
         } else {
-            creeperDamageLogs.stream()
-                .sorted((a, b) -> Long.compare(a.gameTime(), b.gameTime()))
-                .forEach(entry -> {
-                    LOGGER.info("Time: {} | Attacker: {} | Creeper Pos: [{}, {}, {}] | Damage Source Pos: [{}, {}, {}]",
-                        entry.gameTime(),
-                        entry.PlayerName(),
-                        String.format("%.2f", entry.creeperPosition().x),
-                        String.format("%.2f", entry.creeperPosition().y),
-                        String.format("%.2f", entry.creeperPosition().z),
-                        String.format("%.2f", entry.damageSourcePosition().x),
-                        String.format("%.2f", entry.damageSourcePosition().y),
-                        String.format("%.2f", entry.damageSourcePosition().z)
-                    );
-                });
+            for (CreeperLogHelper.CreeperDamageLogEntry entry : creeperDamageLogs) {
+                Vec3 creeperPos = entry.creeperPosition();
+                Vec3 damagePos = entry.damageSourcePosition();
+
+                LOGGER.info("Time: {} | Attacker: {} | Creeper Pos: [{}] | Damage Source Pos: [{}]",
+                    entry.gameTime(),
+                    entry.PlayerName(),
+                    formatVec3(creeperPos),
+                    formatVec3(damagePos)
+                );
+            }
         }
 
         LOGGER.info("=== End of Report ===");
