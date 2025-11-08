@@ -17,7 +17,7 @@ public abstract class DisableVisualizerEntitySave {
     @Inject(method = "saveAsPassenger", at = @At("HEAD"), cancellable = true)
     public void saveAsPassenger(CallbackInfoReturnable<Boolean> cir) {
         Set<String> tags = this.getTags();
-        if (tags.contains("finditem_highlight")) {
+        if (tags.contains("noSave")) {
             cir.setReturnValue(false);
         }
     }

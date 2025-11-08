@@ -41,6 +41,7 @@ public class HopperCooldownVisualizing {
             entity.setInvulnerable(true);
             entity.setPos(pos.getCenter().x(), pos.getCenter().y(), pos.getCenter().z());
             entity.addTag("hopperCooldownVisualizer");
+            entity.addTag("noSave");
             level.addFreshEntity(entity);
             ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(entity.problemPath(), LOGGER);
             TagValueOutput nbt = TagValueOutput.createWithContext(scopedCollector, entity.registryAccess());

@@ -3,9 +3,9 @@ package top.sducraft.util;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class DelayedEvents {
@@ -25,9 +25,10 @@ public class DelayedEvents {
         }
 
         private void tick(MinecraftServer server) {
-            Iterator<ScheduledEvent> iter = events.iterator();
-            while (iter.hasNext()) {
-                ScheduledEvent e = iter.next();
+            List<ScheduledEvent> snapshot = new ArrayList<>(events);
+            List<ScheduledEvent> toRemove = new ArrayList<>();
+
+            for (ScheduledEvent e : snapshot) {
                 e.ticksRemaining--;
                 if (e.ticksRemaining <= 0) {
                     try {
@@ -35,9 +36,10 @@ public class DelayedEvents {
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
-                    iter.remove();
+                    toRemove.add(e);
                 }
             }
+            events.removeAll(toRemove);
         }
     }
 
@@ -53,7 +55,7 @@ public class DelayedEvents {
 
     @FunctionalInterface
     public interface ScheduledServerCallback {
-        void run(MinecraftServer server) throws URISyntaxException;
+        void run(MinecraftServer server) throws URISyntaxException, IOException;
     }
 }
 

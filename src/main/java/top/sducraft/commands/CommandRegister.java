@@ -3,6 +3,7 @@ package top.sducraft.commands;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import top.sducraft.commands.allitemCommand.AllItemCommand;
 import top.sducraft.commands.allitemCommand.DebugAllitem;
+import top.sducraft.commands.creeperLogCommand.CreeperLogCommand;
 import top.sducraft.commands.easyCommand.EasyCommand;
 import top.sducraft.commands.easyCommand.MachineStatusCommand;
 import top.sducraft.commands.easyCommand.WarningCommand;
@@ -34,5 +35,6 @@ public class CommandRegister {
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> SetSignUrlCommand.register(dispatcher)));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> OpenUrlCommand.register(dispatcher)));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> FindItemAreaCommand.register(dispatcher)));
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> CreeperLogCommand.register(dispatcher)));
     }
 }

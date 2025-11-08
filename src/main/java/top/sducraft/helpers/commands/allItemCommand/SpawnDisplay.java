@@ -199,6 +199,7 @@ public class SpawnDisplay {
         display.setGlowingTag(true);
         display.getEntityData().set(Display.DATA_GLOW_COLOR_OVERRIDE_ID, color);
         display.addTag(tag);
+        display.addTag("noSave");
         level.addFreshEntity(display);
         if (durationTicks > 0) {
             DelayedEvents.START_SERVER_TICK.register(durationTicks, s -> {
