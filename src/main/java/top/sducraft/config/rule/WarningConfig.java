@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class WarningConfig {
     public static File configFile;
-    public static List<warning> warningList = new ArrayList<>();
+    public static final List<warning> warningList = new ArrayList<>();
 
     public static class warning {
         public BlockPos pos;
@@ -49,11 +49,15 @@ public class WarningConfig {
     private static void loadConfig() {
         try {
             if (configFile.exists()) {
-                FileReader reader = new FileReader(configFile);
-                Type type = new TypeToken<List<warning>>() {
-                }.getType();
-                warningList = new Gson().fromJson(reader, type);
-                reader.close();
+                try (FileReader reader = new FileReader(configFile)) {
+                    Type type = new TypeToken<List<warning>>() {
+                    }.getType();
+                    List<warning> loadedData = new Gson().fromJson(reader, type);
+                    if (loadedData != null) {
+                        warningList.clear();
+                        warningList.addAll(loadedData);
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,10 +65,8 @@ public class WarningConfig {
     }
 
     public static void saveConfig() {
-        try {
-            FileWriter writer = new FileWriter(configFile);
+        try (FileWriter writer = new FileWriter(configFile)) {
             new GsonBuilder().setPrettyPrinting().create().toJson(warningList, writer);
-            writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

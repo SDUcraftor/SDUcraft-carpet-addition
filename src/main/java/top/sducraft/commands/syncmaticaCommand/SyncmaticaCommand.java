@@ -5,7 +5,6 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -14,10 +13,10 @@ import top.sducraft.util.DelayedEvents;
 import java.io.File;
 import java.util.Map;
 
-import static carpet.utils.Translations.tr;
 import static top.sducraft.helpers.litematica.LoadSyncmatica.*;
 import static top.sducraft.helpers.litematica.MaterialListManenger.*;
 import static top.sducraft.helpers.litematica.SyncmaticaCommandHelper.listSyncmatica;
+import static top.sducraft.util.Message.translateComponent;
 
 public class SyncmaticaCommand {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
@@ -25,10 +24,10 @@ public class SyncmaticaCommand {
                 .then(Commands.literal("reload")
                         .executes(context -> {
                             if (loadSyncmatica(context.getSource().getServer())) {
-                                context.getSource().sendSuccess(() -> Component.literal(tr("Syncmatica has been reloaded ")), false);
+                                context.getSource().sendSuccess(() -> translateComponent("sducarpet.command.syncmatica.reloaded"), false);
                                 return 1;
                             } else {
-                                context.getSource().sendFailure(Component.literal(tr("Fail to reload Syncmatica")));
+                                context.getSource().sendFailure(translateComponent("sducarpet.command.syncmatica.reloadFailed"));
                                 return 0;
                             }
                         }))

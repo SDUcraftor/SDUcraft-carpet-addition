@@ -19,8 +19,8 @@ import java.util.Objects;
 
 public class MachineStatusCommandConfig {
     public static File configFile;
-    public static List<Machine> permMachineList = new ArrayList<>();
-    public static List<Machine> tempMachineList = new ArrayList<>();
+    public static final List<Machine> permMachineList = new ArrayList<>();
+    public static final List<Machine> tempMachineList = new ArrayList<>();
 
     public static class Machine {
         public BlockPos pos;
@@ -47,11 +47,15 @@ public class MachineStatusCommandConfig {
     private static void loadConfig() {
         try {
             if (configFile.exists()) {
-                FileReader reader = new FileReader(configFile);
-                Type type = new TypeToken<List<Machine>>() {
-                }.getType();
-                permMachineList = new Gson().fromJson(reader, type);
-                reader.close();
+                try (FileReader reader = new FileReader(configFile)) {
+                    Type type = new TypeToken<List<Machine>>() {
+                    }.getType();
+                    List<Machine> loadedData = new Gson().fromJson(reader, type);
+                    if (loadedData != null) {
+                        permMachineList.clear();
+                        permMachineList.addAll(loadedData);
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,10 +63,8 @@ public class MachineStatusCommandConfig {
     }
 
     public static void saveConfig() {
-        try {
-            FileWriter writer = new FileWriter(configFile);
+        try (FileWriter writer = new FileWriter(configFile)) {
             new GsonBuilder().setPrettyPrinting().create().toJson(permMachineList, writer);
-            writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,7 +87,6 @@ public class MachineStatusCommandConfig {
             if (permMachineList.removeIf(machine -> machine.name.equals(name))) {
                 player.displayClientMessage(Component.literal("已删除" + name), false);
             }
-            ;
         }
         saveConfig();
     }
@@ -98,7 +99,6 @@ public class MachineStatusCommandConfig {
             if (tempMachineList.removeIf(machine -> machine.name.equals(name))) {
                 player.displayClientMessage(Component.literal("已删除" + name), false);
             }
-            ;
         }
         saveConfig();
     }

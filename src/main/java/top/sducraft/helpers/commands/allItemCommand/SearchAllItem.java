@@ -65,7 +65,6 @@ public class SearchAllItem {
                         component = Component.empty().append(component).append("\n").append(Component.literal(name)).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem search " + name)));
                     }
                     source.sendFailure(Component.literal(tr("sducarpet.easycommand.allitemcommand2")).append(Component.literal("\"" + keyword + "\"")));
-                    ;
                     player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.allitemcommand3")).append(component), false);
                 }
                 return 0;

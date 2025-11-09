@@ -32,6 +32,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static top.sducraft.util.Message.translateComponent;
+
 public class FindItemCommand {
 
     public record FoundInfo(String areaName, BlockPos pos, double distanceSq, Component name, int count, String type) {
@@ -140,7 +142,7 @@ public class FindItemCommand {
                 result.containers().stream()
                         .map(info -> new FoundInfo(info.areaName(), info.pos(), info.distanceSq(), info.containerName().copy().withStyle(ChatFormatting.AQUA), info.itemCount(), "container")),
                 result.droppedItems().stream()
-                        .map(info -> new FoundInfo(info.areaName(), info.pos(), info.distanceSq(), Component.literal("掉落物").withStyle(ChatFormatting.AQUA), info.itemCount(), "dropped_item"))
+                        .map(info -> new FoundInfo(info.areaName(), info.pos(), info.distanceSq(), translateComponent("sducarpet.command.finditem.droppedItem").withStyle(ChatFormatting.AQUA), info.itemCount(), "dropped_item"))
         ).flatMap(s -> s);
 
         // 2. 按位置、名称和类型对结果进行分组，合并区域名称
@@ -181,19 +183,22 @@ public class FindItemCommand {
         processGroups(droppedItemGroups, displayInfos, displayStack, player, "dropped_item");
 
         if (displayInfos.isEmpty()) {
-            source.sendSuccess(() -> Component.literal("未找到 '").append(displayStack.getHoverName()).append("'物品。"), false);
+            source.sendSuccess(() -> translateComponent("sducarpet.command.finditem.notFound").append(" '").append(displayStack.getHoverName()).append("'"), false);
         } else {
-            player.sendSystemMessage(Component.literal("--- 在" + displayInfos.size() + "个位置找到 ").append(displayStack.getHoverName()).append(" ---").withStyle(ChatFormatting.GOLD));
+            player.sendSystemMessage(translateComponent("sducarpet.command.finditem.foundHeader")
+                    .append(" " + displayInfos.size() + " ")
+                    .append(translateComponent("sducarpet.command.finditem.locations"))
+                    .append(" ").append(displayStack.getHoverName()).append(" ---").withStyle(ChatFormatting.GOLD));
 
             displayInfos.sort(Comparator.comparingDouble(DisplayInfo::distanceSq));
             displayInfos.forEach(info -> player.sendSystemMessage(info.message()));
 
-            source.sendSuccess(() -> Component.literal("使用他人物品前请先询问!!!!!").withStyle(ChatFormatting.RED), false);
+            source.sendSuccess(() -> translateComponent("sducarpet.command.finditem.askFirst").withStyle(ChatFormatting.RED), false);
         }
 
         long endTime = System.nanoTime();
         double durationMs = (endTime - startTime) / 1_000_000.0;
-        source.sendSuccess(() -> Component.literal(String.format("搜索完成，耗时 %.2f 毫秒。", durationMs)), false);
+        source.sendSuccess(() -> translateComponent("sducarpet.command.finditem.searchComplete").append(String.format(" %.2f ", durationMs)).append(translateComponent("sducarpet.command.finditem.milliseconds")), false);
     }
 
     private static int executeDetail(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
@@ -202,13 +207,13 @@ public class FindItemCommand {
         List<MergedResult> group = FindItemResultCache.getGroup(player.getUUID(), groupId);
 
         if (group == null) {
-            context.getSource().sendFailure(Component.literal("该物品组的详细信息已过期或不存在。"));
+            context.getSource().sendFailure(translateComponent("sducarpet.command.finditem.groupExpired"));
             return 0;
         }
 
         ItemStack displayStack = new ItemStack(net.minecraft.world.item.Items.STONE); // 占位符
 
-        player.sendSystemMessage(Component.literal("--- 群组详细信息 ---").withStyle(ChatFormatting.GOLD));
+        player.sendSystemMessage(translateComponent("sducarpet.command.finditem.groupDetails").withStyle(ChatFormatting.GOLD));
         group.sort(Comparator.comparingDouble(MergedResult::distanceSq));
         for (MergedResult res : group) {
             player.sendSystemMessage(createSingleResultMessage(res, displayStack, player.getGameProfile().getName()));
@@ -245,7 +250,7 @@ public class FindItemCommand {
             List<MergedResult> newGroup = new ArrayList<>();
             LinkedList<MergedResult> toProcess = new LinkedList<>();
 
-            MergedResult first = remaining.remove(0);
+            MergedResult first = remaining.removeFirst();
             newGroup.add(first);
             toProcess.add(first);
 
@@ -293,9 +298,9 @@ public class FindItemCommand {
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.YELLOW)
                                 .withHoverEvent(new HoverEvent.ShowItem(displayStack))))
-                .append(Component.literal(" ").append(Component.literal("[点击看向目标]")
+                .append(Component.literal(" ").append(translateComponent("sducarpet.command.finditem.clickToLook")
                         .withStyle(Style.EMPTY
-                                .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击看向目标位置")))
+                                .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.command.finditem.clickToLookHover")))
                                 .withClickEvent(new ClickEvent.RunCommand(command))
                                 .withColor(ChatFormatting.GOLD))));
     }
@@ -306,21 +311,20 @@ public class FindItemCommand {
         String detailCommand = "/finditem detail " + groupId.toString();
 
         String groupName = switch (groupType) {
-            case "container" -> group.size() + "个容器 ";
-            case "dropped_item" -> group.size() + "个掉落物 ";
-            default -> group.size() + "个群组 ";
+            case "container" -> translateComponent("sducarpet.command.finditem.containers").getString().replace("{count}", String.valueOf(group.size()));
+            case "dropped_item" -> translateComponent("sducarpet.command.finditem.droppedItems").getString().replace("{count}", String.valueOf(group.size()));
+            default -> translateComponent("sducarpet.command.finditem.groups").getString().replace("{count}", String.valueOf(group.size()));
         };
 
         return Component.literal("[+] ").withStyle(ChatFormatting.GREEN)
                 .append(Component.literal(String.format("(%.1fm) ", distance)).withStyle(ChatFormatting.GRAY))
                 .append(Component.literal(groupName).withStyle(ChatFormatting.AQUA))
-                .append(Component.literal("共 " + totalCount + " 个 ").withStyle(ChatFormatting.YELLOW)
-                        .withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowItem(displayStack))))
-                .append(Component.literal("[点击展开]")
+                .append(translateComponent("sducarpet.command.finditem.totalCount").getString().replace("{count}", String.valueOf(totalCount))).withStyle(ChatFormatting.YELLOW)
+                .append(translateComponent("sducarpet.command.finditem.clickToExpand")
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.GOLD)
                                 .withClickEvent(new ClickEvent.RunCommand(detailCommand))
-                                .withHoverEvent(new HoverEvent.ShowText(Component.literal("显示群组内所有物品的详细信息")))
+                                .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.command.finditem.clickToExpandHover")))
                         )
                 );
     }
@@ -340,9 +344,12 @@ public class FindItemCommand {
         List<ItemFinder.FoundFilteredItemInfo> results = ItemFinder.findItemsWithFilters(player, searchBox, itemFilter, containerFilter);
 
         if (results.isEmpty()) {
-            source.sendSuccess(() -> Component.literal("在指定区域和过滤器下未找到任何物品。"), false);
+            source.sendSuccess(() -> translateComponent("sducarpet.command.finditem.filteredNotFound"), false);
         } else {
-            player.sendSystemMessage(Component.literal("--- 找到 " + results.size() + " 个符合条件的容器 ---").withStyle(ChatFormatting.GOLD));
+            player.sendSystemMessage(translateComponent("sducarpet.command.finditem.filteredFoundHeader")
+                    .append(" " + results.size() + " ")
+                    .append(translateComponent("sducarpet.command.finditem.filteredContainers"))
+                    .withStyle(ChatFormatting.GOLD));
             for (ItemFinder.FoundFilteredItemInfo info : results) {
                 player.sendSystemMessage(createFilteredResultMessage(player, info));
             }
@@ -350,7 +357,7 @@ public class FindItemCommand {
 
         long endTime = System.nanoTime();
         double durationMs = (endTime - startTime) / 1_000_000.0;
-        source.sendSuccess(() -> Component.literal(String.format("搜索完成，耗时 %.2f 毫秒。", durationMs)), false);
+        source.sendSuccess(() -> translateComponent("sducarpet.command.finditem.searchComplete").append(String.format(" %.2f ", durationMs)).append(translateComponent("sducarpet.command.finditem.milliseconds")), false);
 
         return results.size();
     }
@@ -364,9 +371,9 @@ public class FindItemCommand {
         MutableComponent message = Component.literal("- ")
                 .append(info.containerName().copy().withStyle(ChatFormatting.AQUA))
                 .append(Component.literal(String.format(" at [%d, %d, %d] (%.1fm)", pos.getX(), pos.getY(), pos.getZ(), distance)).withStyle(ChatFormatting.GRAY))
-                .append(Component.literal(" ").append(Component.literal("[点击看向目标]")
+                .append(Component.literal(" ").append(translateComponent("sducarpet.command.finditem.clickToLook")
                         .withStyle(Style.EMPTY
-                                .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击看向容器位置")))
+                                .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.command.finditem.clickToLookContainerHover")))
                                 .withClickEvent(new ClickEvent.RunCommand(command))
                                 .withColor(ChatFormatting.GOLD))));
 

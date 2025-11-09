@@ -3,11 +3,10 @@ package top.sducraft.commands.tickRateChangedMessageCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.ServerTickRateManager;
 import top.sducraft.SDUcraftCarpetSettings;
 
-import static carpet.utils.Translations.tr;
+import static top.sducraft.util.Message.translateComponent;
 
 public class TickResetCommand {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
@@ -19,7 +18,7 @@ public class TickResetCommand {
                             serverTickRateManager.finishTickSprint();
                             serverTickRateManager.setTickRate(20);
                             serverTickRateManager.setFrozen(false);
-                            context.getSource().sendSuccess(() -> Component.literal(tr("carpet.command.resetTick")), true);
+                            context.getSource().sendSuccess(() -> translateComponent("carpet.command.resetTick"), true);
                             return 1;
                         })));
     }

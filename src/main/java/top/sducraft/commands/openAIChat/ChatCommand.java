@@ -4,16 +4,15 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import top.sducraft.config.chat.ChatAIConfig;
 import top.sducraft.helpers.chat.ChatMemory;
 
-import static carpet.utils.Translations.tr;
 import static top.sducraft.config.chat.ChatAIConfig.configList;
 import static top.sducraft.config.chat.ChatAIConfig.setActiveConfig;
 import static top.sducraft.helpers.chat.OpenaiChat.suggestArgument;
 import static top.sducraft.helpers.chat.OpenaiChat.tryStartChat;
+import static top.sducraft.util.Message.translateComponent;
 
 public class ChatCommand {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
@@ -23,10 +22,10 @@ public class ChatCommand {
                             ServerPlayer player = context.getSource().getPlayer();
                             if (player != null) {
                                 ChatMemory.clear(player);
-                                context.getSource().sendSuccess(() -> Component.literal(tr("sducarpet.command.chat1")), false);
+                                context.getSource().sendSuccess(() -> translateComponent("sducarpet.command.chat1"), false);
                                 return 1;
                             }
-                            context.getSource().sendFailure(Component.literal(tr("sducarpet.command.chat2")));
+                            context.getSource().sendFailure(translateComponent("sducarpet.command.chat2"));
                             return 0;
                         }))
                 .then(Commands.literal("model")
@@ -39,10 +38,10 @@ public class ChatCommand {
                                 })
                                 .executes(context -> {
                                     if (setActiveConfig(StringArgumentType.getString(context, "model"), context.getSource().getPlayer().getUUID())) {
-                                        context.getSource().sendSuccess(() -> Component.literal(tr("sducarpet.command.chat5") + StringArgumentType.getString(context, "model")), false);
+                                        context.getSource().sendSuccess(() -> translateComponent("sducarpet.command.chat5").append(StringArgumentType.getString(context, "model")), false);
                                         return 1;
                                     }
-                                    context.getSource().sendFailure(Component.literal(tr("sducarpet.command.chat6")));
+                                    context.getSource().sendFailure(translateComponent("sducarpet.command.chat6"));
                                     return 0;
                                 })))
                 .then(Commands.argument("content", StringArgumentType.greedyString())

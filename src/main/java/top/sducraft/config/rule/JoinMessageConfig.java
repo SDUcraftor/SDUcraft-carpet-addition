@@ -24,7 +24,7 @@ public class JoinMessageConfig {
 
     private static class DialogSeenData {
         String dialogFileHash;
-        Set<UUID> seenPlayerUUIDs = new HashSet<>();
+        final Set<UUID> seenPlayerUUIDs = new HashSet<>();
     }
 
     private static DialogSeenData data = new DialogSeenData();

@@ -14,8 +14,8 @@ import java.util.*;
 
 public class ChatAIConfig {
     public static File configFile;
-    public static List<APIConfig> configList = new ArrayList<>();
-    public static Map<UUID, APIConfig> playerActiveConfig = new HashMap<>();
+    public static final List<APIConfig> configList = new ArrayList<>();
+    public static final Map<UUID, APIConfig> playerActiveConfig = new HashMap<>();
 
     public static class APIConfig {
         public String provider = "openai";
@@ -40,11 +40,15 @@ public class ChatAIConfig {
     private static void loadConfig() {
         try {
             if (configFile.exists()) {
-                FileReader reader = new FileReader(configFile);
-                Type listType = new TypeToken<List<APIConfig>>() {
-                }.getType();
-                configList = new Gson().fromJson(reader, listType);
-                reader.close();
+                try (FileReader reader = new FileReader(configFile)) {
+                    Type listType = new TypeToken<List<APIConfig>>() {
+                    }.getType();
+                    List<APIConfig> loadedList = new Gson().fromJson(reader, listType);
+                    if (loadedList != null) {
+                        configList.clear();
+                        configList.addAll(loadedList);
+                    }
+                }
             } else {
                 configList.add(new APIConfig());
                 saveConfig();
@@ -55,20 +59,15 @@ public class ChatAIConfig {
     }
 
     public static void saveConfig() {
-        try {
-            FileWriter writer = new FileWriter(configFile);
+        try (FileWriter writer = new FileWriter(configFile)) {
             new GsonBuilder().setPrettyPrinting().create().toJson(configList, writer);
-            writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static APIConfig getActiveConfig(UUID uuid) {
-        for (UUID uuid1 : playerActiveConfig.keySet()) {
-            if (uuid.equals(uuid1)) return playerActiveConfig.get(uuid1);
-        }
-        return configList.get(0);
+        return playerActiveConfig.getOrDefault(uuid, configList.get(0));
     }
 
     public static boolean setActiveConfig(String name, UUID uuid) {

@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class EasyFakePeaceConfig {
     public static File configFile;
-    static Map<String, FakePeaceData> fakePeaceData = new HashMap<>();
+    static final Map<String, FakePeaceData> fakePeaceData = new HashMap<>();
 
     static class FakePeaceData {
         int x;
@@ -47,11 +47,15 @@ public class EasyFakePeaceConfig {
     private static void loadConfig() {
         try {
             if (configFile.exists()) {
-                FileReader reader = new FileReader(configFile);
-                Type type = new TypeToken<Map<String, FakePeaceData>>() {
-                }.getType();
-                fakePeaceData = new Gson().fromJson(reader, type);
-                reader.close();
+                try (FileReader reader = new FileReader(configFile)) {
+                    Type type = new TypeToken<Map<String, FakePeaceData>>() {
+                    }.getType();
+                    Map<String, FakePeaceData> loadedData = new Gson().fromJson(reader, type);
+                    if (loadedData != null) {
+                        fakePeaceData.clear();
+                        fakePeaceData.putAll(loadedData);
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,10 +64,8 @@ public class EasyFakePeaceConfig {
 
     // 保存配置文件
     public static void saveConfig() {
-        try {
-            FileWriter writer = new FileWriter(configFile);
+        try (FileWriter writer = new FileWriter(configFile)) {
             new GsonBuilder().setPrettyPrinting().create().toJson(fakePeaceData, writer);
-            writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -2,6 +2,7 @@ package top.sducraft.util;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import top.sducraft.util.dialog.DialogBuilder;
@@ -9,7 +10,7 @@ import top.sducraft.util.dialog.DialogBuilder;
 import static carpet.utils.Translations.tr;
 
 
-public class Message {
+public abstract class Message {
     public static void sandCustomMessage(ServerPlayer player, String message, ChatFormatting color) {
         player.displayClientMessage(Component.literal(message).withStyle(color), false);
     }
@@ -33,13 +34,15 @@ public class Message {
         String jsonString = dialogBuilder.build().toString();
         String command = "dialog show " + player.getGameProfile().getName() + " " + jsonString;
         MinecraftServer server = player.getServer();
-        server.getCommands().performPrefixedCommand(
-                server.createCommandSourceStack(),
-                command
-        );
+        if (server != null) {
+            server.getCommands().performPrefixedCommand(
+                    server.createCommandSourceStack(),
+                    command
+            );
+        }
     }
 
-    public static Component translateComponent(String text) {
+    public static MutableComponent translateComponent(String text) {
         return Component.literal(tr(text));
     }
 

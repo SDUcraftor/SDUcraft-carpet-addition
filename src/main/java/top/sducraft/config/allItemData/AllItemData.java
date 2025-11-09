@@ -20,14 +20,14 @@ import static top.sducraft.helpers.translation.allitem.ItemTranslation.translate
 
 public class AllItemData {
     public static File configFile;
-    public static HashMap<String, ItemData> dataList = new HashMap<>();
-    public static HashMap<String, ItemData> chineseNameToData = new HashMap<>();
-    public static HashMap<String, ItemData> englishNameToData = new HashMap<>();
+    public static final HashMap<String, ItemData> dataList = new HashMap<>();
+    public static final HashMap<String, ItemData> chineseNameToData = new HashMap<>();
+    public static final HashMap<String, ItemData> englishNameToData = new HashMap<>();
 
     public static class ItemData {
         public String type;
-        public HashSet<BlockPos> storePos;
-        public HashSet<BlockPos> chestPos;
+        public final HashSet<BlockPos> storePos;
+        public final HashSet<BlockPos> chestPos;
 
         public ItemData(String type, HashSet<BlockPos> storePos, HashSet<BlockPos> chestPos) {
             this.storePos = storePos;
@@ -49,11 +49,15 @@ public class AllItemData {
     private static void loadConfig() {
         try {
             if (configFile.exists()) {
-                FileReader reader = new FileReader(configFile);
-                Type type = new TypeToken<HashMap<String, ItemData>>() {
-                }.getType();
-                dataList = new Gson().fromJson(reader, type);
-                reader.close();
+                try (FileReader reader = new FileReader(configFile)) {
+                    Type type = new TypeToken<HashMap<String, ItemData>>() {
+                    }.getType();
+                    HashMap<String, ItemData> loadedData = new Gson().fromJson(reader, type);
+                    if (loadedData != null) {
+                        dataList.clear();
+                        dataList.putAll(loadedData);
+                    }
+                }
                 updateNameToDataMap();
                 DelayedEvents.START_SERVER_TICK.register(20, s -> generateDisplaysInfo(CarpetServer.minecraft_server.overworld()));
             }
@@ -64,16 +68,13 @@ public class AllItemData {
 
     public static void saveConfig() {
         updateNameToDataMap();
-        try {
-            FileWriter writer = new FileWriter(configFile);
+        try (FileWriter writer = new FileWriter(configFile)) {
             new GsonBuilder().setPrettyPrinting().create().toJson(dataList, writer);
-            writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // ✅ 添加物品
     public static void addItem(String key, String type, BlockPos pos, HashSet<BlockPos> storePos) {
         ItemData data = dataList.get(key);
         if (data != null) {

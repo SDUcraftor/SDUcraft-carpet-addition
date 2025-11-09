@@ -7,7 +7,6 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.LevelResource;
 
@@ -16,6 +15,7 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static top.sducraft.helpers.visualizers.CreeperLogVisualizer.visualizeLog;
+import static top.sducraft.util.Message.translateComponent;
 
 public class CreeperLogCommand {
     
@@ -61,16 +61,16 @@ public class CreeperLogCommand {
                     .toFile();
             
             if (!logFile.exists()) {
-                source.sendFailure(Component.literal("日志文件不存在: " + logFileName));
+                source.sendFailure(translateComponent("sducarpet.command.creeperlog.fileNotFound").append(": " + logFileName));
                 return 0;
             }
             
             visualizeLog(level, logFile, source);
-            source.sendSuccess(() -> Component.literal("已可视化苦力怕爆炸日志: " + logFileName), true);
+            source.sendSuccess(() -> translateComponent("sducarpet.command.creeperlog.success").append(": " + logFileName), true);
             return 1;
             
         } catch (Exception e) {
-            source.sendFailure(Component.literal("读取日志文件失败: " + e.getMessage()));
+            source.sendFailure(translateComponent("sducarpet.command.creeperlog.readError").append(": " + e.getMessage()));
             e.printStackTrace();
             return 0;
         }

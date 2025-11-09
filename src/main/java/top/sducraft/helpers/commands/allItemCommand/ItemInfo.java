@@ -36,7 +36,7 @@ public class ItemInfo {
         StringBuilder chestStr = new StringBuilder(" ");
         double ratio = 1 - (double) countRemainCapacity(data) / countCapacity(data);
         for (BlockPos pos : data.chestPos) {
-            chestStr.append("(" + pos.getX() + "," + pos.getY() + "," + pos.getZ() + ")");
+            chestStr.append("(").append(pos.getX()).append(",").append(pos.getY()).append(",").append(pos.getZ()).append(")");
         }
         player.displayClientMessage((Component.empty().append(title)
                         .append(Component.literal(tr("分类:") + typename))

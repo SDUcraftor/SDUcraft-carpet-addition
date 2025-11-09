@@ -24,6 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.mojang.text2speech.Narrator.LOGGER;
+import static top.sducraft.util.Message.translateComponent;
 
 public class CreeperLogVisualizer {
     
@@ -56,7 +57,7 @@ public class CreeperLogVisualizer {
             List<LogEntry> entries = parseLogFile(logFile);
 
             if (entries.isEmpty()) {
-                source.sendFailure(Component.literal("日志文件中没有找到位置数据"));
+                source.sendFailure(translateComponent("sducarpet.command.creeperlog.noData"));
                 return;
             }
 
@@ -77,7 +78,9 @@ public class CreeperLogVisualizer {
                 }
             }
 
-            source.sendSuccess(() -> Component.literal("已显示 " + entries.size() + " 个位置记录，将在60秒后自动清除"), false);
+            source.sendSuccess(() -> translateComponent("sducarpet.command.creeperlog.visualized")
+                    .append(" " + entries.size() + " ")
+                    .append(translateComponent("sducarpet.command.creeperlog.recordsCount")), false);
         });
     }
     
