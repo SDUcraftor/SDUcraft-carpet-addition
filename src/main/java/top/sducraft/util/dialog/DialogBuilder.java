@@ -3,17 +3,19 @@ package top.sducraft.util.dialog;
 import com.google.gson.JsonObject;
 
 /**
- * 一个抽象的对话框构建器基类。
- * 它使用“奇异的递归模板模式” (CRTP) 来在继承体系中实现流畅的链式调用。
+ * Abstract base class for dialog builders.
+ * Uses the Curiously Recurring Template Pattern (CRTP) to provide fluent method chaining in subclasses.
  *
- * @param <T> 具体的构建器子类类型。
+ * @param <T> The concrete builder subclass type.
  */
 public abstract class DialogBuilder<T extends DialogBuilder<T>> {
     protected final JsonObject root;
-    // 我们将让子类完全负责元素的管理，父类不再需要这个列表。
-    // 为了避免混淆，可以将其注释或删除。
-    // protected final List<JsonObject> bodyElements = new ArrayList<>();
 
+    /**
+     * Creates a new dialog builder with the specified type.
+     *
+     * @param type The dialog type identifier.
+     */
     protected DialogBuilder(String type) {
         this.root = new JsonObject();
         this.root.addProperty("type", type);
@@ -22,16 +24,24 @@ public abstract class DialogBuilder<T extends DialogBuilder<T>> {
         this.setPauseGame(false);
     }
 
+    /**
+     * Sets the title of the dialog.
+     *
+     * @param title The title text.
+     * @return This builder for chaining.
+     */
     public T setTitle(String title) {
         this.root.add("title", ComponentFactory.createText(title));
         return self();
     }
 
     /**
-     * [为了方便保留] 添加一行简单的文本。
-     * 这是一个便捷方法，内部调用 addBody。
+     * Adds a simple text line to the dialog body.
+     * This is a convenience method that internally calls addBody.
      *
-     * @deprecated 推荐使用 addBody(TextComponentBuilder) 以获得更多控制。
+     * @param text The text to add.
+     * @return This builder for chaining.
+     * @deprecated Use {@link #addBody(TextComponentBuilder)} for better control over text styling.
      */
     @Deprecated
     public T addBodyText(String text) {
@@ -39,41 +49,65 @@ public abstract class DialogBuilder<T extends DialogBuilder<T>> {
     }
 
     /**
-     * [抽象方法] 添加一个复杂的文本主体。
-     * 这个方法必须由子类来实现，因为只有子类知道如何存储元素。
+     * Adds a complex text component to the dialog body.
+     * This method must be implemented by subclasses.
      *
-     * @param builder 一个配置好的 TextComponentBuilder。
+     * @param builder A configured TextComponentBuilder.
+     * @return This builder for chaining.
      */
     public abstract T addBody(TextComponentBuilder builder);
 
-
+    /**
+     * Builds and returns the final JsonObject representing this dialog.
+     *
+     * @return The complete dialog JsonObject.
+     */
     public JsonObject build() {
-        // 父类的 build 方法现在只负责返回 root，因为所有构建逻辑都在子类中。
         return root;
     }
 
+    /**
+     * Returns this builder instance with the proper generic type.
+     * Used internally to support method chaining in the CRTP pattern.
+     *
+     * @return This builder instance.
+     */
     @SuppressWarnings("unchecked")
     protected T self() {
         return (T) this;
     }
 
     /**
-     * 设置操作执行后的行为。
+     * Sets the behavior after an action is executed.
      *
-     * @param afterAction "close", "none", 或 "wait_for_response"。
+     * @param afterAction "close", "none", or "wait_for_response".
+     * @return This builder for chaining.
      */
     public T setAfterAction(String afterAction) {
         this.root.addProperty("after_action", afterAction);
         return self();
     }
 
+    /**
+     * Sets whether the dialog can be closed with the Escape key.
+     *
+     * @param canClose true if the dialog can be closed with Escape, false otherwise.
+     * @return This builder for chaining.
+     */
     public T setCanCloseWithEscape(boolean canClose) {
         this.root.addProperty("can_close_with_escape", canClose);
         return self();
     }
 
+    /**
+     * Sets whether the game should be paused while the dialog is open.
+     *
+     * @param pause true to pause the game, false otherwise.
+     * @return This builder for chaining.
+     */
     public T setPauseGame(boolean pause) {
         this.root.addProperty("pause", pause);
         return self();
     }
 }
+

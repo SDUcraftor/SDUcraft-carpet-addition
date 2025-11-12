@@ -2,6 +2,9 @@ package top.sducraft.util.dialog;
 
 import com.google.gson.JsonObject;
 
+/**
+ * Factory class for creating Minecraft text components in JSON format.
+ */
 public class ComponentFactory {
 
     /**

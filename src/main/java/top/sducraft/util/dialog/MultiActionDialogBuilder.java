@@ -8,29 +8,36 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * 一个用于创建 "multi_action" 类型对话框的具体构建器。
+ * A concrete builder for creating "multi_action" type dialogs.
+ * This type of dialog can contain multiple body elements, inputs, and action buttons.
  */
 public class MultiActionDialogBuilder extends DialogBuilder<MultiActionDialogBuilder> {
 
-    // --- 内部结构 (保持不变) ---
+    /**
+     * Internal interface for dialog elements.
+     */
     private interface IDialogElement {
         void addToParent(Consumer<JsonObject> bodyConsumer, Consumer<JsonObject> inputConsumer, Consumer<JsonObject> actionConsumer);
     }
 
     /**
-     * [关键] 这个列表是定义在子类中的，所有添加操作都围绕它进行。
+     * List of dialog elements added to this builder.
      */
     private final List<IDialogElement> elements = new ArrayList<>();
 
+    /**
+     * Creates a new multi-action dialog builder.
+     */
     public MultiActionDialogBuilder() {
         super("multi_action");
     }
 
-    // --- 实现父类的抽象方法 ---
-
     /**
-     * [实现] 实现父类定义的抽象方法 addBody。
-     * 它将一个构建好的文本组件添加到 elements 列表中。
+     * Adds a text component to the dialog body.
+     * Implements the abstract method from the parent class.
+     *
+     * @param builder A configured TextComponentBuilder.
+     * @return This builder for chaining.
      */
     @Override
     public MultiActionDialogBuilder addBody(TextComponentBuilder builder) {
@@ -39,13 +46,24 @@ public class MultiActionDialogBuilder extends DialogBuilder<MultiActionDialogBui
         return this;
     }
 
-    // --- 其他添加方法 (保持不变) ---
-
+    /**
+     * Sets the number of columns for the action button layout.
+     *
+     * @param columns The number of columns.
+     * @return This builder for chaining.
+     */
     public MultiActionDialogBuilder setColumns(int columns) {
         this.root.addProperty("columns", columns);
         return this;
     }
 
+    /**
+     * Adds a text input field to the dialog.
+     *
+     * @param key The key to identify the input value.
+     * @param label The label text to display.
+     * @return This builder for chaining.
+     */
     public MultiActionDialogBuilder addTextInput(String key, String label) {
         JsonObject inputJson = new JsonObject();
         inputJson.addProperty("key", key);
@@ -55,12 +73,24 @@ public class MultiActionDialogBuilder extends DialogBuilder<MultiActionDialogBui
         return this;
     }
 
+    /**
+     * Adds an action button to the dialog.
+     *
+     * @param actionBuilder A configured ActionBuilder.
+     * @return This builder for chaining.
+     */
     public MultiActionDialogBuilder addAction(ActionBuilder actionBuilder) {
         JsonObject actionJson = actionBuilder.build();
         this.elements.add((body, input, action) -> action.accept(actionJson));
         return this;
     }
 
+    /**
+     * Adds an exit button to close the dialog.
+     *
+     * @param label The text to display on the exit button.
+     * @return This builder for chaining.
+     */
     public MultiActionDialogBuilder addExitButton(String label) {
         JsonObject exitAction = new JsonObject();
         exitAction.add("label", ComponentFactory.createText(label));
@@ -68,10 +98,13 @@ public class MultiActionDialogBuilder extends DialogBuilder<MultiActionDialogBui
         return this;
     }
 
-    // --- Build 方法 (保持不变) ---
+    /**
+     * Builds and returns the final JsonObject representing this dialog.
+     *
+     * @return The complete dialog JsonObject.
+     */
     @Override
     public JsonObject build() {
-        // 首先调用父类的 build 来获取带有 title 等信息的 root 对象
         super.build();
 
         JsonArray bodyArray = new JsonArray();
@@ -95,3 +128,4 @@ public class MultiActionDialogBuilder extends DialogBuilder<MultiActionDialogBui
         return this.root;
     }
 }
+

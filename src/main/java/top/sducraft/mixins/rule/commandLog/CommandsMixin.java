@@ -27,7 +27,7 @@ public abstract class CommandsMixin {
                 if (source.getEntity() != null) {
                     name = source.getEntity().toString();
                 } else {
-                    name = "Server/Console";
+                    return;
                 }
             } catch (Throwable t) {
                 name = "InvalidSource";
