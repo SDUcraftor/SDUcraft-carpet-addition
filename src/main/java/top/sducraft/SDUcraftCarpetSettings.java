@@ -7,7 +7,6 @@ import carpet.api.settings.Validators;
 import carpet.utils.CommandHelper;
 import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.Nullable;
-
 import static carpet.api.settings.RuleCategory.FEATURE;
 import static top.sducraft.helpers.visualizers.Visualizers.updateVisualizers;
 
@@ -118,6 +117,11 @@ public class SDUcraftCarpetSettings {
             categories = {sdu}
     )
     public static boolean creeperLog = false;
+
+    @Rule(
+            categories = {sdu}
+    )
+    public static boolean ignoreFakePlayerPacket = false;
 
     private static class NotifyPlayers<T> extends Validator<T> {
         @Override

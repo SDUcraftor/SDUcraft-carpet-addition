@@ -37,6 +37,8 @@
   "carpet.rule.commandLog.name": "命令执行日志",
   "carpet.rule.creeperLog.desc": "记录苦力怕爆炸事件",
   "carpet.rule.creeperLog.name": "苦力怕日志",
+  "carpet.rule.ignoreFakePlayerPacket.desc": "忽略对假人发包",
+  "carpet.rule.ignoreFakePlayerPacket.name": "忽略将对假人发送的数据包",
   "sducarpet.easycommand.fakepeacestatus": "当前伪和平状态 :",
   "sducarpet.easycommand.fakepeacestatus1": "主世界",
   "sducarpet.easycommand.fakepeacestatus2": "地 狱",

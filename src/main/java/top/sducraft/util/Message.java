@@ -1,5 +1,6 @@
 package top.sducraft.util;
 
+import carpet.patches.EntityPlayerMPFake;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -31,6 +32,8 @@ public abstract class Message {
     }
 
     public static void sandPlayerDialog(ServerPlayer player, DialogBuilder<?> dialogBuilder) {
+        if (player instanceof EntityPlayerMPFake) return;
+
         String jsonString = dialogBuilder.build().toString();
         String command = "dialog show " + player.getGameProfile().getName() + " " + jsonString;
         MinecraftServer server = player.getServer();

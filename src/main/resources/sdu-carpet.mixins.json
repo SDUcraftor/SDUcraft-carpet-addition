@@ -6,6 +6,7 @@
   "mixins": [
     "carpet.SettingsManagerMixin",
     "carpet.fix.ServerGamePacketListenerImplMixin",
+    "optimize.IgnoreFakePlayerPacket.PlayerMixin",
     "rule.brittleDeepSlate.BlockBehaviorMixin",
     "rule.chickenJockeyGenerationOdds.ZombieMixin",
     "rule.commandLog.CommandsMixin",

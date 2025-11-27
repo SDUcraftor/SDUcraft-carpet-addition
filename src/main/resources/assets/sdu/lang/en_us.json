@@ -37,6 +37,8 @@
   "carpet.rule.commandLog.name": "Command Logging",
   "carpet.rule.creeperLog.desc": "Logs creeper explosion events",
   "carpet.rule.creeperLog.name": "Creeper log",
+  "carpet.rule.ignoreFakePlayerPacket.desc": "Ignore packets to fake player",
+  "carpet.rule.ignoreFakePlayerPacket.name": "Ignore packets to fake player",
   "sducarpet.easycommand.fakepeacestatus": "fakepeace status :",
   "sducarpet.easycommand.fakepeacestatus1": "overworld",
   "sducarpet.easycommand.fakepeacestatus2": "the nether",
