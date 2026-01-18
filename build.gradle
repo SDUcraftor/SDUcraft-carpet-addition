@@ -113,3 +113,12 @@ publishing {
 kotlin {
     jvmToolchain(21)
 }
+
+tasks.register('syncCarpetLang', JavaExec) {
+    group = 'i18n'
+    description = 'Scan @Rule fields and ensure zh_cn/en_us translations exist.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'top.sducraft.util.Translation'
+    workingDir = project.projectDir
+    standardInput = System.in
+}

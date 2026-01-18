@@ -35,7 +35,6 @@ public class SDUcraftCarpetSettings {
     @Rule(
             validators = Validators.NonNegativeNumber.class,
             options = {"0", "40", "80", "32767"},
-            strict = false,
             categories = {sdu}
     )
     public static int itemPickUpDelay = 40;
@@ -122,6 +121,11 @@ public class SDUcraftCarpetSettings {
             categories = {sdu}
     )
     public static boolean ignoreFakePlayerPacket = false;
+
+    @Rule(
+            categories = {sdu}
+    )
+    public static boolean OfflineBots = false;
 
     private static class NotifyPlayers<T> extends Validator<T> {
         @Override

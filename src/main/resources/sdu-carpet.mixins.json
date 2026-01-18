@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "carpet.SettingsManagerMixin",
+    "carpet.fix.EntityPlayerMPFakeMixin",
     "carpet.fix.ServerGamePacketListenerImplMixin",
     "optimize.IgnoreFakePlayerPacket.PlayerMixin",
     "rule.brittleDeepSlate.BlockBehaviorMixin",
