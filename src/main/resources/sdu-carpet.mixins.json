@@ -6,6 +6,7 @@
   "mixins": [
     "carpet.SettingsManagerMixin",
     "carpet.fix.EntityPlayerMPFakeMixin",
+    "carpet.fix.PlayerCommandMixin",
     "carpet.fix.ServerGamePacketListenerImplMixin",
     "optimize.IgnoreFakePlayerPacket.PlayerMixin",
     "rule.brittleDeepSlate.BlockBehaviorMixin",
