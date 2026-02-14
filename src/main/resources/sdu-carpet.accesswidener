@@ -14,4 +14,5 @@ accessible field net/minecraft/world/entity/Display DATA_SCALE_ID Lnet/minecraft
 accessible method net/minecraft/world/entity/Display setTransformation (Lcom/mojang/math/Transformation;)V
 accessible method net/minecraft/world/entity/Display createTransformation (Lnet/minecraft/network/syncher/SynchedEntityData;)Lcom/mojang/math/Transformation;
 accessible method net/minecraft/server/level/TicketType register (Ljava/lang/String;JZLnet/minecraft/server/level/TicketType$TicketUse;)Lnet/minecraft/server/level/TicketType;
+accessible field net/minecraft/server/players/PlayerList viewDistance I
 accessible method net/minecraft/resources/ResourceLocation <init> (Ljava/lang/String;Ljava/lang/String;)V

@@ -14,6 +14,7 @@
     "rule.commandLog.CommandsMixin",
     "rule.CreeperExplodeLog.CreeperMixin",
     "rule.disableNetherPortal.EntityMixin",
+    "rule.dynamicViewDistance.PlayerListMixin",
     "rule.easyFakePeace.MinecraftServerMixin",
     "rule.finditem.DisableVisualizerEntitySave",
     "rule.itemPickupDelay.LivingEntityMixin",

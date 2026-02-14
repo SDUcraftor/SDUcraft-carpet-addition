@@ -3,7 +3,6 @@ package top.sducraft.util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.*;
 import net.minecraft.server.level.ServerPlayer;
-import java.util.ArrayList;
 import java.util.List;
 import static carpet.utils.Translations.tr;
 
@@ -66,21 +65,16 @@ public class PaginatedMessage {
      * @see net.minecraft.network.chat.ClickEvent
      */
     public static <T extends List<K>,K> void displayMessageWithPage(ServerPlayer player, int page, int itemPerPage, int noPagingThreshold, T items, java.util.function.Function<K, Component> itemToComponent, String commandTemplate) {
-        List<Component> fullItems = new ArrayList<>();
-
-        for (K item : items) {
-            fullItems.add(itemToComponent.apply(item));
-        }
-
-        boolean paginate = fullItems.size() > noPagingThreshold;
-        int totalPages = paginate ? (fullItems.size() + itemPerPage - 1) / itemPerPage : 1;
+        int totalItems = items.size();
+        boolean paginate = totalItems > noPagingThreshold;
+        int totalPages = paginate ? (totalItems + itemPerPage - 1) / itemPerPage : 1;
         page = Math.max(1, Math.min(page, totalPages));
 
         int startIndex = paginate ? (page - 1) * itemPerPage : 0;
-        int endIndex = paginate ? Math.min(startIndex + itemPerPage, fullItems.size()) : fullItems.size();
+        int endIndex = paginate ? Math.min(startIndex + itemPerPage, totalItems) : totalItems;
 
         for (int i = startIndex; i < endIndex; i++) {
-            player.displayClientMessage(fullItems.get(i), false);
+            player.displayClientMessage(itemToComponent.apply(items.get(i)), false);
         }
 
         if (paginate) {

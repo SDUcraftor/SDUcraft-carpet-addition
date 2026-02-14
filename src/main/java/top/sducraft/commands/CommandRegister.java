@@ -17,6 +17,7 @@ import top.sducraft.commands.setSignUrl.SetSignUrlCommand;
 import top.sducraft.commands.syncmaticaCommand.SyncmaticaCommand;
 import top.sducraft.commands.tickRateChangedMessageCommand.TickRateChangeMessageCommand;
 import top.sducraft.commands.tickRateChangedMessageCommand.TickResetCommand;
+import top.sducraft.commands.viewDistanceCommand.ViewDistanceCommand;
 
 public class CommandRegister {
     public static void registerCommands() {
@@ -35,6 +36,7 @@ public class CommandRegister {
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> SetSignUrlCommand.register(dispatcher)));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> OpenUrlCommand.register(dispatcher)));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> FindItemAreaCommand.register(dispatcher)));
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> ViewDistanceCommand.register(dispatcher)));
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> CreeperLogCommand.register(dispatcher)));
     }
 }

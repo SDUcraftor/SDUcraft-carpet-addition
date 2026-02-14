@@ -3,8 +3,11 @@ package top.sducraft.helpers.rule.dynamicViewDistance;
 import carpet.CarpetServer;
 import carpet.patches.EntityPlayerMPFake;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSetChunkCacheRadiusPacket;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.TimeUtil;
 import top.sducraft.SDUcraftCarpetSettings;
 
@@ -22,7 +25,6 @@ public class DynamicViewDistance {
     private static double smoothedMspt = -1;
 
     private static int tickCounter = 0;
-    private static int playerCounter = 0;
 
     public static void updateViewDistance(MinecraftServer server) {
         if (!server.isDedicatedServer()) return;
@@ -38,6 +40,16 @@ public class DynamicViewDistance {
 
         if (newVD != currentVD) {
             server.getPlayerList().setViewDistance(newVD);
+            PlayerList playerList = server.getPlayerList();
+            playerList.viewDistance = newVD;
+            playerList.broadcastAll(new ClientboundSetChunkCacheRadiusPacket(newVD));
+
+            for (ServerLevel serverLevel : server.getAllLevels()) {
+                if (serverLevel != null) {
+                    serverLevel.getChunkSource().setViewDistance(newVD);
+                }
+            }
+
             currentVD = newVD;
             lastUpdateTime = now;
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
@@ -48,7 +60,7 @@ public class DynamicViewDistance {
     }
 
     private static int calculateTargetViewDistance(double mspt) {
-        playerCounter = 0;
+        int playerCounter = 0;
         for (ServerPlayer player : CarpetServer.minecraft_server.getPlayerList().getPlayers()) {
             if (!(player instanceof EntityPlayerMPFake)) {
                 playerCounter++;

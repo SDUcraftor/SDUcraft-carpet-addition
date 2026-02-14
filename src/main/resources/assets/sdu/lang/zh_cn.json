@@ -39,8 +39,8 @@
   "carpet.rule.tickRateChangedMessage.name": "游戏速度改变提示",
   "carpet.rule.tntTeleportThroughNetherPortal.desc": "如果启用此选项,被点燃的TNT将可以通过地狱门传送",
   "carpet.rule.tntTeleportThroughNetherPortal.name": "允许被点燃的TNT穿过地狱门",
-  "carpet.rule.unicodeArgumentsSupport.desc": "根据mspt动态调整视距",
-  "carpet.rule.unicodeArgumentsSupport.name": "动态视距",
+  "carpet.rule.unicodeArgumentsSupport.desc": "unicodeArgumentssupport",
+  "carpet.rule.unicodeArgumentsSupport.name": "unicodeArgumentssupport",
   "sducarpet.command.chat1": "成功清除对话历史",
   "sducarpet.command.chat2": "清除失败",
   "sducarpet.command.chat3": "You are waiting for the last reply, please wait...",
@@ -136,5 +136,10 @@
   "sducarpet.easycommand.warningcommand6": "已存在警告",
   "sducarpet.easycommand.warningcommand7": "没有警报，请使用 \"/warning add\" 添加警报",
   "sducarpet.easycommand.warningcommand8": "/warning list 展示所有警告\n/warning add <name> <dimension> <blockPos> 添加警告\n/warning rel <name> 删除警告\n/warning set <name> <true/false> 开/关警告",
-  "sducarpet.easycommand.warningcommand9": "\n注意事项:只有op能添加/删除警告"
+  "sducarpet.easycommand.warningcommand9": "\n注意事项:只有op能添加/删除警告",
+  "sducraft.view_distance.check_title": "视距状态:",
+  "sducraft.view_distance.current": "- 当前服务器视距",
+  "sducraft.view_distance.dynamic_control": "- 动态视距控制",
+  "sducraft.view_distance.enabled": "已开启 (ON)",
+  "sducraft.view_distance.disabled": "已关闭 (OFF)"
 }
