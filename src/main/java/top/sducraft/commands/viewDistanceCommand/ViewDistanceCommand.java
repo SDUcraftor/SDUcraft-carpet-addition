@@ -10,6 +10,8 @@ import net.minecraft.server.MinecraftServer;
 import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.util.Message;
 
+import static top.sducraft.util.Message.translateComponent;
+
 public class ViewDistanceCommand {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(Commands.literal("viewdistance")
@@ -30,13 +32,13 @@ public class ViewDistanceCommand {
 
         Component message = Component.empty()
             .append(Message.translateComponent("sducraft.view_distance.check_title"))
-            .append("\n")
+            .append(translateComponent("\n"))
             .append(Message.translateComponent("sducraft.view_distance.current").withStyle(ChatFormatting.GRAY))
-            .append(": ")
+            .append(translateComponent(": "))
             .append(Component.literal(String.valueOf(currentVd)).withStyle(ChatFormatting.AQUA))
-            .append("\n")
+            .append(translateComponent("\n"))
             .append(Message.translateComponent("sducraft.view_distance.dynamic_control").withStyle(ChatFormatting.GRAY))
-            .append(": ")
+            .append(translateComponent(": "))
             .append(statusText);
 
         source.sendSuccess(() -> message, false);

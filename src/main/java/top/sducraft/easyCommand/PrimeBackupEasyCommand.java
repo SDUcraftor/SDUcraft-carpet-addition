@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
+import static top.sducraft.util.Message.translateComponent;
 
 public class PrimeBackupEasyCommand implements IEasyCommand {
     @Override
@@ -25,13 +26,13 @@ public class PrimeBackupEasyCommand implements IEasyCommand {
 
     @Override
     public void showEasyCommandInterface(ServerPlayer player) throws URISyntaxException {
-        Component component = Component.literal("\n[pb 命令简介]").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
+        Component component = translateComponent("sducarpet.text.primebackup.intro_title").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
                         .withClickEvent(new ClickEvent.OpenUrl(new URI("https://tisunion.github.io/PrimeBackup/zh/")))
-                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看pb 命令简介介绍"))))
+                        .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.text.primebackup.click_doc"))))
                 .append(Component.literal("""
                         一个强大的 MCDR 备份插件，一套先进的 Minecraft 存档备份解决方案
                         """));
         player.displayClientMessage(component, false);
-        player.displayClientMessage(Component.literal("输入 !!pb 或点击上方按钮获取更多详细信息"), false);
+        player.displayClientMessage(translateComponent("sducarpet.text.primebackup.more_info"), false);
     }
 }

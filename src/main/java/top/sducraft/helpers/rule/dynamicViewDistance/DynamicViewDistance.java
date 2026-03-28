@@ -11,6 +11,8 @@ import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.TimeUtil;
 import top.sducraft.SDUcraftCarpetSettings;
 
+import static top.sducraft.util.Message.translateComponent;
+
 public class DynamicViewDistance {
     private static int currentVD = 16;
     private static long lastUpdateTime = 0;
@@ -54,7 +56,11 @@ public class DynamicViewDistance {
             lastUpdateTime = now;
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                 if (!player.hasPermissions(2)) continue;
-                player.displayClientMessage(Component.literal("VD -> " + newVD + " (MSPT~" + String.format("%.1f", mspt) + ")"), false);
+                player.displayClientMessage(translateComponent("sducarpet.viewdistance.changed")
+                        .append(String.valueOf(newVD))
+                        .append(translateComponent("sducarpet.viewdistance.msptPrefix"))
+                        .append(String.format("%.1f", mspt))
+                        .append(translateComponent(")")), false);
             }
         }
     }

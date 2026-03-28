@@ -17,10 +17,10 @@ import net.minecraft.world.phys.Vec3;
 import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.config.rule.WarningConfig;
 
-import static carpet.utils.Translations.tr;
 import static top.sducraft.config.rule.WarningConfig.warningList;
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 import static top.sducraft.util.MassageComponentCreate.getDimensionColor;
+import static top.sducraft.util.Message.translateComponent;
 
 public class WarningEasyCommand implements IEasyCommand {
     private static int tickcount = 0;
@@ -37,21 +37,21 @@ public class WarningEasyCommand implements IEasyCommand {
 
     @Override
     public void showEasyCommandInterface(ServerPlayer player) {
-        Component component = Component.literal("\n[warning指令介绍]\n").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
+        Component component = translateComponent("sducarpet.text.warning.intro_title").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
 //                        .withClickEvent(new ClickEvent.OpenUrl(new URI("https://mcdreforged.com/zh-CN/plugin/gamemode"))
-//                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看!!spec命令使用文档"))))
-                .append(Component.literal(tr("sducarpet.easycommand.warningcommand8")))
-                .append(Component.literal(tr("sducarpet.easycommand.warningcommand9")).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
+//                        .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.text.spectator.click_doc"))))
+                .append(translateComponent("sducarpet.easycommand.warningcommand8"))
+                .append(translateComponent("sducarpet.easycommand.warningcommand9").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
         player.displayClientMessage(component, false);
         showWarningList(player);
     }
 
     public static void showWarningList(ServerPlayer player) {
         if (warningList.isEmpty()) {
-            player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.warningcommand7")), false);
+            player.displayClientMessage(translateComponent("sducarpet.easycommand.warningcommand7"), false);
             return;
         }
-        Component header = Component.literal(tr("sducarpet.easycommand.warningcommand10"));
+        Component header = translateComponent("sducarpet.easycommand.warningcommand10");
         Component body = Component.empty();
         for (WarningConfig.warning warning : warningList) {
             Component info = Component.literal("\n" + warning.name + "  ")
@@ -71,14 +71,14 @@ public class WarningEasyCommand implements IEasyCommand {
         Component trueButton;
         Component falseButton;
         if (state) {
-            trueButton = Component.literal("[true] ")
+            trueButton = translateComponent("[true] ")
                     .withStyle(Style.EMPTY
                             .withBold(true)
                             .withUnderlined(true)
                             .withColor(ChatFormatting.AQUA)
                     );
 
-            falseButton = Component.literal("[false]")
+            falseButton = translateComponent("[false]")
                     .withStyle(Style.EMPTY
                             .withClickEvent(new
                                     ClickEvent.RunCommand(
@@ -86,12 +86,12 @@ public class WarningEasyCommand implements IEasyCommand {
                             ))
                             .withHoverEvent(new
                                     HoverEvent.ShowText(
-                                    Component.literal(tr("sducarpet.easycommand.warningcommand12")).append(name)
+                                    translateComponent("sducarpet.easycommand.warningcommand12").append(name)
                             ))
                             .withColor(ChatFormatting.GRAY)
                     );
         } else {
-            trueButton = Component.literal("[true] ")
+            trueButton = translateComponent("[true] ")
                     .withStyle(Style.EMPTY
                             .withClickEvent(new
                                     ClickEvent.RunCommand(
@@ -99,12 +99,12 @@ public class WarningEasyCommand implements IEasyCommand {
                             ))
                             .withHoverEvent(new
                                     HoverEvent.ShowText(
-                                    Component.literal(tr("sducarpet.easycommand.warningcommand13")).append(name)
+                                    translateComponent("sducarpet.easycommand.warningcommand13").append(name)
                             ))
                             .withColor(ChatFormatting.GRAY)
                     );
 
-            falseButton = Component.literal("[false]")
+            falseButton = translateComponent("[false]")
                     .withStyle(Style.EMPTY
                             .withBold(true)
                             .withUnderlined(true)
@@ -126,9 +126,9 @@ public class WarningEasyCommand implements IEasyCommand {
                     for (WarningConfig.warning warning : warningList) {
                         if (warning.status) {
                             if (player.level().dimension().location().getPath().equals(warning.dimension) && Math.abs(player.getX() - warning.pos.getX()) <= 250 && Math.abs(player.getZ() - warning.pos.getZ()) <= 250) {
-                                ClientboundSetTitleTextPacket titleTextPacket = new ClientboundSetTitleTextPacket(Component.literal(tr("sducarpet.easycommand.fakepeacewarn1")).withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                                ClientboundSetTitleTextPacket titleTextPacket = new ClientboundSetTitleTextPacket(translateComponent("sducarpet.easycommand.fakepeacewarn1").withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                                 player.connection.send(titleTextPacket);
-                                player.sendSystemMessage(Component.literal(warning.text + " ").append(Component.literal(tr("sducarpet.easycommand.warningcommand11")).withColor(0xFF5555)).append(Component.literal("(" + warning.pos.toShortString() + ")")).append(Component.literal(warning.dimension).withColor(getDimensionColor(warning.dimension))), true);
+                                player.sendSystemMessage(Component.literal(warning.text + " ").append(translateComponent("sducarpet.easycommand.warningcommand11").withColor(0xFF5555)).append(Component.literal("(" + warning.pos.toShortString() + ")")).append(Component.literal(warning.dimension).withColor(getDimensionColor(warning.dimension))), true);
                                 drawDirectionArrow(player, warning.pos);
                             }
                         }

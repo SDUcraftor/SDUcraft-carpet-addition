@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
+import static top.sducraft.util.Message.translateComponent;
 
 public class LocEasyCommand implements IEasyCommand {
     @Override
@@ -25,16 +26,16 @@ public class LocEasyCommand implements IEasyCommand {
 
     @Override
     public void showEasyCommandInterface(ServerPlayer player) throws URISyntaxException {
-        Component component = Component.literal("\n[!!loc指令简介]").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
+        Component component = translateComponent("sducarpet.text.loc.intro_title").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
                         .withClickEvent(new ClickEvent.OpenUrl(new URI("https://mcdreforged.com/zh-CN/plugin/location_marker")))
-                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看Location Marker插件介绍"))))
-                .append(Component.literal("一个基于MCDR的服务器路标插件"));
+                        .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.text.loc.click_doc"))))
+                .append(translateComponent("sducarpet.text.loc.intro_body"));
         player.displayClientMessage(component, false);
-        player.displayClientMessage(Component.literal("输入指令 ")
-                .append(Component.literal("!!loc").withStyle(Style.EMPTY
+        player.displayClientMessage(translateComponent("sducarpet.text.loc.input_command_prefix")
+                .append(translateComponent("!!loc").withStyle(Style.EMPTY
                         .withClickEvent(new ClickEvent.SuggestCommand("!!loc"))
                         .withColor(ChatFormatting.AQUA)))
-                .append(" 以获取详细信息"), false);
+                .append(translateComponent("sducarpet.text.loc.details_suffix")), false);
     }
 
 }

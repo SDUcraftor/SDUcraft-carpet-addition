@@ -14,20 +14,18 @@ import static top.sducraft.config.rule.JoinMessageConfig.markAsSeen;
 import static top.sducraft.config.rule.JoinMessageConfig.shouldShowDialog;
 import static top.sducraft.helpers.commands.tickRateChangeMessage.TickRateChangeMessageCommandHelper.sendTickRateChangeMessage;
 import static top.sducraft.util.MassageComponentCreate.createSuggestClickComponent;
+import static top.sducraft.util.Message.translateComponent;
 
 public abstract class JoinMessage {
     public static void showJoinMessage(ServerPlayer player) {
         DelayedEvents.START_SERVER_TICK.register(9, server -> {
-            player.displayClientMessage(Component.literal("强烈建议新玩家先阅读SDUcraft常用命令")
-                            .append(Component.literal("[点我转跳]")
+            player.displayClientMessage(translateComponent("sducarpet.joinmessage.prefix")
+                            .append(translateComponent("sducarpet.joinmessage.link")
                                     .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withClickEvent(new ClickEvent.OpenUrl(new URI("https://www.sducraft.top/community/notice?id=22&header=%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4%E8%AF%B4%E6%98%8E")))
-                                            .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看SDUcraft常用命令")))))
-                            .append(Component.literal("或使用"))
+                                            .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.joinmessage.linkHover")))))
+                            .append(translateComponent("sducarpet.joinmessage.orUse"))
                             .append(createSuggestClickComponent(" /easycommand ", "/easycommand", null))
-                            .append(Component.literal("""
-                                    来获取良好的游戏内指令体验
-                                    新功能,使用/finditem <物品id> <范围> 可以搜索范围内的物品
-                                    """))
+                            .append(translateComponent("sducarpet.joinmessage.suffix"))
                     , false);
             sendTickRateChangeMessage(player);
             if (shouldShowDialog(player)) {

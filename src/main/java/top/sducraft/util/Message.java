@@ -13,7 +13,7 @@ import static carpet.utils.Translations.tr;
 
 public abstract class Message {
     public static void sandCustomMessage(ServerPlayer player, String message, ChatFormatting color) {
-        player.displayClientMessage(Component.literal(message).withStyle(color), false);
+        player.displayClientMessage(translateComponent(message).withStyle(color), false);
     }
 
     public static void sandAllPlayerCustomMessage(MinecraftServer server, String message, ChatFormatting color) {

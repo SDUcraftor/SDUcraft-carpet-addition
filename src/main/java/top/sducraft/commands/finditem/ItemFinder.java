@@ -23,6 +23,8 @@ import top.sducraft.config.findItemArea.FindItemAreaData;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static top.sducraft.util.Message.translateComponent;
+
 public class ItemFinder {
 
     public record FoundPlayerInfo(Component playerName, BlockPos pos, int itemCount, double distanceSq,
@@ -135,7 +137,7 @@ public class ItemFinder {
             if (count > 0) {
                 double distSq = player.position().distanceToSqr(otherPlayer.position());
                 if (otherPlayer instanceof EntityPlayerMPFake player1) {
-                    foundPlayers.add(new FoundPlayerInfo(Component.empty().append(otherPlayer.getDisplayName()).append("(假人)"), otherPlayer.blockPosition(), count, distSq, playerAreaName));
+                    foundPlayers.add(new FoundPlayerInfo(Component.empty().append(otherPlayer.getDisplayName()).append(translateComponent("sducarpet.text.finditem.fake_player_tag")), otherPlayer.blockPosition(), count, distSq, playerAreaName));
                 } else {
                     foundPlayers.add(new FoundPlayerInfo(otherPlayer.getDisplayName(), otherPlayer.blockPosition(), count, distSq, playerAreaName));
                 }

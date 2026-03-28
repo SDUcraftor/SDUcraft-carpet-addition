@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static carpet.utils.Translations.tr;
+import static top.sducraft.util.Message.translateComponent;
 
 public class OpenaiChat {
 
@@ -35,7 +35,7 @@ public class OpenaiChat {
     public static void tryStartChat(String prompt, ServerPlayer player) {
         UUID id = player.getUUID();
         if (generatingPlayers.contains(id)) {
-            player.displayClientMessage(Component.literal(tr("sducarpet.command.chat3")), false);
+            player.displayClientMessage(translateComponent("sducarpet.command.chat3"), false);
             return;
         }
 
@@ -119,12 +119,12 @@ public class OpenaiChat {
                         inReasoning = true;
                         content = content.replace("<think>", "");
                         if (wantThink)
-                            player.displayClientMessage(Component.literal("\nthink:").withColor(0x808080), false);
+                            player.displayClientMessage(translateComponent("\nthink:").withColor(0x808080), false);
                     }
                     if (content.contains("</think>")) {
                         inReasoning = false;
                         content = content.replace("</think>", "");
-                        player.displayClientMessage(Component.literal("\nanswer:"), false);
+                        player.displayClientMessage(translateComponent("\nanswer:"), false);
                     }
 
                     if (inReasoning) {
@@ -153,7 +153,7 @@ public class OpenaiChat {
 
         } catch (Exception e) {
             player.getServer().execute(() ->
-                    player.displayClientMessage(Component.literal(tr("sducarpet.command.chat4") + ": " + e.getMessage()), false)
+                    player.displayClientMessage(translateComponent("sducarpet.command.chat4").append(": " + e.getMessage()), false)
             );
         }
     }
@@ -175,4 +175,3 @@ public class OpenaiChat {
     }
 
 }
-

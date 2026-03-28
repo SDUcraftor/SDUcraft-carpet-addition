@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.displayAllItemInfo;
+import static top.sducraft.util.Message.translateComponent;
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 
 public class AllItemEasyCommand implements IEasyCommand {
@@ -26,9 +27,9 @@ public class AllItemEasyCommand implements IEasyCommand {
 
     @Override
     public void showEasyCommandInterface(ServerPlayer player) throws URISyntaxException {
-        Component component = Component.literal("\n[全物品简介]").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
+        Component component = translateComponent("sducarpet.text.allitem.intro_title").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
                         .withClickEvent(new ClickEvent.OpenUrl(new URI("https://zh.minecraft.wiki/w/Tutorial:%E9%80%9A%E7%94%A8%E7%89%A9%E5%93%81%E5%88%86%E7%B1%BB%E5%99%A8?variant=zh-cn#%E5%85%A8%E7%89%A9%E5%93%81")))
-                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看全物品简介介绍"))))
+                        .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.text.allitem.click_intro_doc"))))
                 .append(Component.literal("""
                         全物品是一种自动分类,储存mc中所有物品的装置
                         allitem 指令用于快速检索全物品中某物品的位置或获取某物品的信息
@@ -43,7 +44,7 @@ public class AllItemEasyCommand implements IEasyCommand {
                     custom 返回常规物品列表
                     all 返回全部物品列表
                 """), false);
-        player.displayClientMessage(Component.literal("温馨提示:返回列表中很多元素可以通过直接 点击 获取详细信息").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)), false);
+        player.displayClientMessage(translateComponent("sducarpet.text.common.friendly_tip_click").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)), false);
         displayAllItemInfo(player);
 
 

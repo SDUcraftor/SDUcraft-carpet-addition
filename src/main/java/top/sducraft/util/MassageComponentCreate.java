@@ -10,40 +10,42 @@ import org.jetbrains.annotations.Nullable;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static top.sducraft.util.Message.translateComponent;
+
 public class MassageComponentCreate {
 
     public static Component createDescriptionClickComponent(String label, String url, @Nullable String hoverText, @Nullable String tips) throws URISyntaxException {
-        Component description = Component.literal(label)
+        Component description = translateComponent(label)
                 .withStyle(Style.EMPTY
                         .withClickEvent(new ClickEvent.OpenUrl(new URI(url)))
                         .withColor(ChatFormatting.GRAY));
         if (hoverText != null) {
-            description = Component.empty().append(description).withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Component.literal(hoverText))));
+            description = Component.empty().append(description).withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(translateComponent(hoverText))));
         }
         if (tips != null) {
-            description = Component.empty().append(description).append(Component.literal("\n" + tips));
+            description = Component.empty().append(description).append(translateComponent("\n" + tips));
         }
         return description;
     }
 
     public static Component createCommandClickComponent(String label, String command, @Nullable String hoverText) {
-        Component clickcomponent = Component.literal(label)
+        Component clickcomponent = translateComponent(label)
                 .withStyle(Style.EMPTY
                         .withClickEvent(new ClickEvent.RunCommand(command))
                         .withColor(ChatFormatting.AQUA));
         if (hoverText != null) {
-            clickcomponent = Component.empty().append(clickcomponent).withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Component.literal(hoverText))));
+            clickcomponent = Component.empty().append(clickcomponent).withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(translateComponent(hoverText))));
         }
         return clickcomponent;
     }
 
     public static Component createSuggestClickComponent(String label, String command, @Nullable String hoverText) {
-        Component suggestclickcomponent = Component.literal(label)
+        Component suggestclickcomponent = translateComponent(label)
                 .withStyle(Style.EMPTY
                         .withClickEvent(new ClickEvent.SuggestCommand(command))
                         .withColor(ChatFormatting.AQUA));
         if (hoverText != null) {
-            suggestclickcomponent = Component.empty().append(suggestclickcomponent).withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Component.literal(hoverText))));
+            suggestclickcomponent = Component.empty().append(suggestclickcomponent).withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(translateComponent(hoverText))));
         }
         return suggestclickcomponent;
     }

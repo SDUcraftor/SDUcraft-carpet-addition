@@ -10,18 +10,18 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
 
-import static carpet.utils.Translations.tr;
+import static top.sducraft.util.Message.translateComponent;
 
 public class SyncmaticaCommandHelper {
 
     public static void listSyncmatica(ServerPlayer player, int page) {
         List<LoadSyncmatica.Litematica> list = LoadSyncmatica.litematicas;
         if (list.isEmpty()) {
-            player.displayClientMessage(Component.literal(("There is no syncmatica")), false);
+            player.displayClientMessage(translateComponent("sducarpet.syncmatica.none"), false);
             return;
         }
 
-        player.displayClientMessage(Component.literal(tr("syncmatica:")), false);
+        player.displayClientMessage(translateComponent("sducarpet.syncmatica.title"), false);
 
         boolean paginate = list.size() > 10;
         int totalPages = paginate ? (list.size() + 10 - 1) / 10 : 1;
@@ -35,30 +35,42 @@ public class SyncmaticaCommandHelper {
         for (int i = startIndex; i < endIndex; i++) {
             LoadSyncmatica.Litematica l = list.get(i);
             String owner = l.owner != null ? l.owner.name : "unknown";
-            player.displayClientMessage(Component.literal(tr("name: "))
+            player.displayClientMessage(translateComponent("sducarpet.syncmatica.name")
                     .append(Component.literal(l.file_name).withColor(0x00FFFF))
-                    .append(Component.literal(tr(" owner: ")))
+                    .append(translateComponent("sducarpet.syncmatica.owner"))
                     .append(Component.literal(owner).withColor(0xFFFF00)), false);
         }
 
         if (paginate) {
             Component pagination;
             if (page == 1 && totalPages > 1) {
-                pagination = Component.literal("第 " + page + " 页 / 共 " + totalPages + " 页 ")
-                        .append(Component.literal("->").withStyle(Style.EMPTY
+                pagination = translateComponent("sducarpet.pagination.pagePrefix")
+                        .append(String.valueOf(page))
+                        .append(translateComponent("sducarpet.pagination.pageMiddle"))
+                        .append(String.valueOf(totalPages))
+                        .append(translateComponent("sducarpet.pagination.pageSuffixWithSpace"))
+                        .append(translateComponent("->").withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica list " + (page + 1)))
                                 .withColor(ChatFormatting.AQUA)));
             } else if (page == totalPages && totalPages > 1) {
-                pagination = Component.literal("<-").withStyle(Style.EMPTY
+                pagination = translateComponent("<-").withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica list " + (page - 1)))
                                 .withColor(ChatFormatting.AQUA))
-                        .append(Component.literal(" 第 " + page + " 页 / 共 " + totalPages + " 页"));
+                        .append(translateComponent("sducarpet.pagination.pagePrefixWithLeadingSpace"))
+                        .append(String.valueOf(page))
+                        .append(translateComponent("sducarpet.pagination.pageMiddle"))
+                        .append(String.valueOf(totalPages))
+                        .append(translateComponent("sducarpet.pagination.pageSuffix"));
             } else {
-                pagination = Component.literal("<-").withStyle(Style.EMPTY
+                pagination = translateComponent("<-").withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica list " + (page - 1)))
                                 .withColor(ChatFormatting.AQUA))
-                        .append(Component.literal(" 第 " + page + " 页 / 共 " + totalPages + " 页 "))
-                        .append(Component.literal("->").withStyle(Style.EMPTY
+                        .append(translateComponent("sducarpet.pagination.pagePrefixWithLeadingSpace"))
+                        .append(String.valueOf(page))
+                        .append(translateComponent("sducarpet.pagination.pageMiddle"))
+                        .append(String.valueOf(totalPages))
+                        .append(translateComponent("sducarpet.pagination.pageSuffixWithSpace"))
+                        .append(translateComponent("->").withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica list " + (page + 1)))
                                 .withColor(ChatFormatting.AQUA)));
             }

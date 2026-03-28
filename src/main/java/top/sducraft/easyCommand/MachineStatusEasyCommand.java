@@ -17,10 +17,10 @@ import top.sducraft.util.dialog.TextComponentBuilder;
 
 import java.util.Objects;
 
-import static carpet.utils.Translations.tr;
 import static top.sducraft.config.rule.MachineStatusCommandConfig.permMachineList;
 import static top.sducraft.config.rule.MachineStatusCommandConfig.tempMachineList;
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
+import static top.sducraft.util.Message.translateComponent;
 
 public class MachineStatusEasyCommand implements IEasyCommand {
     @Override
@@ -75,18 +75,18 @@ public class MachineStatusEasyCommand implements IEasyCommand {
         boolean bl1 = tempMachineList.isEmpty();
         boolean bl2 = permMachineList.isEmpty();
         if (bl1 && bl2) {
-            player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.machinestatus1")), false);
+            player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus1"), false);
             return 0;
         } else {
-            player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.machinestatus4")).append(Component.literal(tr("sducarpet.easycommand.machinestatus5")).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN))).append(Component.literal(tr("sducarpet.easycommand.machinestatus6"))).append(Component.literal(tr("sducarpet.easycommand.machinestatus7")).withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))).append(Component.literal(tr("sducarpet.easycommand.machinestatus8"))), false);
+            player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus4").append(translateComponent("sducarpet.easycommand.machinestatus5").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN))).append(translateComponent("sducarpet.easycommand.machinestatus6")).append(translateComponent("sducarpet.easycommand.machinestatus7").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))).append(translateComponent("sducarpet.easycommand.machinestatus8")), false);
             if (!bl1) {
-                player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.machinestatus2")), false);
+                player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus2"), false);
                 for (MachineStatusCommandConfig.Machine machine : tempMachineList) {
                     player.displayClientMessage(Component.literal(machine.name).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)).append(Component.literal("  " + machine.dimension + " (" + machine.pos.toShortString() + ")").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE))), false);
                 }
             }
             if (!bl2) {
-                player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.machinestatus3")), false);
+                player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus3"), false);
                 for (MachineStatusCommandConfig.Machine machine : permMachineList) {
                     BlockState blockState = getDimension(player.getServer(), machine.dimension).getBlockState(machine.pos);
                     if ((blockState.getBlock() instanceof LeverBlock && blockState.getValue(LeverBlock.POWERED)) || (blockState.getBlock() instanceof RedstoneLampBlock && blockState.getValue(RedstoneLampBlock.LIT))) {
@@ -102,7 +102,7 @@ public class MachineStatusEasyCommand implements IEasyCommand {
                 for (MachineStatusCommandConfig.Machine machine : permMachineList) {
                     BlockState blockState = getDimension(player.getServer(), machine.dimension).getBlockState(machine.pos);
                     if (!(blockState.getBlock() instanceof LeverBlock || blockState.getBlock() instanceof RedstoneLampBlock)) {
-                        player.displayClientMessage(Component.literal(machine.name).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)).append("  " + machine.dimension + " (" + machine.pos.toShortString() + ")" + "开关状态未知"), false);
+                        player.displayClientMessage(Component.literal(machine.name).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)).append(translateComponent("  " + machine.dimension + " (" + machine.pos.toShortString() + ")" + "开关状态未知")), false);
                     }
                 }
             }

@@ -26,6 +26,7 @@ import static top.sducraft.config.allItemData.AllItemData.dataList;
 import static top.sducraft.helpers.commands.allItemCommand.SearchAllItem.suggestFuzzyItemNames;
 import static top.sducraft.helpers.commands.allItemCommand.SpawnDisplay.spawnBlockDisplay;
 import static top.sducraft.helpers.commands.allItemCommand.SpawnDisplay.spawnItemDisplay;
+import static top.sducraft.util.Message.translateComponent;
 
 public class DebugAllitem {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
@@ -49,7 +50,7 @@ public class DebugAllitem {
                                         }
                                     }
 
-                                    context.getSource().sendSuccess(() -> Component.literal("已生成store展示实体"), false);
+                                    context.getSource().sendSuccess(() -> translateComponent("sducarpet.command.debugallitem.storeSpawned"), false);
                                     return 1;
                                 })
                                 .then(Commands.argument("item", StringArgumentType.greedyString())
@@ -65,9 +66,11 @@ public class DebugAllitem {
                                                     if (level.getBlockEntity(pos) instanceof Container)
                                                         spawnBlockDisplay(context.getSource().getServer().overworld(), pos, context.getSource().getServer().overworld().getBlockState(pos), 0x00FF00, "allitem_debug");
                                                 }
-                                                context.getSource().sendSuccess(() -> Component.literal(tr("已生成") + StringArgumentType.getString(context, "item") + ("展示实体")), false);
+                                                context.getSource().sendSuccess(() -> translateComponent("sducarpet.command.debugallitem.itemSpawned")
+                                                        .append(StringArgumentType.getString(context, "item"))
+                                                        .append(translateComponent("sducarpet.command.debugallitem.displaySuffix")), false);
                                             } else {
-                                                context.getSource().sendFailure(Component.literal(tr("未找到物品")));
+                                                context.getSource().sendFailure(translateComponent("sducarpet.command.debugallitem.itemNotFound"));
                                             }
                                             return 0;
                                         })))
@@ -85,9 +88,11 @@ public class DebugAllitem {
                                             AllItemData.ItemData data = AllItemData.search(StringArgumentType.getString(context, "item"));
                                             if (data != null) {
                                                 spawnItemDisplay(data, SpawnDisplay.DisplayType.PERM, "allitem_debug");
-                                                context.getSource().sendSuccess(() -> Component.literal(tr("已生成") + StringArgumentType.getString(context, "item") + ("展示实体")), false);
+                                                context.getSource().sendSuccess(() -> translateComponent("sducarpet.command.debugallitem.itemSpawned")
+                                                        .append(StringArgumentType.getString(context, "item"))
+                                                        .append(translateComponent("sducarpet.command.debugallitem.displaySuffix")), false);
                                             } else {
-                                                context.getSource().sendFailure(Component.literal(tr("未找到物品")));
+                                                context.getSource().sendFailure(translateComponent("sducarpet.command.debugallitem.itemNotFound"));
                                             }
                                             return 0;
                                         })))
@@ -109,7 +114,7 @@ public class DebugAllitem {
                                             }
                                         }
                                     }
-                                    context.getSource().sendSuccess(() -> Component.literal("已生成全部展示实体"), false);
+                                    context.getSource().sendSuccess(() -> translateComponent("sducarpet.command.debugallitem.allSpawned"), false);
                                     return 1;
                                 })
                         )

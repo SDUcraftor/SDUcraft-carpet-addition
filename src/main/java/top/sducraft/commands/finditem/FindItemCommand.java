@@ -183,12 +183,12 @@ public class FindItemCommand {
         processGroups(droppedItemGroups, displayInfos, displayStack, player, "dropped_item");
 
         if (displayInfos.isEmpty()) {
-            source.sendSuccess(() -> translateComponent("sducarpet.command.finditem.notFound").append(" '").append(displayStack.getHoverName()).append("'"), false);
+            source.sendSuccess(() -> translateComponent("sducarpet.command.finditem.notFound").append(translateComponent(" '")).append(displayStack.getHoverName()).append(translateComponent("'")), false);
         } else {
             player.sendSystemMessage(translateComponent("sducarpet.command.finditem.foundHeader")
-                    .append(" " + displayInfos.size() + " ")
+                    .append(translateComponent(" ").append(String.valueOf(displayInfos.size())).append(translateComponent(" ")))
                     .append(translateComponent("sducarpet.command.finditem.locations"))
-                    .append(" ").append(displayStack.getHoverName()).append(" ---").withStyle(ChatFormatting.GOLD));
+                    .append(translateComponent(" ")).append(displayStack.getHoverName()).append(translateComponent(" ---")).withStyle(ChatFormatting.GOLD));
 
             displayInfos.sort(Comparator.comparingDouble(DisplayInfo::distanceSq));
             displayInfos.forEach(info -> player.sendSystemMessage(info.message()));
@@ -298,7 +298,7 @@ public class FindItemCommand {
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.YELLOW)
                                 .withHoverEvent(new HoverEvent.ShowItem(displayStack))))
-                .append(Component.literal(" ").append(translateComponent("sducarpet.command.finditem.clickToLook")
+                .append(translateComponent(" ").append(translateComponent("sducarpet.command.finditem.clickToLook")
                         .withStyle(Style.EMPTY
                                 .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.command.finditem.clickToLookHover")))
                                 .withClickEvent(new ClickEvent.RunCommand(command))
@@ -316,7 +316,7 @@ public class FindItemCommand {
             default -> translateComponent("sducarpet.command.finditem.groups").getString().replace("{count}", String.valueOf(group.size()));
         };
 
-        return Component.literal("[+] ").withStyle(ChatFormatting.GREEN)
+        return translateComponent("[+] ").withStyle(ChatFormatting.GREEN)
                 .append(Component.literal(String.format("(%.1fm) ", distance)).withStyle(ChatFormatting.GRAY))
                 .append(Component.literal(groupName).withStyle(ChatFormatting.AQUA))
                 .append(translateComponent("sducarpet.command.finditem.totalCount").getString().replace("{count}", String.valueOf(totalCount))).withStyle(ChatFormatting.YELLOW)
@@ -368,10 +368,10 @@ public class FindItemCommand {
         String commandUser = player.getGameProfile().getName();
         String command = String.format("/finditem action lookandhighlight %d %d %d", pos.getX(), pos.getY(), pos.getZ());
 
-        MutableComponent message = Component.literal("- ")
+        MutableComponent message = translateComponent("- ")
                 .append(info.containerName().copy().withStyle(ChatFormatting.AQUA))
                 .append(Component.literal(String.format(" at [%d, %d, %d] (%.1fm)", pos.getX(), pos.getY(), pos.getZ(), distance)).withStyle(ChatFormatting.GRAY))
-                .append(Component.literal(" ").append(translateComponent("sducarpet.command.finditem.clickToLook")
+                .append(translateComponent(" ").append(translateComponent("sducarpet.command.finditem.clickToLook")
                         .withStyle(Style.EMPTY
                                 .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.command.finditem.clickToLookContainerHover")))
                                 .withClickEvent(new ClickEvent.RunCommand(command))
@@ -385,7 +385,7 @@ public class FindItemCommand {
             int count = entry.getValue();
             ItemStack displayStack = new ItemStack(item);
 
-            message.append(Component.literal("\n  - ").withStyle(ChatFormatting.DARK_GRAY))
+            message.append(translateComponent("\n  - ").withStyle(ChatFormatting.DARK_GRAY))
                     .append(Component.literal("x" + count + " ").withStyle(ChatFormatting.YELLOW))
                     .append(item.getName(displayStack).copy().withStyle(ChatFormatting.WHITE)
                             .withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowItem(displayStack)))

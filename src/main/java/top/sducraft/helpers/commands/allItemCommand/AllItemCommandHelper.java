@@ -11,20 +11,20 @@ import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import java.util.HashSet;
 import java.util.Objects;
 
-import static carpet.utils.Translations.tr;
 import static top.sducraft.config.allItemData.AllItemData.addItem;
 import static top.sducraft.config.allItemData.AllItemData.delItem;
+import static top.sducraft.util.Message.translateComponent;
 
 public class AllItemCommandHelper {
     public static int addItemToData(String type, BlockPos startPos, BlockPos endPos, BlockPos startStorePos, BlockPos endStorePos, BlockPos startChestPos, BlockPos endChestPos, CommandSourceStack sourceStack) {
         if (!Objects.equals(type, "item") && !Objects.equals(type, "bulk")) {
-            sourceStack.sendFailure(Component.literal(tr("sducarpet.easycommand.allitemcommand")));
+            sourceStack.sendFailure(translateComponent("sducarpet.easycommand.allitemcommand"));
             return 0;
         } else {
             int dx = Integer.compare(endPos.getX(), startPos.getX());
             int dz = Integer.compare(endPos.getZ(), startPos.getZ());
             if ((dx != 0 && dz != 0) || (dx == 0 && dz == 0)) {
-                sourceStack.sendFailure(Component.literal(tr("sducarpet.easycommand.allitemcommand1")));
+                sourceStack.sendFailure(translateComponent("sducarpet.easycommand.allitemcommand1"));
                 return 0;
             }
             BlockPos current = startPos;
@@ -61,7 +61,7 @@ public class AllItemCommandHelper {
         int dx = Integer.compare(endpos.getX(), startpos.getX());
         int dz = Integer.compare(endpos.getZ(), startpos.getZ());
         if ((dx != 0 && dz != 0) || (dx == 0 && dz == 0)) {
-            sourceStack.sendFailure(Component.literal(tr("sducarpet.easycommand.allitemcommand1")));
+            sourceStack.sendFailure(translateComponent("sducarpet.easycommand.allitemcommand1"));
             return 0;
         }
         BlockPos current = startpos;

@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
 import java.util.Objects;
 
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
+import static top.sducraft.util.Message.translateComponent;
 import static top.sducraft.util.MassageComponentCreate.createSuggestClickComponent;
 
 public class TickRateManagerEasyCommand implements IEasyCommand {
@@ -28,20 +29,20 @@ public class TickRateManagerEasyCommand implements IEasyCommand {
 
     @Override
     public void showEasyCommandInterface(ServerPlayer player) throws URISyntaxException {
-        Component component = Component.literal("\n[tick命令简介]").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
+        Component component = translateComponent("sducarpet.text.tickrate.intro_title").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
                         .withClickEvent(new ClickEvent.OpenUrl(new URI("https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/tick")))
-                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看tick命令完整介绍"))))
-                .append(Component.literal("Minecraft的绝大多数计算逻辑都在一个游戏循环内执行，执行一次这个循环就被称为执行了一次游戏刻(GameTick)作为单位时缩写为gt.在默认情况下,每秒会进行20个游戏刻,每秒最多运行游戏刻的次数可以使用tick指令进行修改.特别的,SDUcraft中开启了tickcommandcarpet化,这将使得加速游戏时的命令变为/tick warp\n"))
-                .append(Component.literal("注意事项:在更改游戏速度前请先与其他玩家沟通,在更改游戏速度后可以使用").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE))
-                        .append(Component.literal(" /leavemessage ").withStyle(Style.EMPTY
+                        .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.text.tickrate.click_doc"))))
+                .append(translateComponent("sducarpet.text.tickrate.intro_body"))
+                .append(translateComponent("sducarpet.text.tickrate.notice_prefix").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE))
+                        .append(translateComponent(" /leavemessage ").withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent.RunCommand("/leavemessage"))
                                 .withColor(ChatFormatting.AQUA)))
-                        .append(Component.literal("指令进行留言")).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
+                        .append(translateComponent("sducarpet.text.tickrate.message_suffix")).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
 
         ServerTickRateManager tickRateManager = Objects.requireNonNull(player.getServer()).tickRateManager();
-        Component tickrate = Component.literal("当前游戏速度:")
+        Component tickrate = translateComponent("sducarpet.text.tickrate.current_label")
                 .append(Component.literal(String.valueOf(tickRateManager.tickrate()))
-                        .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)).append(Component.literal("gt/s")));
+                        .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)).append(translateComponent("gt/s")));
 
         player.displayClientMessage(component, false);
         player.displayClientMessage(tickrate, false);

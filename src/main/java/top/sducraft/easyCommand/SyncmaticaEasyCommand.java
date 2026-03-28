@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
+import static top.sducraft.util.Message.translateComponent;
 
 public class SyncmaticaEasyCommand implements IEasyCommand {
     @Override
@@ -25,9 +26,9 @@ public class SyncmaticaEasyCommand implements IEasyCommand {
 
     @Override
     public void showEasyCommandInterface(ServerPlayer player) throws URISyntaxException {
-        Component component = Component.literal("\n[syncmatica命令简介]").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
+        Component component = translateComponent("sducarpet.text.syncmatica.intro_title").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
                         .withClickEvent(new ClickEvent.OpenUrl(new URI("https://www.mcmod.cn/class/6842.html")))
-                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看共享投影介绍"))))
+                        .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.text.syncmatica.click_intro_doc"))))
                 .append(Component.literal("""
                         Syncmatica 模组可以使你在服务器中与其他安装了 Syncmatica 模组的玩家一起共享投影
                         syncmatica命令用于在全物品中高亮对应材质
@@ -38,6 +39,6 @@ public class SyncmaticaEasyCommand implements IEasyCommand {
                 /syncmatica material <syncmatica> 加载指定投影的材料列表
                 /asyncmatica clear 清除当前材料列表
                 """), false);
-        player.displayClientMessage(Component.literal("温馨提示:返回列表中很多元素可以通过直接 点击 获取详细信息").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)), false);
+        player.displayClientMessage(translateComponent("sducarpet.text.common.friendly_tip_click").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)), false);
     }
 }

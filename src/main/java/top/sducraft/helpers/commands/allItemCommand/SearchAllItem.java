@@ -27,6 +27,7 @@ import static top.sducraft.config.allItemData.AllItemData.*;
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.countItemInWorld;
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.getCountString;
 import static top.sducraft.helpers.commands.allItemCommand.SpawnDisplay.spawnItemDisplay;
+import static top.sducraft.util.Message.translateComponent;
 
 
 public class SearchAllItem {
@@ -48,24 +49,24 @@ public class SearchAllItem {
                 }
 //                spawnItemDisplay(player.level(), data.chestPos, getItemByDescriptionId(descriptionId), 0xFFFF00);
                 spawnItemDisplay(data, SpawnDisplay.DisplayType.TEMP, "allitem_display");
-                source.sendSuccess(() -> Component.literal(tr("成功搜索到物品") + keyword)
+                source.sendSuccess(() -> translateComponent("sducarpet.text.allitem.search_found_prefix").append(keyword)
                         .withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent.RunCommand("/allitem info " + keyword))
-                                .withHoverEvent(new HoverEvent.ShowText(Component.literal(tr("点击查看 ") + keyword + tr("物品详细信息")))))
-                        .append(Component.literal(tr(",当前储量为") + getCountString(countItemInWorld(data)))), false);
+                                .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.text.common.click_view_with_space").append(keyword).append(translateComponent("sducarpet.text.allitem.item_details")))))
+                        .append(translateComponent("sducarpet.text.allitem.current_stock_prefix").append(getCountString(countItemInWorld(data)))), false);
 //                displayItemInfo(keyword, data, player);
                 return 1;
             } else {
                 List<String> fuzzyMatches = fuzzySearch(keyword.toLowerCase());
                 if (fuzzyMatches.isEmpty()) {
-                    source.sendFailure(Component.literal(tr("sducarpet.easycommand.allitemcommand2")).append(Component.literal("\"" + keyword + "\"")));
+                    source.sendFailure(translateComponent("sducarpet.easycommand.allitemcommand2").append(Component.literal("\"" + keyword + "\"")));
                 } else {
                     Component component = Component.empty();
                     for (String name : fuzzyMatches) {
-                        component = Component.empty().append(component).append("\n").append(Component.literal(name)).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem search " + name)));
+                        component = Component.empty().append(component).append(translateComponent("\n")).append(Component.literal(name)).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem search " + name)));
                     }
-                    source.sendFailure(Component.literal(tr("sducarpet.easycommand.allitemcommand2")).append(Component.literal("\"" + keyword + "\"")));
-                    player.displayClientMessage(Component.literal(tr("sducarpet.easycommand.allitemcommand3")).append(component), false);
+                    source.sendFailure(translateComponent("sducarpet.easycommand.allitemcommand2").append(Component.literal("\"" + keyword + "\"")));
+                    player.displayClientMessage(translateComponent("sducarpet.easycommand.allitemcommand3").append(component), false);
                 }
                 return 0;
             }

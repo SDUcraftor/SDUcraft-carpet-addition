@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.*;
 
 import static carpet.utils.Translations.tr;
+import static top.sducraft.util.Message.translateComponent;
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.countItemInWorld;
 import static top.sducraft.helpers.commands.allItemCommand.ItemInfo.getCountString;
 import static top.sducraft.helpers.commands.allItemCommand.SpawnDisplay.spawnBlockDisplay;
@@ -116,19 +117,19 @@ public class MaterialListManenger {
                     missingMaterials.put(descriptionId, requiredCount);
                 }
             }
-            player.displayClientMessage(Component.literal(tr("\nTotal material species:"))
+            player.displayClientMessage(translateComponent("\nTotal material species:")
                             .append(Component.literal(String.valueOf(totalCount)).withColor(0x00FF00))
-                            .append(Component.literal(tr("\nlack material species:")))
-                            .append(Component.literal(String.valueOf(lackCount)).withColor(0xFFFF00)).append(Component.literal(tr("\nUse \"/syncmatica material lack\" to display complete list of lack materials")))
-                            .append(Component.literal(tr("\nmissing material species:")))
-                            .append(Component.literal(String.valueOf(missingCount)).withColor(0xFF0000)).append(Component.literal(tr("\nUse \"/syncmatica material missing\" to display complete list of lack materials")))
+                            .append(translateComponent("\nlack material species:"))
+                            .append(Component.literal(String.valueOf(lackCount)).withColor(0xFFFF00)).append(translateComponent("\nUse \"/syncmatica material lack\" to display complete list of lack materials"))
+                            .append(translateComponent("\nmissing material species:"))
+                            .append(Component.literal(String.valueOf(missingCount)).withColor(0xFF0000)).append(translateComponent("\nUse \"/syncmatica material missing\" to display complete list of lack materials"))
                     , false);
         }
     }
 
     public static void listLackMaterial(ServerPlayer player, int page) {
         if (lackMaterials.isEmpty()) {
-            player.displayClientMessage(Component.literal(tr("没有缺货的材料。")), false);
+            player.displayClientMessage(translateComponent("sducarpet.text.syncmatica.lack_none"), false);
             return;
         }
 
@@ -143,32 +144,32 @@ public class MaterialListManenger {
         int startIndex = (page - 1) * ITEMS_PER_PAGE;
         int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, list.size());
 
-        player.displayClientMessage(Component.literal(tr("Lack materials：")), false);
+        player.displayClientMessage(translateComponent("Lack materials："), false);
 
         for (int i = startIndex; i < endIndex; i++) {
             Map.Entry<String, Integer> entry = list.get(i);
             int count = entry.getValue();
-            player.displayClientMessage(Component.literal("- ").append(entry.getKey()).append(Component.literal(": " + getCountString(count))), false);
+            player.displayClientMessage(translateComponent("- ").append(entry.getKey()).append(translateComponent(": ").append(getCountString(count))), false);
         }
 
         if (paginate) {
             Component pagination;
             if (page == 1 && totalPages > 1) {
-                pagination = Component.literal("第 " + page + " 页 / 共 " + totalPages + " 页 ")
-                        .append(Component.literal("->").withStyle(Style.EMPTY
+                pagination = translateComponent("sducarpet.text.pagination.prefix").append(String.valueOf(page)).append(translateComponent("sducarpet.text.pagination.middle")).append(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix_with_space"))
+                        .append(translateComponent("->").withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica material lack " + (page + 1)))
                                 .withColor(ChatFormatting.AQUA)));
             } else if (page == totalPages && totalPages > 1) {
-                pagination = Component.literal("<-").withStyle(Style.EMPTY
+                pagination = translateComponent("<-").withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica material lack " + (page - 1)))
                                 .withColor(ChatFormatting.AQUA))
-                        .append(Component.literal(" 第 " + page + " 页 / 共 " + totalPages + " 页"));
+                        .append(translateComponent("sducarpet.text.pagination.prefix_with_leading_space").append(String.valueOf(page)).append(translateComponent("sducarpet.text.pagination.middle")).append(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix")));
             } else {
-                pagination = Component.literal("<-").withStyle(Style.EMPTY
+                pagination = translateComponent("<-").withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica material lack " + (page - 1)))
                                 .withColor(ChatFormatting.AQUA))
-                        .append(Component.literal(" 第 " + page + " 页 / 共 " + totalPages + " 页 "))
-                        .append(Component.literal("->").withStyle(Style.EMPTY
+                        .append(translateComponent("sducarpet.text.pagination.prefix_with_leading_space").append(String.valueOf(page)).append(translateComponent("sducarpet.text.pagination.middle")).append(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix_with_space")))
+                        .append(translateComponent("->").withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica material lack " + (page + 1)))
                                 .withColor(ChatFormatting.AQUA)));
             }
@@ -178,7 +179,7 @@ public class MaterialListManenger {
 
     public static void listMissingMaterial(ServerPlayer player, int page) {
         if (missingMaterials.isEmpty()) {
-            player.displayClientMessage(Component.literal(tr("没有缺失的材料。(不在全物品中)")), false);
+            player.displayClientMessage(translateComponent("sducarpet.text.syncmatica.missing_none"), false);
             return;
         }
 
@@ -193,32 +194,32 @@ public class MaterialListManenger {
         int startIndex = (page - 1) * ITEMS_PER_PAGE;
         int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, list.size());
 
-        player.displayClientMessage(Component.literal(tr("Missing materials：")), false);
+        player.displayClientMessage(translateComponent("Missing materials："), false);
 
         for (int i = startIndex; i < endIndex; i++) {
             Map.Entry<String, Integer> entry = list.get(i);
             int count = entry.getValue();
-            player.displayClientMessage(Component.literal("- ").append(entry.getKey()).append(Component.literal(": " + getCountString(count))), false);
+            player.displayClientMessage(translateComponent("- ").append(entry.getKey()).append(translateComponent(": ").append(getCountString(count))), false);
         }
 
         if (paginate) {
             Component pagination;
             if (page == 1 && totalPages > 1) {
-                pagination = Component.literal("第 " + page + " 页 / 共 " + totalPages + " 页 ")
-                        .append(Component.literal("->").withStyle(Style.EMPTY
+                pagination = translateComponent("sducarpet.text.pagination.prefix").append(String.valueOf(page)).append(translateComponent("sducarpet.text.pagination.middle")).append(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix_with_space"))
+                        .append(translateComponent("->").withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica material missing " + (page + 1)))
                                 .withColor(ChatFormatting.AQUA)));
             } else if (page == totalPages && totalPages > 1) {
-                pagination = Component.empty().append(Component.literal("<-").withStyle(Style.EMPTY
+                pagination = Component.empty().append(translateComponent("<-").withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica material missing " + (page - 1)))
                                 .withColor(ChatFormatting.AQUA)))
-                        .append(Component.literal(" 第 " + page + " 页 / 共 " + totalPages + " 页"));
+                        .append(translateComponent("sducarpet.text.pagination.prefix_with_leading_space").append(String.valueOf(page)).append(translateComponent("sducarpet.text.pagination.middle")).append(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix")));
             } else {
-                pagination = Component.empty().append(Component.literal("<-").withStyle(Style.EMPTY
+                pagination = Component.empty().append(translateComponent("<-").withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica material missing " + (page - 1)))
                                 .withColor(ChatFormatting.AQUA)))
-                        .append(Component.literal(" 第 " + page + " 页 / 共 " + totalPages + " 页 "))
-                        .append(Component.literal("->").withStyle(Style.EMPTY
+                        .append(translateComponent("sducarpet.text.pagination.prefix_with_leading_space").append(String.valueOf(page)).append(translateComponent("sducarpet.text.pagination.middle")).append(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix_with_space")))
+                        .append(translateComponent("->").withStyle(Style.EMPTY
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica material missing " + (page + 1)))
                                 .withColor(ChatFormatting.AQUA)));
             }

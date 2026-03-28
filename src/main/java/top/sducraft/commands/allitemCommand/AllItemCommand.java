@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import top.sducraft.config.allItemData.AllItemData;
 
 import static carpet.utils.Translations.tr;
+import static top.sducraft.util.Message.translateComponent;
 import static top.sducraft.config.allItemData.AllItemData.search;
 import static top.sducraft.helpers.commands.allItemCommand.AllItemCommandHelper.addItemToData;
 import static top.sducraft.helpers.commands.allItemCommand.AllItemCommandHelper.deleteItemFromData;
@@ -63,7 +64,7 @@ public class AllItemCommand {
                                         displayItemInfo(StringArgumentType.getString(context, "item"), data, context.getSource().getPlayer());
                                         return 1;
                                     } else {
-                                        context.getSource().sendFailure(Component.literal(tr("未找到物品")));
+                                        context.getSource().sendFailure(translateComponent("sducarpet.text.common.item_not_found"));
                                         return 0;
                                     }
                                 }))
@@ -106,7 +107,7 @@ public class AllItemCommand {
                                                 displayItemStoreInfo(data, context.getSource());
                                                 return 1;
                                             } else {
-                                                context.getSource().sendFailure(Component.literal(tr("未找到物品")));
+                                                context.getSource().sendFailure(translateComponent("sducarpet.text.common.item_not_found"));
                                                 return 0;
                                             }
                                         })))

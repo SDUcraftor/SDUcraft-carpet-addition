@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
+import static top.sducraft.util.Message.translateComponent;
 import static top.sducraft.util.MassageComponentCreate.createSuggestClickComponent;
 
 public class SpectatorEasyCommand implements IEasyCommand {
@@ -26,11 +27,11 @@ public class SpectatorEasyCommand implements IEasyCommand {
 
     @Override
     public void showEasyCommandInterface(ServerPlayer player) throws URISyntaxException {
-        Component component = Component.literal("\n[!!spec命令简介]").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
+        Component component = translateComponent("sducarpet.text.spectator.intro_title").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
                         .withClickEvent(new ClickEvent.OpenUrl(new URI("https://mcdreforged.com/zh-CN/plugin/gamemode")))
-                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("点击查看!!spec命令使用文档"))))
-                .append(Component.literal("一个基于MCDR的游戏模式切换插件\n"))
-                .append(Component.literal("注意事项:tp指令只能在旁观者模式下使用").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
+                        .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.text.spectator.click_doc"))))
+                .append(translateComponent("sducarpet.text.spectator.intro_body"))
+                .append(translateComponent("sducarpet.text.spectator.notice").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
 
         player.displayClientMessage(component, false);
         player.displayClientMessage(Component.empty()

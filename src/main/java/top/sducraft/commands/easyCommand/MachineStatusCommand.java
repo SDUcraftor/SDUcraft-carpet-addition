@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import static top.sducraft.config.rule.MachineStatusCommandConfig.*;
 import static top.sducraft.easyCommand.MachineStatusEasyCommand.showMachineStatus;
+import static top.sducraft.util.Message.translateComponent;
 
 public class MachineStatusCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -33,10 +34,10 @@ public class MachineStatusCommand {
                                                         .executes(context -> {
                                                                     if (StringArgumentType.getString(context, "type").equals("perm") && Objects.requireNonNull(context.getSource().getPlayer()).hasPermissions(2)) {
                                                                         addPermMachine(StringArgumentType.getString(context, "name"), BlockPosArgument.getBlockPos(context, "pos"), DimensionArgument.getDimension(context, "dimension").dimension().location().getPath());
-                                                                        context.getSource().sendSuccess(() -> Component.literal("已成功添加机器" + StringArgumentType.getString(context, "name")), false);
+                                                                        context.getSource().sendSuccess(() -> translateComponent("sducarpet.command.machine.addedPerm").append(StringArgumentType.getString(context, "name")), false);
                                                                     } else if (StringArgumentType.getString(context, "type").equals("temp")) {
                                                                         addTempMachine(StringArgumentType.getString(context, "name"), BlockPosArgument.getBlockPos(context, "pos"), DimensionArgument.getDimension(context, "dimension").dimension().location().getPath());
-                                                                        context.getSource().sendSuccess(() -> Component.literal("已成功添加临时机器" + StringArgumentType.getString(context, "name")), false);
+                                                                        context.getSource().sendSuccess(() -> translateComponent("sducarpet.command.machine.addedTemp").append(StringArgumentType.getString(context, "name")), false);
                                                                     }
                                                                     return 1;
                                                                 }

@@ -7,6 +7,7 @@ import top.sducraft.util.dialog.MultiActionDialogBuilder;
 import java.util.List;
 
 import static top.sducraft.util.Message.sandPlayerDialog;
+import static top.sducraft.util.Message.translateComponent;
 
 public class EasyCommandHelper {
     public static final List<IEasyCommand> EASYCOMMANDS = List.of(
@@ -25,7 +26,7 @@ public class EasyCommandHelper {
     );
 
 //    public static void showEasyCommandInterface(ServerPlayer player) {
-//        Component component1 =  Component.literal("\n欢迎使用sducrafrt快捷命令系统,以下消息中所有[]按钮均可点击\n");
+//        Component component1 =  translateComponent("sducarpet.text.easycommand.welcome_legacy");
 //        int i = 0;
 //        for (IEasyCommand command : EASYCOMMANDS) {
 //            component1 = Component.empty().append(component1).append(" ").append(command.clickButton()).append(" ") ;

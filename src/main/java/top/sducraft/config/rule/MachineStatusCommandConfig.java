@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static top.sducraft.util.Message.translateComponent;
+
 public class MachineStatusCommandConfig {
     public static File configFile;
     public static final List<Machine> permMachineList = new ArrayList<>();
@@ -82,10 +84,10 @@ public class MachineStatusCommandConfig {
     public static void delPermMachine(String name, ServerPlayer player) {
         if (Objects.equals(name, "all")) {
             permMachineList.clear();
-            player.displayClientMessage(Component.literal("已删除所有机器"), false);
+            player.displayClientMessage(translateComponent("sducarpet.command.machine.deletedAllPerm"), false);
         } else {
             if (permMachineList.removeIf(machine -> machine.name.equals(name))) {
-                player.displayClientMessage(Component.literal("已删除" + name), false);
+                player.displayClientMessage(translateComponent("sducarpet.command.machine.deletedOne").append(name), false);
             }
         }
         saveConfig();
@@ -94,10 +96,10 @@ public class MachineStatusCommandConfig {
     public static void delTempMachine(String name, ServerPlayer player) {
         if (Objects.equals(name, "all")) {
             tempMachineList.clear();
-            player.displayClientMessage(Component.literal("已删除所有临时机器"), false);
+            player.displayClientMessage(translateComponent("sducarpet.command.machine.deletedAllTemp"), false);
         } else {
             if (tempMachineList.removeIf(machine -> machine.name.equals(name))) {
-                player.displayClientMessage(Component.literal("已删除" + name), false);
+                player.displayClientMessage(translateComponent("sducarpet.command.machine.deletedOne").append(name), false);
             }
         }
         saveConfig();

@@ -16,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.helpers.commands.tickRateChangeMessage.TickRateChangeMessageCommandHelper;
 
+import static top.sducraft.util.Message.translateComponent;
+
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
 
@@ -34,14 +36,17 @@ public abstract class MinecraftServerMixin {
                 if (changerName != null) {
                     for (ServerPlayer player : playerList.getPlayers()) {
                         if (player.getName().getString().equals(changerName)) {
-                            player.displayClientMessage(Component.literal("检测到游戏速度改变成功，可以使用 ").append(Component.literal("/leavemessage").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withClickEvent(new ClickEvent.RunCommand("/leavemessage ")))).append(" 指令进行留言"), false);
+                            player.displayClientMessage(translateComponent("sducarpet.tickratechange.self")
+                                    .append(translateComponent("/leavemessage").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withClickEvent(new ClickEvent.RunCommand("/leavemessage "))))
+                                    .append(translateComponent("sducarpet.tickratechange.selfSuffix")), false);
                         } else {
-                            player.displayClientMessage(Component.literal(changerName).withStyle(ChatFormatting.YELLOW).append(Component.literal(" 改变了游戏速度。").withStyle(ChatFormatting.WHITE)), false);
+                            player.displayClientMessage(Component.literal(changerName).withStyle(ChatFormatting.YELLOW)
+                                    .append(translateComponent("sducarpet.tickratechange.other").withStyle(ChatFormatting.WHITE)), false);
                         }
                     }
                 }
             } else {
-                playerList.broadcastSystemMessage(Component.literal("游戏速度已恢复正常。").withStyle(ChatFormatting.GREEN), false);
+                playerList.broadcastSystemMessage(translateComponent("sducarpet.tickratechange.reset").withStyle(ChatFormatting.GREEN), false);
                 TickRateChangeMessageCommandHelper.resetTickRateChangeMessage();
             }
         }

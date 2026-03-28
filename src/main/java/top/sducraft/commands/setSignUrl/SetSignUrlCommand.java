@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
 
-import static carpet.utils.Translations.tr;
 import static top.sducraft.util.Message.translateComponent;
 
 public class SetSignUrlCommand {
@@ -30,7 +29,7 @@ public class SetSignUrlCommand {
                                         signText = signText.setMessage(0, Component.literal(signBlockEntity.getFrontText().getMessage(0, false).getString())
                                                 .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withClickEvent(new ClickEvent.RunCommand("/openurl " + (StringArgumentType.getString(context, "url"))))));
                                         signBlockEntity.setText(signText, true);
-                                        context.getSource().sendSuccess(() -> Component.literal(tr("sducarpet.command.setSignUrlSuccess") + StringArgumentType.getString(context, "url")), false);
+                                        context.getSource().sendSuccess(() -> translateComponent("sducarpet.command.setSignUrlSuccess").append(StringArgumentType.getString(context, "url")), false);
                                         return 1;
                                     } else {
                                         context.getSource().sendFailure(translateComponent("sducarpet.command.setSignUrlFailure"));

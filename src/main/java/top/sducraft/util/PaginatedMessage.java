@@ -5,6 +5,7 @@ import net.minecraft.network.chat.*;
 import net.minecraft.server.level.ServerPlayer;
 import java.util.List;
 import static carpet.utils.Translations.tr;
+import static top.sducraft.util.Message.translateComponent;
 
 /**
  * Utility class for displaying paginated messages to players in Minecraft.
@@ -80,22 +81,22 @@ public class PaginatedMessage {
         if (paginate) {
             if (page > 1 && page < totalPages) {
                 player.displayClientMessage(Component.empty()
-                        .append(Component.literal("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand(commandTemplate + " " + (page - 1))).withColor(ChatFormatting.AQUA)))
-                        .append(Component.literal(tr("第 ")).append(Component.literal(String.valueOf(page))).append(Component.literal(tr(" 页 / 共 ")))
-                                .append(Component.literal(String.valueOf(totalPages)).append(Component.literal(" 页")))
-                                .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand(commandTemplate + " " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
+                        .append(translateComponent("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand(commandTemplate + " " + (page - 1))).withColor(ChatFormatting.AQUA)))
+                        .append(translateComponent("sducarpet.text.pagination.prefix").append(Component.literal(String.valueOf(page))).append(translateComponent("sducarpet.text.pagination.middle"))
+                                .append(Component.literal(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix")))
+                                .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand(commandTemplate + " " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
             } else if (page == 1) {
-                player.displayClientMessage(Component.literal(tr("第 "))
+                player.displayClientMessage(translateComponent("sducarpet.text.pagination.prefix")
                         .append(Component.literal(String.valueOf(page)))
-                        .append(Component.literal(tr(" 页 / 共 ")))
+                        .append(translateComponent("sducarpet.text.pagination.middle"))
                         .append(Component.literal(String.valueOf(totalPages)))
-                        .append(Component.literal(" 页"))
-                        .append(Component.literal("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand(commandTemplate + " " + (page + 1))).withColor(ChatFormatting.AQUA))), false);
+                        .append(translateComponent("sducarpet.text.pagination.page_suffix"))
+                        .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand(commandTemplate + " " + (page + 1))).withColor(ChatFormatting.AQUA))), false);
             } else {
                 player.displayClientMessage(Component.empty()
-                        .append(Component.literal("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand(commandTemplate + " " + (page - 1)))))
-                        .append(Component.literal(tr("第 ")).append(Component.literal(String.valueOf(page))).append(Component.literal(tr(" 页 / 共 ")))
-                                .append(Component.literal(String.valueOf(totalPages))).append(Component.literal(" 页"))), false);
+                        .append(translateComponent("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand(commandTemplate + " " + (page - 1)))))
+                        .append(translateComponent("sducarpet.text.pagination.prefix").append(Component.literal(String.valueOf(page))).append(translateComponent("sducarpet.text.pagination.middle"))
+                                .append(Component.literal(String.valueOf(totalPages))).append(translateComponent("sducarpet.text.pagination.page_suffix"))), false);
             }
         }
     }

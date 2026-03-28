@@ -68,7 +68,7 @@ public class SyncmaticaCommand {
 //                                                    if (player != null) {
 //                                                        player.displayClientMessage(Component.literal(blockCounts.toString()), false);
 //                                                    }
-//                                                    context.getSource().sendSuccess(() -> Component.literal(tr("已高亮")+blockNames.size()+("个材料")), false);
+//                                                    context.getSource().sendSuccess(() -> Component.literal(translateComponent("sducarpet.text.syncmatica.highlighted_prefix").getString()+blockNames.size()+("个材料")), false);
                                                         return 1;
                                                     }
                                                     return 0;

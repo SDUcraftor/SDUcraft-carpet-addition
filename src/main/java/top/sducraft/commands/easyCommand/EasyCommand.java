@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 
 import static top.sducraft.easyCommand.EasyCommandHelper.EASYCOMMANDS;
 import static top.sducraft.easyCommand.EasyCommandHelper.showEasyCommandInterface;
+import static top.sducraft.util.Message.translateComponent;
 
 public class EasyCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -39,11 +40,10 @@ public class EasyCommand {
                                     return 1;
                                 }
                             }
-                            context.getSource().sendFailure(Component.literal("无效的命令选项"));
+                            context.getSource().sendFailure(translateComponent("sducarpet.command.easycommand.invalidOption"));
                             return 0;
                         })
                 )
         );
     }
 }
-

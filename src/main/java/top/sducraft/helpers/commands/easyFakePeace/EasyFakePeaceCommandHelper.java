@@ -17,6 +17,7 @@ import top.sducraft.util.dialog.MultiActionDialogBuilder;
 import top.sducraft.util.dialog.TextComponentBuilder;
 
 import static carpet.utils.Translations.tr;
+import static top.sducraft.util.Message.translateComponent;
 import static net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock.getConnectedDirection;
 import static top.sducraft.config.rule.EasyFakePeaceConfig.getFakePeaceStates;
 import static top.sducraft.helpers.rule.chunkLoadHelper.RegistTicket.addFakepeaceTicket;
@@ -44,7 +45,7 @@ public class EasyFakePeaceCommandHelper {
         }
         BlockPos pos = EasyFakePeaceConfig.getFakePeaceCoordinates(dimensionKey);
         if (pos == null) {
-            source.sendFailure(Component.literal(dimensionName + "伪和平还没人做啊啊啊啊"));
+            source.sendFailure(translateComponent(dimensionName + "伪和平还没人做啊啊啊啊"));
             return 1;
         }
         if (targetDimension != null) {
@@ -66,7 +67,7 @@ public class EasyFakePeaceCommandHelper {
                     }
                 }
             } else {
-                source.sendFailure(Component.literal("该位置的方块不是拉杆！"));
+                source.sendFailure(translateComponent("sducarpet.text.fakepeace.lever_required"));
                 return 1;
             }
         }
