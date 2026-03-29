@@ -8,16 +8,15 @@ import net.minecraft.network.chat.Style;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import static top.sducraft.util.Message.translateComponent;
 
 public class MassageComponentCreate {
 
-    public static Component createDescriptionClickComponent(String label, String url, @Nullable String hoverText, @Nullable String tips) throws URISyntaxException {
+    public static Component createDescriptionClickComponent(String label, String url, @Nullable String hoverText, @Nullable String tips) {
         Component description = translateComponent(label)
                 .withStyle(Style.EMPTY
-                        .withClickEvent(new ClickEvent.OpenUrl(new URI(url)))
+                        .withClickEvent(new ClickEvent.OpenUrl(URI.create(url)))
                         .withColor(ChatFormatting.GRAY));
         if (hoverText != null) {
             description = Component.empty().append(description).withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(translateComponent(hoverText))));

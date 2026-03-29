@@ -18,7 +18,6 @@ import top.sducraft.SDUcraftCarpetSettings;
 import top.sducraft.config.rule.WarningConfig;
 
 import static top.sducraft.config.rule.WarningConfig.warningList;
-import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 import static top.sducraft.util.MassageComponentCreate.getDimensionColor;
 import static top.sducraft.util.Message.translateComponent;
 
@@ -28,11 +27,6 @@ public class WarningEasyCommand implements IEasyCommand {
     @Override
     public String getCommandName() {
         return "warning";
-    }
-
-    @Override
-    public Component clickButton() {
-        return createCommandClickComponent("[警告系统]", "/easycommand warning", "点击进入警告配置界面");
     }
 
     @Override

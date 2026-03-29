@@ -4,13 +4,10 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
 import top.sducraft.SDUcraftCarpetSettings;
-import top.sducraft.easyCommand.IEasyCommand;
 
-import java.net.URISyntaxException;
-
-import static top.sducraft.easyCommand.EasyCommandHelper.EASYCOMMANDS;
+import static top.sducraft.easyCommand.EasyCommandHelper.getEasyCommand;
+import static top.sducraft.easyCommand.EasyCommandHelper.getEasyCommands;
 import static top.sducraft.easyCommand.EasyCommandHelper.showEasyCommandInterface;
 import static top.sducraft.util.Message.translateComponent;
 
@@ -24,21 +21,17 @@ public class EasyCommand {
                 })
                 .then(Commands.argument("option", StringArgumentType.word())
                         .suggests((context, builder) -> {
-                            for (IEasyCommand command : EASYCOMMANDS) {
+                            for (var command : getEasyCommands()) {
                                 builder.suggest(command.getCommandName());
                             }
                             return builder.buildFuture();
                         })
                         .executes(context -> {
-                            for (IEasyCommand command : EASYCOMMANDS) {
-                                if (command.getCommandName().equalsIgnoreCase(StringArgumentType.getString(context, "option"))) {
-                                    try {
-                                        command.showEasyCommandInterface(context.getSource().getPlayer());
-                                    } catch (URISyntaxException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                    return 1;
-                                }
+                            String option = StringArgumentType.getString(context, "option");
+                            var command = getEasyCommand(option);
+                            if (command.isPresent()) {
+                                command.get().showEasyCommandInterface(context.getSource().getPlayer());
+                                return 1;
                             }
                             context.getSource().sendFailure(translateComponent("sducarpet.command.easycommand.invalidOption"));
                             return 0;

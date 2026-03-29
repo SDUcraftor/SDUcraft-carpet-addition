@@ -15,22 +15,24 @@ import top.sducraft.util.Message;
 import top.sducraft.util.dialog.NoticeDialogBuilder;
 import top.sducraft.util.dialog.TextComponentBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static top.sducraft.config.rule.MachineStatusCommandConfig.permMachineList;
 import static top.sducraft.config.rule.MachineStatusCommandConfig.tempMachineList;
-import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 import static top.sducraft.util.Message.translateComponent;
 
 public class MachineStatusEasyCommand implements IEasyCommand {
-    @Override
-    public String getCommandName() {
-        return "machinestatus";
+    private enum MachineState {
+        ON,
+        OFF,
+        UNKNOWN
     }
 
     @Override
-    public Component clickButton() {
-        return createCommandClickComponent("[机器状态查询]", "/easycommand machinestatus", "点击进入机器状态查询界面");
+    public String getCommandName() {
+        return "machinestatus";
     }
 
     private static ServerLevel getDimension(MinecraftServer server, String dimension) {
@@ -39,6 +41,8 @@ public class MachineStatusEasyCommand implements IEasyCommand {
             case "overworld" -> level = server.getLevel(ServerLevel.OVERWORLD);
             case "nether" -> level = server.getLevel(ServerLevel.NETHER);
             case "end" -> level = server.getLevel(ServerLevel.END);
+            case "the_nether" -> level = server.getLevel(ServerLevel.NETHER);
+            case "the_end" -> level = server.getLevel(ServerLevel.END);
         }
         return level;
     }
@@ -72,53 +76,78 @@ public class MachineStatusEasyCommand implements IEasyCommand {
     }
 
     public static int showMachineStatus(ServerPlayer player) {
-        boolean bl1 = tempMachineList.isEmpty();
-        boolean bl2 = permMachineList.isEmpty();
-        if (bl1 && bl2) {
+        boolean noTempMachines = tempMachineList.isEmpty();
+        boolean noPermMachines = permMachineList.isEmpty();
+        if (noTempMachines && noPermMachines) {
             player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus1"), false);
             return 0;
-        } else {
-            player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus4").append(translateComponent("sducarpet.easycommand.machinestatus5").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN))).append(translateComponent("sducarpet.easycommand.machinestatus6")).append(translateComponent("sducarpet.easycommand.machinestatus7").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))).append(translateComponent("sducarpet.easycommand.machinestatus8")), false);
-            if (!bl1) {
-                player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus2"), false);
-                for (MachineStatusCommandConfig.Machine machine : tempMachineList) {
-                    player.displayClientMessage(Component.literal(machine.name).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)).append(Component.literal("  " + machine.dimension + " (" + machine.pos.toShortString() + ")").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE))), false);
-                }
-            }
-            if (!bl2) {
-                player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus3"), false);
-                for (MachineStatusCommandConfig.Machine machine : permMachineList) {
-                    BlockState blockState = getDimension(player.getServer(), machine.dimension).getBlockState(machine.pos);
-                    if ((blockState.getBlock() instanceof LeverBlock && blockState.getValue(LeverBlock.POWERED)) || (blockState.getBlock() instanceof RedstoneLampBlock && blockState.getValue(RedstoneLampBlock.LIT))) {
-                        player.displayClientMessage(Component.literal(machine.name).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)).append(Component.literal("  " + machine.dimension + " (" + machine.pos.toShortString() + ")").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE))), false);
-                    }
-                }
-                for (MachineStatusCommandConfig.Machine machine : permMachineList) {
-                    BlockState blockState = getDimension(player.getServer(), machine.dimension).getBlockState(machine.pos);
-                    if ((blockState.getBlock() instanceof LeverBlock && !blockState.getValue(LeverBlock.POWERED)) || (blockState.getBlock() instanceof RedstoneLampBlock && !blockState.getValue(RedstoneLampBlock.LIT))) {
-                        player.displayClientMessage(Component.literal(machine.name).withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)).append("  " + machine.dimension + " (" + machine.pos.toShortString() + ")").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)), false);
-                    }
-                }
-                for (MachineStatusCommandConfig.Machine machine : permMachineList) {
-                    BlockState blockState = getDimension(player.getServer(), machine.dimension).getBlockState(machine.pos);
-                    if (!(blockState.getBlock() instanceof LeverBlock || blockState.getBlock() instanceof RedstoneLampBlock)) {
-                        player.displayClientMessage(Component.literal(machine.name).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)).append(translateComponent("  " + machine.dimension + " (" + machine.pos.toShortString() + ")" + "开关状态未知")), false);
-                    }
-                }
-            }
-            return 1;
         }
+
+        player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus4").append(translateComponent("sducarpet.easycommand.machinestatus5").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN))).append(translateComponent("sducarpet.easycommand.machinestatus6")).append(translateComponent("sducarpet.easycommand.machinestatus7").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))).append(translateComponent("sducarpet.easycommand.machinestatus8")), false);
+        if (!noTempMachines) {
+            player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus2"), false);
+            for (MachineStatusCommandConfig.Machine machine : tempMachineList) {
+                player.displayClientMessage(formatMachineLine(machine, ChatFormatting.GREEN, ChatFormatting.WHITE), false);
+            }
+        }
+
+        if (!noPermMachines) {
+            player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus3"), false);
+            List<Component> onMachines = new ArrayList<>();
+            List<Component> offMachines = new ArrayList<>();
+            List<Component> unknownMachines = new ArrayList<>();
+
+            for (MachineStatusCommandConfig.Machine machine : permMachineList) {
+                switch (getMachineState(player.getServer(), machine)) {
+                    case ON -> onMachines.add(formatMachineLine(machine, ChatFormatting.GREEN, ChatFormatting.WHITE));
+                    case OFF -> offMachines.add(formatMachineLine(machine, ChatFormatting.GRAY, ChatFormatting.GRAY));
+                    case UNKNOWN -> unknownMachines.add(Component.literal(machine.name).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)).append(translateComponent("  " + machine.dimension + " (" + machine.pos.toShortString() + ")开关状态未知")));
+                }
+            }
+
+            for (Component line : onMachines) {
+                player.displayClientMessage(line, false);
+            }
+            for (Component line : offMachines) {
+                player.displayClientMessage(line, false);
+            }
+            for (Component line : unknownMachines) {
+                player.displayClientMessage(line, false);
+            }
+        }
+
+        return 1;
     }
 
     public static boolean getAllItemStatus() {
         for (MachineStatusCommandConfig.Machine machine : permMachineList) {
             if (Objects.equals(machine.name, "全物品")) {
-                BlockState blockState = getDimension(CarpetServer.minecraft_server, machine.dimension).getBlockState(machine.pos);
-                if ((blockState.getBlock() instanceof LeverBlock && blockState.getValue(LeverBlock.POWERED)) || (blockState.getBlock() instanceof RedstoneLampBlock && blockState.getValue(RedstoneLampBlock.LIT))) {
+                if (getMachineState(CarpetServer.minecraft_server, machine) == MachineState.ON) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    private static Component formatMachineLine(MachineStatusCommandConfig.Machine machine, ChatFormatting nameColor, ChatFormatting detailColor) {
+        return Component.literal(machine.name).withStyle(Style.EMPTY.withColor(nameColor))
+                .append(Component.literal("  " + machine.dimension + " (" + machine.pos.toShortString() + ")").withStyle(Style.EMPTY.withColor(detailColor)));
+    }
+
+    private static MachineState getMachineState(MinecraftServer server, MachineStatusCommandConfig.Machine machine) {
+        ServerLevel level = getDimension(server, machine.dimension);
+        if (level == null) {
+            return MachineState.UNKNOWN;
+        }
+
+        BlockState blockState = level.getBlockState(machine.pos);
+        if (blockState.getBlock() instanceof LeverBlock) {
+            return blockState.getValue(LeverBlock.POWERED) ? MachineState.ON : MachineState.OFF;
+        }
+        if (blockState.getBlock() instanceof RedstoneLampBlock) {
+            return blockState.getValue(RedstoneLampBlock.LIT) ? MachineState.ON : MachineState.OFF;
+        }
+        return MachineState.UNKNOWN;
     }
 }

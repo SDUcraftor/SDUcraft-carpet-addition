@@ -5,12 +5,16 @@ import top.sducraft.util.dialog.ActionBuilder;
 import top.sducraft.util.dialog.MultiActionDialogBuilder;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static top.sducraft.util.Message.sandPlayerDialog;
-import static top.sducraft.util.Message.translateComponent;
 
 public class EasyCommandHelper {
-    public static final List<IEasyCommand> EASYCOMMANDS = List.of(
+    private static final List<IEasyCommand> EASY_COMMANDS = List.of(
             new MachineStatusEasyCommand(),
             new FindItemEasyCommand(),
             new LocEasyCommand(),
@@ -25,19 +29,20 @@ public class EasyCommandHelper {
             new SyncmaticaEasyCommand()
     );
 
-//    public static void showEasyCommandInterface(ServerPlayer player) {
-//        Component component1 =  translateComponent("sducarpet.text.easycommand.welcome_legacy");
-//        int i = 0;
-//        for (IEasyCommand command : EASYCOMMANDS) {
-//            component1 = Component.empty().append(component1).append(" ").append(command.clickButton()).append(" ") ;
-//            i++;
-//            if(i%4==0)
-//            {
-//                component1 =  Component.empty().append(component1). append("\n");
-//            }
-//        }
-//        player.displayClientMessage(component1, false);
-//    }
+
+    private static final Map<String, IEasyCommand> EASY_COMMANDS_BY_NAME = EASY_COMMANDS.stream()
+            .collect(Collectors.toUnmodifiableMap(
+                    command -> command.getCommandName().toLowerCase(Locale.ROOT),
+                    Function.identity()
+            ));
+
+    public static List<IEasyCommand> getEasyCommands() {
+        return EASY_COMMANDS;
+    }
+
+    public static Optional<IEasyCommand> getEasyCommand(String commandName) {
+        return Optional.ofNullable(EASY_COMMANDS_BY_NAME.get(commandName.toLowerCase(Locale.ROOT)));
+    }
 
     public static void showEasyCommandInterface(ServerPlayer player) {
         MultiActionDialogBuilder dialogBuilder = new MultiActionDialogBuilder();
@@ -47,8 +52,7 @@ public class EasyCommandHelper {
                 .addBodyText("欢迎使用快捷命令系统，请点击下方按钮执行操作")
                 .addExitButton("关闭");
 
-        for (IEasyCommand command : EASYCOMMANDS) {
-
+        for (IEasyCommand command : EASY_COMMANDS) {
             ActionBuilder button = new ActionBuilder(command.getLabelText())
                     .withTooltip(command.getHoverText())
                     .asRunCommand("/easycommand " + command.getCommandName());

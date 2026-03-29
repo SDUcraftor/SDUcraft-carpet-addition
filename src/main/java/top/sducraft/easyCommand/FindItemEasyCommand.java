@@ -4,10 +4,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import top.sducraft.util.dialog.ActionBuilder;
 import top.sducraft.util.dialog.MultiActionDialogBuilder;
-
-import java.net.URISyntaxException;
-
-import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
 import static top.sducraft.util.Message.sandPlayerDialog;
 
 public class FindItemEasyCommand implements IEasyCommand {
@@ -17,12 +13,7 @@ public class FindItemEasyCommand implements IEasyCommand {
     }
 
     @Override
-    public Component clickButton() {
-        return createCommandClickComponent("[物品查找]", "/easycommand finditem", "点击打开物品查找界面");
-    }
-
-    @Override
-    public void showEasyCommandInterface(ServerPlayer player) throws URISyntaxException {
+    public void showEasyCommandInterface(ServerPlayer player) {
         MultiActionDialogBuilder dialogBuilder = new MultiActionDialogBuilder();
 
         dialogBuilder.setTitle("finditem指令介绍")

@@ -1,41 +1,32 @@
 package top.sducraft.easyCommand;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.List;
 
-import static top.sducraft.util.MassageComponentCreate.createCommandClickComponent;
-import static top.sducraft.util.Message.translateComponent;
 import static top.sducraft.util.MassageComponentCreate.createSuggestClickComponent;
+import static top.sducraft.util.Message.translateComponent;
 
-public class SpectatorEasyCommand implements IEasyCommand {
+public class SpectatorEasyCommand extends AbstractDocumentEasyCommand {
     @Override
     public String getCommandName() {
         return "spectator";
     }
 
     @Override
-    public Component clickButton() {
-        return createCommandClickComponent("[旁观者模式]", "/easycommand spectator", "点击查看!!spec命令介绍");
-    }
-
-    @Override
-    public void showEasyCommandInterface(ServerPlayer player) throws URISyntaxException {
-        Component component = translateComponent("sducarpet.text.spectator.intro_title").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)
-                        .withClickEvent(new ClickEvent.OpenUrl(new URI("https://mcdreforged.com/zh-CN/plugin/gamemode")))
-                        .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.text.spectator.click_doc"))))
-                .append(translateComponent("sducarpet.text.spectator.intro_body"))
-                .append(translateComponent("sducarpet.text.spectator.notice").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
-
-        player.displayClientMessage(component, false);
-        player.displayClientMessage(Component.empty()
+    protected List<Component> getMessages(ServerPlayer player) {
+        Component intro = createDocumentHeader(
+                "sducarpet.text.spectator.intro_title",
+                "https://mcdreforged.com/zh-CN/plugin/gamemode",
+                "sducarpet.text.spectator.click_doc",
+                Component.empty()
+                        .append(translateComponent("sducarpet.text.spectator.intro_body"))
+                        .append(translateComponent("sducarpet.text.spectator.notice"))
+        );
+        Component actions = Component.empty()
                 .append(createSuggestClickComponent("[切换游戏模式] ", "!!spec", "点击切换游戏模式"))
-                .append(createSuggestClickComponent(" [tp]", "!!tp", null)), false);
+                .append(createSuggestClickComponent(" [tp]", "!!tp", null));
+        return List.of(intro, actions);
     }
 }
