@@ -67,7 +67,7 @@ public class JoinMessageConfig {
     }
 
     public static boolean shouldShowDialog(ServerPlayer player) {
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
         String currentHash = calculateDialogHash();
 
         if (currentHash == null) {
@@ -85,7 +85,7 @@ public class JoinMessageConfig {
 
     public static void markAsSeen(ServerPlayer player) {
         if (data.seenPlayerUUIDs.add(player.getUUID())) {
-            save(player.getServer());
+            save(player.level().getServer());
         }
     }
 

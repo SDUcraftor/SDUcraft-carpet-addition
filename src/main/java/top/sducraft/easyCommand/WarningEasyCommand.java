@@ -36,13 +36,13 @@ public class WarningEasyCommand implements IEasyCommand {
 //                        .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.text.spectator.click_doc"))))
                 .append(translateComponent("sducarpet.easycommand.warningcommand8"))
                 .append(translateComponent("sducarpet.easycommand.warningcommand9").withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
-        player.displayClientMessage(component, false);
+        player.sendSystemMessage(component);
         showWarningList(player);
     }
 
     public static void showWarningList(ServerPlayer player) {
         if (warningList.isEmpty()) {
-            player.displayClientMessage(translateComponent("sducarpet.easycommand.warningcommand7"), false);
+            player.sendSystemMessage(translateComponent("sducarpet.easycommand.warningcommand7"));
             return;
         }
         Component header = translateComponent("sducarpet.easycommand.warningcommand10");
@@ -56,7 +56,7 @@ public class WarningEasyCommand implements IEasyCommand {
             Component buttons = createWarningStateText(warning);
             body = Component.empty().append(body).append(info).append(buttons);
         }
-        player.displayClientMessage(Component.empty().append(header).append(body), false);
+        player.sendSystemMessage(Component.empty().append(header).append(body));
     }
 
     private static Component createWarningStateText(WarningConfig.warning warning) {
@@ -119,7 +119,7 @@ public class WarningEasyCommand implements IEasyCommand {
                 for (ServerPlayer player : playerList.getPlayers()) {
                     for (WarningConfig.warning warning : warningList) {
                         if (warning.status) {
-                            if (player.level().dimension().location().getPath().equals(warning.dimension) && Math.abs(player.getX() - warning.pos.getX()) <= 250 && Math.abs(player.getZ() - warning.pos.getZ()) <= 250) {
+                            if (player.level().dimension().identifier().getPath().equals(warning.dimension) && Math.abs(player.getX() - warning.pos.getX()) <= 250 && Math.abs(player.getZ() - warning.pos.getZ()) <= 250) {
                                 ClientboundSetTitleTextPacket titleTextPacket = new ClientboundSetTitleTextPacket(translateComponent("sducarpet.easycommand.fakepeacewarn1").withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                                 player.connection.send(titleTextPacket);
                                 player.sendSystemMessage(Component.literal(warning.text + " ").append(translateComponent("sducarpet.easycommand.warningcommand11").withColor(0xFF5555)).append(Component.literal("(" + warning.pos.toShortString() + ")")).append(Component.literal(warning.dimension).withColor(getDimensionColor(warning.dimension))), true);

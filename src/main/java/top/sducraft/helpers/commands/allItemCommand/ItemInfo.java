@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
@@ -39,7 +40,7 @@ public class ItemInfo {
         for (BlockPos pos : data.chestPos) {
             chestStr.append("(").append(pos.getX()).append(",").append(pos.getY()).append(",").append(pos.getZ()).append(")");
         }
-        player.displayClientMessage((Component.empty().append(title)
+        player.sendSystemMessage((Component.empty().append(title)
                         .append(translateComponent("sducarpet.text.allitem.category_label").append(typename))
                         .append(translateComponent("sducarpet.text.allitem.current_stock_label")
                                 .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info store " + name)))
@@ -50,7 +51,7 @@ public class ItemInfo {
                                 .append(translateComponent("sducarpet.text.allitem.chest_positions_label").append(chestStr.toString())
                                         .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem search " + name))
                                                 .withHoverEvent(new HoverEvent.ShowText(translateComponent("点击搜索\"").append(name).append(translateComponent("\"物品位置"))))))))
-                , false);
+                );
     }
 
     public static int displayItemStoreInfo(AllItemData.ItemData data, CommandSourceStack source) {
@@ -65,7 +66,7 @@ public class ItemInfo {
         for (BlockPos pos : allPositions) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof Container) {
-                Display.BlockDisplay entity = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level);
+                Display.BlockDisplay entity = new Display.BlockDisplay(EntityTypes.BLOCK_DISPLAY, level);
                 entity.setBlockState(player.level().getBlockState(pos));
                 entity.setGlowingTag(true);
                 entity.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
@@ -77,7 +78,7 @@ public class ItemInfo {
             }
         }
 
-        player.displayClientMessage(translateComponent("sducarpet.text.allitem.marked_prefix").append(String.valueOf(count)).append(translateComponent("sducarpet.text.allitem.container_positions_suffix")), false);
+        player.sendSystemMessage(translateComponent("sducarpet.text.allitem.marked_prefix").append(String.valueOf(count)).append(translateComponent("sducarpet.text.allitem.container_positions_suffix")));
         return count;
     }
 
@@ -85,10 +86,10 @@ public class ItemInfo {
     public static int displayAllItemInfo(ServerPlayer player) {
         if (player == null) return 0;
         boolean status = getAllItemStatus();
-        player.displayClientMessage(translateComponent("sducarpet.text.allitem.overview_title")
+        player.sendSystemMessage(translateComponent("sducarpet.text.allitem.overview_title")
                 .append(translateComponent("sducarpet.text.common.status_label")
                         .append(Component.literal(status ? translateComponent("sducarpet.text.allitem.running").getString() : translateComponent("sducarpet.text.allitem.not_running").getString()).withColor(status ? 0x00FF00 : 0xFF0000))
-                ), false);
+                ));
         displayLackItemInfo(player);
         displayFullItemInfo(player);
         return 1;
@@ -105,14 +106,14 @@ public class ItemInfo {
         }
 
         if (count == 0) {
-            player.displayClientMessage(translateComponent("sducarpet.text.allitem.lack_none"), false);
+            player.sendSystemMessage(translateComponent("sducarpet.text.allitem.lack_none"));
             return;
         }
-        player.displayClientMessage(translateComponent("sducarpet.text.allitem.lack_info_prefix").append(String.valueOf(count)).append(translateComponent("sducarpet.text.allitem.lack_info_suffix"))
+        player.sendSystemMessage(translateComponent("sducarpet.text.allitem.lack_info_prefix").append(String.valueOf(count)).append(translateComponent("sducarpet.text.allitem.lack_info_suffix"))
                 .append(translateComponent("/allitem info lack").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)
                         .withClickEvent(new ClickEvent.RunCommand("/allitem info lack"))
                         .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.text.allitem.click_lack_details")))))
-                .append(translateComponent("sducarpet.text.common.view_details")), false);
+                .append(translateComponent("sducarpet.text.common.view_details")));
     }
 
     public static void displayLackItemInfoWithPage(ServerPlayer player, int page) {
@@ -138,10 +139,10 @@ public class ItemInfo {
         }
 
         if (lackItems.isEmpty()) {
-            player.displayClientMessage(translateComponent("sducarpet.text.allitem.lack_none_with_newline"), false);
+            player.sendSystemMessage(translateComponent("sducarpet.text.allitem.lack_none_with_newline"));
             return;
         }
-        player.displayClientMessage(translateComponent("sducarpet.text.allitem.lack_list_title"), false);
+        player.sendSystemMessage(translateComponent("sducarpet.text.allitem.lack_list_title"));
         lackItems.sort(Comparator.comparingInt(Map.Entry::getValue));
 
         boolean paginate = lackItems.size() > NO_PAGING_THRESHOLD;
@@ -154,23 +155,23 @@ public class ItemInfo {
 
         for (int i = startIndex; i < endIndex; i++) {
             Map.Entry<Component, Integer> entry = lackItems.get(i);
-            player.displayClientMessage(entry.getKey(), false);
+            player.sendSystemMessage(entry.getKey());
         }
 
         if (paginate) {
             if (page < totalPages && page > 1) {
-                player.displayClientMessage(Component.empty().append(translateComponent("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info lack " + (page - 1))).withColor(ChatFormatting.AQUA)))
+                player.sendSystemMessage(Component.empty().append(translateComponent("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info lack " + (page - 1))).withColor(ChatFormatting.AQUA)))
                         .append(translateComponent("sducarpet.text.pagination.prefix").append(Component.literal(String.valueOf(page))).append(translateComponent("sducarpet.text.pagination.middle"))
                                 .append(Component.literal(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix")))
-                                .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info lack " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
+                                .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info lack " + (page + 1))).withColor(ChatFormatting.AQUA)))));
             } else if (page == 1) {
-                player.displayClientMessage(translateComponent("sducarpet.text.pagination.prefix").append(Component.literal(String.valueOf(page))).append(translateComponent("sducarpet.text.pagination.middle"))
+                player.sendSystemMessage(translateComponent("sducarpet.text.pagination.prefix").append(Component.literal(String.valueOf(page))).append(translateComponent("sducarpet.text.pagination.middle"))
                         .append(Component.literal(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix"))
-                                .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info lack " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
+                                .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info lack " + (page + 1))).withColor(ChatFormatting.AQUA)))));
             } else {
-                player.displayClientMessage(Component.empty().append(translateComponent("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info lack " + (page - 1)))))
+                player.sendSystemMessage(Component.empty().append(translateComponent("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info lack " + (page - 1)))))
                         .append(translateComponent("sducarpet.text.pagination.prefix").append(Component.literal(String.valueOf(page))).append(translateComponent("sducarpet.text.pagination.middle"))
-                                .append(Component.literal(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix")))), false);
+                                .append(Component.literal(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix")))));
             }
         }
     }
@@ -188,15 +189,15 @@ public class ItemInfo {
         }
 
         if (count == 0) {
-            player.displayClientMessage(translateComponent("sducarpet.text.allitem.full_none"), false);
+            player.sendSystemMessage(translateComponent("sducarpet.text.allitem.full_none"));
             return;
         }
 
-        player.displayClientMessage(translateComponent("sducarpet.text.allitem.full_info_prefix").append(String.valueOf(count)).append(translateComponent("sducarpet.text.allitem.full_info_suffix"))
+        player.sendSystemMessage(translateComponent("sducarpet.text.allitem.full_info_prefix").append(String.valueOf(count)).append(translateComponent("sducarpet.text.allitem.full_info_suffix"))
                 .append(translateComponent("/allitem info full").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)
                         .withClickEvent(new ClickEvent.RunCommand("/allitem info full"))
                         .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.text.allitem.click_full_details")))))
-                .append(translateComponent("sducarpet.text.common.view_details")), false);
+                .append(translateComponent("sducarpet.text.common.view_details")));
     }
 
     public static void displayFullItemInfoWithPage(ServerPlayer player, int page) {
@@ -231,11 +232,11 @@ public class ItemInfo {
         }
 
         if (fullItems.isEmpty()) {
-            player.displayClientMessage(translateComponent("sducarpet.text.allitem.full_none_with_newline"), false);
+            player.sendSystemMessage(translateComponent("sducarpet.text.allitem.full_none_with_newline"));
             return;
         }
 
-        player.displayClientMessage(translateComponent("sducarpet.text.allitem.full_list_title"), false);
+        player.sendSystemMessage(translateComponent("sducarpet.text.allitem.full_list_title"));
 
         fullItems.sort((a, b) -> Double.compare(b.getValue(), a.getValue()));
 
@@ -247,28 +248,28 @@ public class ItemInfo {
         int endIndex = paginate ? Math.min(startIndex + ITEMS_PER_PAGE, fullItems.size()) : fullItems.size();
 
         for (int i = startIndex; i < endIndex; i++) {
-            player.displayClientMessage(fullItems.get(i).getKey(), false);
+            player.sendSystemMessage(fullItems.get(i).getKey());
         }
 
         if (paginate) {
             if (page > 1 && page < totalPages) {
-                player.displayClientMessage(Component.empty()
+                player.sendSystemMessage(Component.empty()
                         .append(translateComponent("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info full " + (page - 1))).withColor(ChatFormatting.AQUA)))
                         .append(translateComponent("sducarpet.text.pagination.prefix").append(Component.literal(String.valueOf(page))).append(translateComponent("sducarpet.text.pagination.middle"))
                                 .append(Component.literal(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix")))
-                                .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info full " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
+                                .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info full " + (page + 1))).withColor(ChatFormatting.AQUA)))));
             } else if (page == 1) {
-                player.displayClientMessage(translateComponent("sducarpet.text.pagination.prefix")
+                player.sendSystemMessage(translateComponent("sducarpet.text.pagination.prefix")
                         .append(Component.literal(String.valueOf(page)))
                         .append(translateComponent("sducarpet.text.pagination.middle"))
                         .append(Component.literal(String.valueOf(totalPages)))
                         .append(translateComponent("sducarpet.text.pagination.page_suffix"))
-                        .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info full " + (page + 1))).withColor(ChatFormatting.AQUA))), false);
+                        .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info full " + (page + 1))).withColor(ChatFormatting.AQUA))));
             } else {
-                player.displayClientMessage(Component.empty()
+                player.sendSystemMessage(Component.empty()
                         .append(translateComponent("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info full " + (page - 1)))))
                         .append(translateComponent("sducarpet.text.pagination.prefix").append(Component.literal(String.valueOf(page))).append(translateComponent("sducarpet.text.pagination.middle"))
-                                .append(Component.literal(String.valueOf(totalPages))).append(translateComponent("sducarpet.text.pagination.page_suffix"))), false);
+                                .append(Component.literal(String.valueOf(totalPages))).append(translateComponent("sducarpet.text.pagination.page_suffix"))));
             }
         }
     }
@@ -299,7 +300,7 @@ public class ItemInfo {
             fullItems.add(Map.entry(line, ratio));
         }
 
-        player.displayClientMessage(translateComponent("sducarpet.text.allitem.item_list_title"), false);
+        player.sendSystemMessage(translateComponent("sducarpet.text.allitem.item_list_title"));
         fullItems.sort((a, b) -> Double.compare(b.getValue(), a.getValue()));
         boolean paginate = fullItems.size() > NO_PAGING_THRESHOLD;
         int totalPages = paginate ? (fullItems.size() + ITEMS_PER_PAGE - 1) / ITEMS_PER_PAGE : 1;
@@ -309,28 +310,28 @@ public class ItemInfo {
         int endIndex = paginate ? Math.min(startIndex + ITEMS_PER_PAGE, fullItems.size()) : fullItems.size();
 
         for (int i = startIndex; i < endIndex; i++) {
-            player.displayClientMessage(fullItems.get(i).getKey(), false);
+            player.sendSystemMessage(fullItems.get(i).getKey());
         }
 
         if (paginate) {
             if (page > 1 && page < totalPages) {
-                player.displayClientMessage(Component.empty()
+                player.sendSystemMessage(Component.empty()
                         .append(translateComponent("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info all " + (page - 1))).withColor(ChatFormatting.AQUA)))
                         .append(translateComponent("sducarpet.text.pagination.prefix").append(Component.literal(String.valueOf(page))).append(translateComponent("sducarpet.text.pagination.middle"))
                                 .append(Component.literal(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix")))
-                                .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info all " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
+                                .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info all " + (page + 1))).withColor(ChatFormatting.AQUA)))));
             } else if (page == 1) {
-                player.displayClientMessage(translateComponent("sducarpet.text.pagination.prefix")
+                player.sendSystemMessage(translateComponent("sducarpet.text.pagination.prefix")
                         .append(Component.literal(String.valueOf(page)))
                         .append(translateComponent("sducarpet.text.pagination.middle"))
                         .append(Component.literal(String.valueOf(totalPages)))
                         .append(translateComponent("sducarpet.text.pagination.page_suffix"))
-                        .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info all " + (page + 1))).withColor(ChatFormatting.AQUA))), false);
+                        .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info all " + (page + 1))).withColor(ChatFormatting.AQUA))));
             } else {
-                player.displayClientMessage(Component.empty()
+                player.sendSystemMessage(Component.empty()
                         .append(translateComponent("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info all " + (page - 1)))))
                         .append(translateComponent("sducarpet.text.pagination.prefix").append(Component.literal(String.valueOf(page))).append(translateComponent("sducarpet.text.pagination.middle"))
-                                .append(Component.literal(String.valueOf(totalPages))).append(translateComponent("sducarpet.text.pagination.page_suffix"))), false);
+                                .append(Component.literal(String.valueOf(totalPages))).append(translateComponent("sducarpet.text.pagination.page_suffix"))));
             }
         }
     }
@@ -363,7 +364,7 @@ public class ItemInfo {
             }
         }
 
-        player.displayClientMessage(translateComponent(type.equals("bulk") ? "大宗物品信息:" : "常规物品信息:"), false);
+        player.sendSystemMessage(translateComponent(type.equals("bulk") ? "大宗物品信息:" : "常规物品信息:"));
         fullItems.sort((a, b) -> Double.compare(b.getValue(), a.getValue()));
         boolean paginate = fullItems.size() > NO_PAGING_THRESHOLD;
         int totalPages = paginate ? (fullItems.size() + ITEMS_PER_PAGE - 1) / ITEMS_PER_PAGE : 1;
@@ -373,28 +374,28 @@ public class ItemInfo {
         int endIndex = paginate ? Math.min(startIndex + ITEMS_PER_PAGE, fullItems.size()) : fullItems.size();
 
         for (int i = startIndex; i < endIndex; i++) {
-            player.displayClientMessage(fullItems.get(i).getKey(), false);
+            player.sendSystemMessage(fullItems.get(i).getKey());
         }
 
         if (paginate) {
             if (page > 1 && page < totalPages) {
-                player.displayClientMessage(Component.empty()
+                player.sendSystemMessage(Component.empty()
                         .append(translateComponent("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info " + (type.equals("bulk") ? "bulk" : "custom") + " " + (page - 1))).withColor(ChatFormatting.AQUA)))
                         .append(translateComponent("sducarpet.text.pagination.prefix").append(Component.literal(String.valueOf(page))).append(translateComponent("sducarpet.text.pagination.middle"))
                                 .append(Component.literal(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix")))
-                                .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info " + (type.equals("bulk") ? "bulk" : "custom") + " " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
+                                .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info " + (type.equals("bulk") ? "bulk" : "custom") + " " + (page + 1))).withColor(ChatFormatting.AQUA)))));
             } else if (page == 1) {
-                player.displayClientMessage(translateComponent("sducarpet.text.pagination.prefix")
+                player.sendSystemMessage(translateComponent("sducarpet.text.pagination.prefix")
                         .append(Component.literal(String.valueOf(page)))
                         .append(translateComponent("sducarpet.text.pagination.middle"))
                         .append(Component.literal(String.valueOf(totalPages)))
                         .append(translateComponent("sducarpet.text.pagination.page_suffix"))
-                        .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info " + (type.equals("bulk") ? "bulk" : "custom") + " " + (page + 1))).withColor(ChatFormatting.AQUA))), false);
+                        .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info " + (type.equals("bulk") ? "bulk" : "custom") + " " + (page + 1))).withColor(ChatFormatting.AQUA))));
             } else {
-                player.displayClientMessage(Component.empty()
+                player.sendSystemMessage(Component.empty()
                         .append(translateComponent("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem info " + (type.equals("bulk") ? "bulk" : "custom") + " " + (page - 1)))))
                         .append(translateComponent("sducarpet.text.pagination.prefix").append(Component.literal(String.valueOf(page))).append(translateComponent("sducarpet.text.pagination.middle"))
-                                .append(Component.literal(String.valueOf(totalPages))).append(translateComponent("sducarpet.text.pagination.page_suffix"))), false);
+                                .append(Component.literal(String.valueOf(totalPages))).append(translateComponent("sducarpet.text.pagination.page_suffix"))));
             }
         }
         return 1;

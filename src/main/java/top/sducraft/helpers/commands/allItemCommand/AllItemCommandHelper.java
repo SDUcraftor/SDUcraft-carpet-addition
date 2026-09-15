@@ -72,7 +72,7 @@ public class AllItemCommandHelper {
                 ItemStack firstItem = ItemStack.EMPTY;
                 for (int i = 0; i < hopper.getContainerSize(); i++) {
                     ItemStack stack = hopper.getItem(i);
-                    if (!stack.isEmpty() && stack.getTags() != null) {
+                    if (!stack.isEmpty()) { // 26.2 移除了 ItemStack#getTags()，原判断恒为真
                         firstItem = stack;
                         break;
                     }

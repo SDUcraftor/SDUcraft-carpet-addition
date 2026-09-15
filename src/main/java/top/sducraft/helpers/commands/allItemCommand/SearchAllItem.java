@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.phys.Vec3;
 import top.sducraft.util.DelayedEvents;
 
@@ -38,7 +39,7 @@ public class SearchAllItem {
             if (data != null && !data.storePos.isEmpty()) {
                 for (BlockPos pos : data.chestPos) {
                     ServerLevel level = player.level();
-                    Display.BlockDisplay entity = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level);
+                    Display.BlockDisplay entity = new Display.BlockDisplay(EntityTypes.BLOCK_DISPLAY, level);
                     entity.setBlockState(source.getLevel().getBlockState(pos));
                     entity.setGlowingTag(true);
                     entity.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
@@ -66,7 +67,7 @@ public class SearchAllItem {
                         component = Component.empty().append(component).append(translateComponent("\n")).append(Component.literal(name)).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/allitem search " + name)));
                     }
                     source.sendFailure(translateComponent("sducarpet.easycommand.allitemcommand2").append(Component.literal("\"" + keyword + "\"")));
-                    player.displayClientMessage(translateComponent("sducarpet.easycommand.allitemcommand3").append(component), false);
+                    player.sendSystemMessage(translateComponent("sducarpet.easycommand.allitemcommand3").append(component));
                 }
                 return 0;
             }
@@ -77,7 +78,7 @@ public class SearchAllItem {
     public static void deleteAllItemDisplay(MinecraftServer server) {
         for (ServerLevel level : server.getAllLevels()) {
             for (Entity entity : level.getEntities().getAll()) {
-                if (entity != null && entity.getTags().contains("allitem_display")) {
+                if (entity != null && entity.entityTags().contains("allitem_display")) {
                     entity.discard();
                 }
             }

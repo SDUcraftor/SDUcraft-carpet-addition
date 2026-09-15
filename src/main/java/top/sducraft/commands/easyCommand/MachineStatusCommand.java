@@ -23,7 +23,7 @@ public class MachineStatusCommand {
                         .then(Commands.argument("type", StringArgumentType.string())
                                 .suggests((context, builder) -> {
                                     builder.suggest("temp");
-                                    if (Objects.requireNonNull(context.getSource().getPlayer()).hasPermissions(2)) {
+                                    if (Commands.LEVEL_GAMEMASTERS.check(Objects.requireNonNull(context.getSource().getPlayer()).permissions())) {
                                         builder.suggest("perm");
                                     }
                                     return builder.buildFuture();
@@ -32,11 +32,11 @@ public class MachineStatusCommand {
                                         .then(Commands.argument("dimension", DimensionArgument.dimension())
                                                 .then(Commands.argument("pos", BlockPosArgument.blockPos())
                                                         .executes(context -> {
-                                                                    if (StringArgumentType.getString(context, "type").equals("perm") && Objects.requireNonNull(context.getSource().getPlayer()).hasPermissions(2)) {
-                                                                        addPermMachine(StringArgumentType.getString(context, "name"), BlockPosArgument.getBlockPos(context, "pos"), DimensionArgument.getDimension(context, "dimension").dimension().location().getPath());
+                                                                    if (StringArgumentType.getString(context, "type").equals("perm") && Commands.LEVEL_GAMEMASTERS.check(Objects.requireNonNull(context.getSource().getPlayer()).permissions())) {
+                                                                        addPermMachine(StringArgumentType.getString(context, "name"), BlockPosArgument.getBlockPos(context, "pos"), DimensionArgument.getDimension(context, "dimension").dimension().identifier().getPath());
                                                                         context.getSource().sendSuccess(() -> translateComponent("sducarpet.command.machine.addedPerm").append(StringArgumentType.getString(context, "name")), false);
                                                                     } else if (StringArgumentType.getString(context, "type").equals("temp")) {
-                                                                        addTempMachine(StringArgumentType.getString(context, "name"), BlockPosArgument.getBlockPos(context, "pos"), DimensionArgument.getDimension(context, "dimension").dimension().location().getPath());
+                                                                        addTempMachine(StringArgumentType.getString(context, "name"), BlockPosArgument.getBlockPos(context, "pos"), DimensionArgument.getDimension(context, "dimension").dimension().identifier().getPath());
                                                                         context.getSource().sendSuccess(() -> translateComponent("sducarpet.command.machine.addedTemp").append(StringArgumentType.getString(context, "name")), false);
                                                                     }
                                                                     return 1;
@@ -46,14 +46,14 @@ public class MachineStatusCommand {
                         .then(Commands.argument("type", StringArgumentType.string())
                                 .suggests((context, builder) -> {
                                     builder.suggest("temp");
-                                    if (Objects.requireNonNull(context.getSource().getPlayer()).hasPermissions(2)) {
+                                    if (Commands.LEVEL_GAMEMASTERS.check(Objects.requireNonNull(context.getSource().getPlayer()).permissions())) {
                                         builder.suggest("perm");
                                     }
                                     return builder.buildFuture();
                                 })
                                 .then(Commands.argument("name", StringArgumentType.string())
                                         .suggests((context, builder) -> {
-                                            if (StringArgumentType.getString(context, "type").equals("perm") && Objects.requireNonNull(context.getSource().getPlayer()).hasPermissions(2)) {
+                                            if (StringArgumentType.getString(context, "type").equals("perm") && Commands.LEVEL_GAMEMASTERS.check(Objects.requireNonNull(context.getSource().getPlayer()).permissions())) {
                                                 for (Machine machine : permMachineList) {
                                                     builder.suggest(machine.name);
                                                 }

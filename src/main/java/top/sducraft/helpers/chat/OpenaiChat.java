@@ -35,7 +35,7 @@ public class OpenaiChat {
     public static void tryStartChat(String prompt, ServerPlayer player) {
         UUID id = player.getUUID();
         if (generatingPlayers.contains(id)) {
-            player.displayClientMessage(translateComponent("sducarpet.command.chat3"), false);
+            player.sendSystemMessage(translateComponent("sducarpet.command.chat3"));
             return;
         }
 
@@ -58,7 +58,7 @@ public class OpenaiChat {
         userPrompt = userPrompt.replace("-nosystemprompt", "").trim();
         ChatMemory.appendMessage(player, "user", userPrompt);
         List<ChatMemory.Message> history = ChatMemory.getHistory(player);
-        player.displayClientMessage(Component.literal("\nuser:\n" + userPrompt), false);
+        player.sendSystemMessage(Component.literal("\nuser:\n" + userPrompt));
 
         JsonArray messagesJsonArray = new JsonArray();
         JsonObject systemMessage = new JsonObject();
@@ -97,7 +97,7 @@ public class OpenaiChat {
         boolean inReasoning = false;
 
         try {
-            player.displayClientMessage(Component.literal("\nresponse:\n" + userPrompt), false);
+            player.sendSystemMessage(Component.literal("\nresponse:\n" + userPrompt));
             HttpResponse<java.io.InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.body(), StandardCharsets.UTF_8));
             String line;
@@ -119,12 +119,12 @@ public class OpenaiChat {
                         inReasoning = true;
                         content = content.replace("<think>", "");
                         if (wantThink)
-                            player.displayClientMessage(translateComponent("\nthink:").withColor(0x808080), false);
+                            player.sendSystemMessage(translateComponent("\nthink:").withColor(0x808080));
                     }
                     if (content.contains("</think>")) {
                         inReasoning = false;
                         content = content.replace("</think>", "");
-                        player.displayClientMessage(translateComponent("\nanswer:"), false);
+                        player.sendSystemMessage(translateComponent("\nanswer:"));
                     }
 
                     if (inReasoning) {
@@ -132,8 +132,8 @@ public class OpenaiChat {
                         if (wantThink && content.matches(".*[。.!？?]\\s*$")) {
                             String chunk = reasoningBuffer.toString();
                             reasoningBuffer.setLength(0);
-                            player.getServer().execute(() ->
-                                    player.displayClientMessage(Component.literal(chunk.trim()).withColor(0x808080), false)
+                            player.level().getServer().execute(() ->
+                                    player.sendSystemMessage(Component.literal(chunk.trim()).withColor(0x808080))
                             );
                         }
                     } else {
@@ -141,8 +141,8 @@ public class OpenaiChat {
                         if (content.matches(".*[。.!？?]\\s*$")) {
                             String chunk = answerBuffer.toString();
                             answerBuffer.setLength(0);
-                            player.getServer().execute(() ->
-                                    player.displayClientMessage(Component.literal(chunk.trim()), false)
+                            player.level().getServer().execute(() ->
+                                    player.sendSystemMessage(Component.literal(chunk.trim()))
                             );
                         }
                     }
@@ -152,8 +152,8 @@ public class OpenaiChat {
             ChatMemory.appendMessage(player, "assistant", fullReply.toString());
 
         } catch (Exception e) {
-            player.getServer().execute(() ->
-                    player.displayClientMessage(translateComponent("sducarpet.command.chat4").append(": " + e.getMessage()), false)
+            player.level().getServer().execute(() ->
+                    player.sendSystemMessage(translateComponent("sducarpet.command.chat4").append(": " + e.getMessage()))
             );
         }
     }

@@ -23,10 +23,10 @@ public class OpenUrlCommand {
                             Player player = context.getSource().getPlayer();
                             if (player != null) {
                                 try {
-                                    player.displayClientMessage(translateComponent("sducarpet.command.openurl")
+                                    player.sendSystemMessage(translateComponent("sducarpet.command.openurl")
                                             .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.OpenUrl(new URI(StringArgumentType.getString(context, "url"))))
                                             .withBold(true)
-                                            .withColor(ChatFormatting.AQUA)), false);
+                                            .withColor(ChatFormatting.AQUA)));
                                 } catch (URISyntaxException e) {
                                     throw new RuntimeException(e);
                                 }

@@ -1,6 +1,7 @@
 package top.sducraft.mixins.rule.finditem;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,11 +13,11 @@ import java.util.Set;
 @Mixin(Entity.class)
 public abstract class DisableVisualizerEntitySave {
     @Shadow
-    public abstract Set<String> getTags();
+    public abstract Set<String> entityTags();
 
     @Inject(method = "saveAsPassenger", at = @At("HEAD"), cancellable = true)
-    public void saveAsPassenger(CallbackInfoReturnable<Boolean> cir) {
-        Set<String> tags = this.getTags();
+    public void saveAsPassenger(ValueOutput valueOutput, CallbackInfoReturnable<Boolean> cir) {
+        Set<String> tags = this.entityTags();
         if (tags.contains("noSave")) {
             cir.setReturnValue(false);
         }

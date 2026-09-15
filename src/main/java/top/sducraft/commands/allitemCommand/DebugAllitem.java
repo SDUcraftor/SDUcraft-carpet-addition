@@ -122,7 +122,7 @@ public class DebugAllitem {
                                 .executes(context -> {
                                     for (ServerLevel level : context.getSource().getServer().getAllLevels()) {
                                         for (Entity entity : level.getEntities().getAll()) {
-                                            if (entity != null && entity.getTags().contains("allitem_debug")) {
+                                            if (entity != null && entity.entityTags().contains("allitem_debug")) {
                                                 DelayedEvents.START_SERVER_TICK.register(1, s -> entity.discard());
                                             }
                                         }

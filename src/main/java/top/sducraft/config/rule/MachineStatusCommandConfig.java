@@ -84,10 +84,10 @@ public class MachineStatusCommandConfig {
     public static void delPermMachine(String name, ServerPlayer player) {
         if (Objects.equals(name, "all")) {
             permMachineList.clear();
-            player.displayClientMessage(translateComponent("sducarpet.command.machine.deletedAllPerm"), false);
+            player.sendSystemMessage(translateComponent("sducarpet.command.machine.deletedAllPerm"));
         } else {
             if (permMachineList.removeIf(machine -> machine.name.equals(name))) {
-                player.displayClientMessage(translateComponent("sducarpet.command.machine.deletedOne").append(name), false);
+                player.sendSystemMessage(translateComponent("sducarpet.command.machine.deletedOne").append(name));
             }
         }
         saveConfig();
@@ -96,10 +96,10 @@ public class MachineStatusCommandConfig {
     public static void delTempMachine(String name, ServerPlayer player) {
         if (Objects.equals(name, "all")) {
             tempMachineList.clear();
-            player.displayClientMessage(translateComponent("sducarpet.command.machine.deletedAllTemp"), false);
+            player.sendSystemMessage(translateComponent("sducarpet.command.machine.deletedAllTemp"));
         } else {
             if (tempMachineList.removeIf(machine -> machine.name.equals(name))) {
-                player.displayClientMessage(translateComponent("sducarpet.command.machine.deletedOne").append(name), false);
+                player.sendSystemMessage(translateComponent("sducarpet.command.machine.deletedOne").append(name));
             }
         }
         saveConfig();

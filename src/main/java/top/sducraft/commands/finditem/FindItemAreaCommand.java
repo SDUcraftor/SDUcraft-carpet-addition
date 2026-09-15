@@ -14,7 +14,7 @@ import static top.sducraft.util.Message.translateComponent;
 public class FindItemAreaCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("finditemarea")
-                .requires(source -> source.hasPermission(2)) // Require op level 2
+                .requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions())) // Require op level 2
                 .then(Commands.literal("add")
                         .then(Commands.argument("name", StringArgumentType.string())
                                 .then(Commands.argument("from", BlockPosArgument.blockPos())

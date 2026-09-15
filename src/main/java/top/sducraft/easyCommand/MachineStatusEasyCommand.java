@@ -79,26 +79,26 @@ public class MachineStatusEasyCommand implements IEasyCommand {
         boolean noTempMachines = tempMachineList.isEmpty();
         boolean noPermMachines = permMachineList.isEmpty();
         if (noTempMachines && noPermMachines) {
-            player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus1"), false);
+            player.sendSystemMessage(translateComponent("sducarpet.easycommand.machinestatus1"));
             return 0;
         }
 
-        player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus4").append(translateComponent("sducarpet.easycommand.machinestatus5").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN))).append(translateComponent("sducarpet.easycommand.machinestatus6")).append(translateComponent("sducarpet.easycommand.machinestatus7").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))).append(translateComponent("sducarpet.easycommand.machinestatus8")), false);
+        player.sendSystemMessage(translateComponent("sducarpet.easycommand.machinestatus4").append(translateComponent("sducarpet.easycommand.machinestatus5").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN))).append(translateComponent("sducarpet.easycommand.machinestatus6")).append(translateComponent("sducarpet.easycommand.machinestatus7").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))).append(translateComponent("sducarpet.easycommand.machinestatus8")));
         if (!noTempMachines) {
-            player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus2"), false);
+            player.sendSystemMessage(translateComponent("sducarpet.easycommand.machinestatus2"));
             for (MachineStatusCommandConfig.Machine machine : tempMachineList) {
-                player.displayClientMessage(formatMachineLine(machine, ChatFormatting.GREEN, ChatFormatting.WHITE), false);
+                player.sendSystemMessage(formatMachineLine(machine, ChatFormatting.GREEN, ChatFormatting.WHITE));
             }
         }
 
         if (!noPermMachines) {
-            player.displayClientMessage(translateComponent("sducarpet.easycommand.machinestatus3"), false);
+            player.sendSystemMessage(translateComponent("sducarpet.easycommand.machinestatus3"));
             List<Component> onMachines = new ArrayList<>();
             List<Component> offMachines = new ArrayList<>();
             List<Component> unknownMachines = new ArrayList<>();
 
             for (MachineStatusCommandConfig.Machine machine : permMachineList) {
-                switch (getMachineState(player.getServer(), machine)) {
+                switch (getMachineState(player.level().getServer(), machine)) {
                     case ON -> onMachines.add(formatMachineLine(machine, ChatFormatting.GREEN, ChatFormatting.WHITE));
                     case OFF -> offMachines.add(formatMachineLine(machine, ChatFormatting.GRAY, ChatFormatting.GRAY));
                     case UNKNOWN -> unknownMachines.add(Component.literal(machine.name).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)).append(translateComponent("  " + machine.dimension + " (" + machine.pos.toShortString() + ")开关状态未知")));
@@ -106,13 +106,13 @@ public class MachineStatusEasyCommand implements IEasyCommand {
             }
 
             for (Component line : onMachines) {
-                player.displayClientMessage(line, false);
+                player.sendSystemMessage(line);
             }
             for (Component line : offMachines) {
-                player.displayClientMessage(line, false);
+                player.sendSystemMessage(line);
             }
             for (Component line : unknownMachines) {
-                player.displayClientMessage(line, false);
+                player.sendSystemMessage(line);
             }
         }
 

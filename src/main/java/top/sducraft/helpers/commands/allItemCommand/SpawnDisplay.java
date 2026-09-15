@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -121,7 +122,7 @@ public class SpawnDisplay {
     }
 
     private static void spawnItemDisplay(ServerLevel level, BlockPos pos, Item item, int color, DisplayType type, String tag) {
-        Display.ItemDisplay display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, level);
+        Display.ItemDisplay display = new Display.ItemDisplay(EntityTypes.ITEM_DISPLAY, level);
         display.setPos(Vec3.atCenterOf(pos));
         display.setItemStack(new ItemStack(item));
         display.setGlowingTag(true);
@@ -183,7 +184,7 @@ public class SpawnDisplay {
     }
 
     public static void spawnBlockDisplay(ServerLevel level, BlockPos pos, BlockState blockState, int color, String tag) {
-        Display.BlockDisplay display = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level);
+        Display.BlockDisplay display = new Display.BlockDisplay(EntityTypes.BLOCK_DISPLAY, level);
         display.setBlockState(blockState);
         display.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
         display.setGlowingTag(true);
@@ -193,7 +194,7 @@ public class SpawnDisplay {
     }
 
     public static void spawnTempBlockDisplay(ServerLevel level, BlockPos pos, BlockState blockState, int color, String tag, int durationTicks) {
-        Display.BlockDisplay display = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level);
+        Display.BlockDisplay display = new Display.BlockDisplay(EntityTypes.BLOCK_DISPLAY, level);
         display.setBlockState(blockState);
         display.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
         display.setGlowingTag(true);

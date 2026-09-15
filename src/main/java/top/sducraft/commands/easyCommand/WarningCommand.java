@@ -21,13 +21,13 @@ public class WarningCommand {
         dispatcher.register(Commands.literal("warning")
                 .requires(c -> SDUcraftCarpetSettings.easyCommand)
                 .then(Commands.literal("add")
-                        .requires(commandSourceStack -> commandSourceStack.hasPermission(2))
+                        .requires(commandSourceStack -> Commands.LEVEL_GAMEMASTERS.check(commandSourceStack.permissions()))
                         .then(Commands.argument("name", StringArgumentType.string())
                                 .then(Commands.argument("dimension", DimensionArgument.dimension())
                                         .then(Commands.argument("pos", BlockPosArgument.blockPos())
                                                 .then(Commands.argument("text", StringArgumentType.string())
                                                         .executes(context -> {
-                                                            if (addWarning(StringArgumentType.getString(context, "name"), DimensionArgument.getDimension(context, "dimension").dimension().location().getPath(), BlockPosArgument.getBlockPos(context, "pos"), StringArgumentType.getString(context, "text"), false)) {
+                                                            if (addWarning(StringArgumentType.getString(context, "name"), DimensionArgument.getDimension(context, "dimension").dimension().identifier().getPath(), BlockPosArgument.getBlockPos(context, "pos"), StringArgumentType.getString(context, "text"), false)) {
                                                                 context.getSource().sendSuccess(() -> translateComponent("sducarpet.easycommand.warningcommand1").append(StringArgumentType.getString(context, "name")), false);
                                                                 return 1;
                                                             } else {
@@ -36,7 +36,7 @@ public class WarningCommand {
                                                             }
                                                         }))))))
                 .then(Commands.literal("del")
-                        .requires(commandSourceStack -> commandSourceStack.hasPermission(2))
+                        .requires(commandSourceStack -> Commands.LEVEL_GAMEMASTERS.check(commandSourceStack.permissions()))
                         .then(Commands.argument("name", StringArgumentType.string())
                                 .suggests((context, builder) -> {
                                     builder.suggest("all");

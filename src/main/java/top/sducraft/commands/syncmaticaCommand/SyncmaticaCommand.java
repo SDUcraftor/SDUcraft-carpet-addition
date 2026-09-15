@@ -66,7 +66,7 @@ public class SyncmaticaCommand {
                                                         ServerLevel level = context.getSource().getServer().overworld();
                                                         updateMaterial(blockCounts, player);
 //                                                    if (player != null) {
-//                                                        player.displayClientMessage(Component.literal(blockCounts.toString()), false);
+//                                                        player.sendSystemMessage(Component.literal(blockCounts.toString()));
 //                                                    }
 //                                                    context.getSource().sendSuccess(() -> Component.literal(translateComponent("sducarpet.text.syncmatica.highlighted_prefix").getString()+blockNames.size()+("个材料")), false);
                                                         return 1;
@@ -77,7 +77,7 @@ public class SyncmaticaCommand {
                                         .executes(context -> {
                                             for (ServerLevel level : context.getSource().getServer().getAllLevels()) {
                                                 for (Entity entity : level.getEntities().getAll()) {
-                                                    if (entity != null && entity.getTags().contains("material")) {
+                                                    if (entity != null && entity.entityTags().contains("material")) {
                                                         DelayedEvents.START_SERVER_TICK.register(1, s -> entity.discard());
                                                     }
                                                 }

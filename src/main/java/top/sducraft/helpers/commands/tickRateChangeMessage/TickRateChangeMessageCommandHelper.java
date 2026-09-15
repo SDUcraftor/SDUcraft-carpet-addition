@@ -34,7 +34,7 @@ public class TickRateChangeMessageCommandHelper {
                                 .withClickEvent(new ClickEvent.RunCommand(resetCommand))
                                 .withColor(ChatFormatting.AQUA)))
                 .append(translateComponent("sducarpet.tickrate.resetHint").withStyle(ChatFormatting.RESET));
-        player.displayClientMessage(message, false);
+        player.sendSystemMessage(message);
 
         boolean hasCustomMessage = playername != null && tickRateChangeMessage != null;
         if (hasCustomMessage) {
@@ -42,13 +42,13 @@ public class TickRateChangeMessageCommandHelper {
                     .append(Component.literal(playername).withStyle(ChatFormatting.YELLOW))
                     .append(translateComponent("sducarpet.tickrate.messageSeparator").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(tickRateChangeMessage).withStyle(ChatFormatting.AQUA));
-            player.displayClientMessage(customMessage, false);
+            player.sendSystemMessage(customMessage);
         }
     }
 
     public static void sendTickRateChangeMessage(Player player) {
         if (!SDUcraftCarpetSettings.tickRateChangedMessage) return;
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
         if (server == null) return;
 
         ServerTickRateManager tickRateManager = server.tickRateManager();

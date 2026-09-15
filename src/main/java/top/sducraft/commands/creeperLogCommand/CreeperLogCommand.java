@@ -41,7 +41,7 @@ public class CreeperLogCommand {
     
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("creeperlog")
-                .requires(source -> source.hasPermission(2))
+                .requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
                 .then(Commands.argument("log", StringArgumentType.string())
                         .suggests(LOG_FILE_SUGGESTIONS)
                         .executes(CreeperLogCommand::executeVisualize)));

@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueInput;
@@ -66,7 +67,7 @@ public class CreeperLogVisualizer {
                         COLOR_SLIME, DISPLAY_SCALE);
 
                 if (entry.playerPos != null) {
-                    spawnBlockDisplayAt(level, entry.playerPos, Blocks.YELLOW_WOOL.defaultBlockState(),
+                    spawnBlockDisplayAt(level, entry.playerPos, Blocks.WOOL.yellow().defaultBlockState(),
                             COLOR_WOOL, DISPLAY_SCALE);
                 }
                 Vec3 textPos = entry.creeperPos.add(0, 0.5, 0);
@@ -126,7 +127,7 @@ public class CreeperLogVisualizer {
     
     private static void spawnBlockDisplayAt(ServerLevel level, Vec3 pos, BlockState blockState, 
                                            int color, float scale) {
-        Display.BlockDisplay display = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level);
+        Display.BlockDisplay display = new Display.BlockDisplay(EntityTypes.BLOCK_DISPLAY, level);
         display.setBlockState(blockState);
         display.setPos(pos);
         display.setGlowingTag(true);
@@ -144,7 +145,7 @@ public class CreeperLogVisualizer {
     }
     
     private static void spawnTextDisplayAt(ServerLevel level, Vec3 pos, String text) {
-        Display.TextDisplay display = new Display.TextDisplay(EntityType.TEXT_DISPLAY, level);
+        Display.TextDisplay display = new Display.TextDisplay(EntityTypes.TEXT_DISPLAY, level);
         display.setPos(pos);
         display.setText(Component.literal(text));
         display.setGlowingTag(true);
@@ -173,7 +174,7 @@ public class CreeperLogVisualizer {
     
     private static void clearPreviousVisualizations(ServerLevel level) {
         level.getAllEntities().forEach(entity -> {
-            if (entity instanceof Display && entity.getTags().contains(TAG_CREEPER_LOG)) {
+            if (entity instanceof Display && entity.entityTags().contains(TAG_CREEPER_LOG)) {
                 DelayedEvents.START_SERVER_TICK.register(1, s -> {
                         entity.discard();
                 });

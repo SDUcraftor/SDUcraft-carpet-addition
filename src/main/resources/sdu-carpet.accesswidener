@@ -1,4 +1,4 @@
-accessWidener	v1	named
+accessWidener	v2	official
 accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
 accessible field net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity exitPortal Lnet/minecraft/core/BlockPos;
 accessible field net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity exactTeleport Z
@@ -13,6 +13,4 @@ accessible field net/minecraft/world/entity/Display DATA_GLOW_COLOR_OVERRIDE_ID 
 accessible field net/minecraft/world/entity/Display DATA_SCALE_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
 accessible method net/minecraft/world/entity/Display setTransformation (Lcom/mojang/math/Transformation;)V
 accessible method net/minecraft/world/entity/Display createTransformation (Lnet/minecraft/network/syncher/SynchedEntityData;)Lcom/mojang/math/Transformation;
-accessible method net/minecraft/server/level/TicketType register (Ljava/lang/String;JZLnet/minecraft/server/level/TicketType$TicketUse;)Lnet/minecraft/server/level/TicketType;
 accessible field net/minecraft/server/players/PlayerList viewDistance I
-accessible method net/minecraft/resources/ResourceLocation <init> (Ljava/lang/String;Ljava/lang/String;)V

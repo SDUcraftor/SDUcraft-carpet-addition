@@ -17,11 +17,11 @@ public class SyncmaticaCommandHelper {
     public static void listSyncmatica(ServerPlayer player, int page) {
         List<LoadSyncmatica.Litematica> list = LoadSyncmatica.litematicas;
         if (list.isEmpty()) {
-            player.displayClientMessage(translateComponent("sducarpet.syncmatica.none"), false);
+            player.sendSystemMessage(translateComponent("sducarpet.syncmatica.none"));
             return;
         }
 
-        player.displayClientMessage(translateComponent("sducarpet.syncmatica.title"), false);
+        player.sendSystemMessage(translateComponent("sducarpet.syncmatica.title"));
 
         boolean paginate = list.size() > 10;
         int totalPages = paginate ? (list.size() + 10 - 1) / 10 : 1;
@@ -35,10 +35,10 @@ public class SyncmaticaCommandHelper {
         for (int i = startIndex; i < endIndex; i++) {
             LoadSyncmatica.Litematica l = list.get(i);
             String owner = l.owner != null ? l.owner.name : "unknown";
-            player.displayClientMessage(translateComponent("sducarpet.syncmatica.name")
+            player.sendSystemMessage(translateComponent("sducarpet.syncmatica.name")
                     .append(Component.literal(l.file_name).withColor(0x00FFFF))
                     .append(translateComponent("sducarpet.syncmatica.owner"))
-                    .append(Component.literal(owner).withColor(0xFFFF00)), false);
+                    .append(Component.literal(owner).withColor(0xFFFF00)));
         }
 
         if (paginate) {
@@ -74,7 +74,7 @@ public class SyncmaticaCommandHelper {
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica list " + (page + 1)))
                                 .withColor(ChatFormatting.AQUA)));
             }
-            player.displayClientMessage(pagination, false);
+            player.sendSystemMessage(pagination);
         }
     }
 

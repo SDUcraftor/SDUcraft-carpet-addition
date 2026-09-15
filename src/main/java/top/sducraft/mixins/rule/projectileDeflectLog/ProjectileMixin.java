@@ -1,6 +1,7 @@
 package top.sducraft.mixins.rule.projectileDeflectLog;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileDeflection;
@@ -18,8 +19,9 @@ public class ProjectileMixin implements ISelf<Projectile> {
     @Unique
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectileMixin.class);
 
+    // 26.2: deflect 的第三个参数由 Entity 变为 EntityReference<Entity>
     @Inject(method = "deflect", at = @org.spongepowered.asm.mixin.injection.At("HEAD"))
-    private void onDeflect(ProjectileDeflection projectileDeflection, Entity entity, Entity entity2, boolean bl, CallbackInfoReturnable<Boolean> cir) {
+    private void onDeflect(ProjectileDeflection projectileDeflection, Entity entity, EntityReference<Entity> entityReference, boolean bl, CallbackInfoReturnable<Boolean> cir) {
         if (SDUcraftCarpetSettings.projectileDeflectLog && entity instanceof Player player) {
             Projectile projectile = SduCarpet$self();
             LOGGER.info(" player" + player.getName() + "hit " + projectile.getType() + " at " + String.format("[%.2f,%.2f,%.2f]", projectile.getX(), projectile.getY(), projectile.getZ()));

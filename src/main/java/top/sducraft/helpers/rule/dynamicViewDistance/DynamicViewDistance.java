@@ -1,5 +1,6 @@
 package top.sducraft.helpers.rule.dynamicViewDistance;
 
+import net.minecraft.commands.Commands;
 import carpet.CarpetServer;
 import carpet.patches.EntityPlayerMPFake;
 import net.minecraft.network.chat.Component;
@@ -55,8 +56,8 @@ public class DynamicViewDistance {
             currentVD = newVD;
             lastUpdateTime = now;
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-                if (!player.hasPermissions(2)) continue;
-                player.displayClientMessage(translateComponent("sducarpet.viewdistance.changed")
+                if (!Commands.LEVEL_GAMEMASTERS.check(player.permissions())) continue;
+                player.sendSystemMessage(translateComponent("sducarpet.viewdistance.changed")
                         .append(String.valueOf(newVD))
                         .append(translateComponent("sducarpet.viewdistance.msptPrefix"))
                         .append(String.format("%.1f", mspt))

@@ -34,7 +34,7 @@ public class TickRateManagerEasyCommand extends AbstractDocumentEasyCommand {
                                 .append(translateComponent("sducarpet.text.tickrate.message_suffix")).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)))
         );
 
-        ServerTickRateManager tickRateManager = Objects.requireNonNull(player.getServer()).tickRateManager();
+        ServerTickRateManager tickRateManager = Objects.requireNonNull(player.level().getServer()).tickRateManager();
         Component tickrate = translateComponent("sducarpet.text.tickrate.current_label")
                 .append(Component.literal(String.valueOf(tickRateManager.tickrate()))
                         .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)).append(translateComponent("gt/s")));

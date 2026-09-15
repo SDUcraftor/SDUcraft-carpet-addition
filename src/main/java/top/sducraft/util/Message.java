@@ -13,7 +13,7 @@ import static carpet.utils.Translations.tr;
 
 public abstract class Message {
     public static void sandCustomMessage(ServerPlayer player, String message, ChatFormatting color) {
-        player.displayClientMessage(translateComponent(message).withStyle(color), false);
+        player.sendSystemMessage(translateComponent(message).withStyle(color));
     }
 
     public static void sandAllPlayerCustomMessage(MinecraftServer server, String message, ChatFormatting color) {
@@ -35,8 +35,8 @@ public abstract class Message {
         if (player instanceof EntityPlayerMPFake) return;
 
         String jsonString = dialogBuilder.build().toString();
-        String command = "dialog show " + player.getGameProfile().getName() + " " + jsonString;
-        MinecraftServer server = player.getServer();
+        String command = "dialog show " + player.getGameProfile().name() + " " + jsonString;
+        MinecraftServer server = player.level().getServer();
         if (server != null) {
             server.getCommands().performPrefixedCommand(
                     server.createCommandSourceStack(),

@@ -89,7 +89,7 @@ public class MaterialListManenger {
         lackMaterials.clear();
 
         if (player != null) {
-            ServerLevel level = player.getServer().overworld();
+            ServerLevel level = player.level().getServer().overworld();
             int totalCount = 0;
             int lackCount = 0;
             int missingCount = 0;
@@ -117,19 +117,19 @@ public class MaterialListManenger {
                     missingMaterials.put(descriptionId, requiredCount);
                 }
             }
-            player.displayClientMessage(translateComponent("\nTotal material species:")
+            player.sendSystemMessage(translateComponent("\nTotal material species:")
                             .append(Component.literal(String.valueOf(totalCount)).withColor(0x00FF00))
                             .append(translateComponent("\nlack material species:"))
                             .append(Component.literal(String.valueOf(lackCount)).withColor(0xFFFF00)).append(translateComponent("\nUse \"/syncmatica material lack\" to display complete list of lack materials"))
                             .append(translateComponent("\nmissing material species:"))
                             .append(Component.literal(String.valueOf(missingCount)).withColor(0xFF0000)).append(translateComponent("\nUse \"/syncmatica material missing\" to display complete list of lack materials"))
-                    , false);
+                    );
         }
     }
 
     public static void listLackMaterial(ServerPlayer player, int page) {
         if (lackMaterials.isEmpty()) {
-            player.displayClientMessage(translateComponent("sducarpet.text.syncmatica.lack_none"), false);
+            player.sendSystemMessage(translateComponent("sducarpet.text.syncmatica.lack_none"));
             return;
         }
 
@@ -144,12 +144,12 @@ public class MaterialListManenger {
         int startIndex = (page - 1) * ITEMS_PER_PAGE;
         int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, list.size());
 
-        player.displayClientMessage(translateComponent("Lack materials："), false);
+        player.sendSystemMessage(translateComponent("Lack materials："));
 
         for (int i = startIndex; i < endIndex; i++) {
             Map.Entry<String, Integer> entry = list.get(i);
             int count = entry.getValue();
-            player.displayClientMessage(translateComponent("- ").append(entry.getKey()).append(translateComponent(": ").append(getCountString(count))), false);
+            player.sendSystemMessage(translateComponent("- ").append(entry.getKey()).append(translateComponent(": ").append(getCountString(count))));
         }
 
         if (paginate) {
@@ -173,13 +173,13 @@ public class MaterialListManenger {
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica material lack " + (page + 1)))
                                 .withColor(ChatFormatting.AQUA)));
             }
-            player.displayClientMessage(pagination, false);
+            player.sendSystemMessage(pagination);
         }
     }
 
     public static void listMissingMaterial(ServerPlayer player, int page) {
         if (missingMaterials.isEmpty()) {
-            player.displayClientMessage(translateComponent("sducarpet.text.syncmatica.missing_none"), false);
+            player.sendSystemMessage(translateComponent("sducarpet.text.syncmatica.missing_none"));
             return;
         }
 
@@ -194,12 +194,12 @@ public class MaterialListManenger {
         int startIndex = (page - 1) * ITEMS_PER_PAGE;
         int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, list.size());
 
-        player.displayClientMessage(translateComponent("Missing materials："), false);
+        player.sendSystemMessage(translateComponent("Missing materials："));
 
         for (int i = startIndex; i < endIndex; i++) {
             Map.Entry<String, Integer> entry = list.get(i);
             int count = entry.getValue();
-            player.displayClientMessage(translateComponent("- ").append(entry.getKey()).append(translateComponent(": ").append(getCountString(count))), false);
+            player.sendSystemMessage(translateComponent("- ").append(entry.getKey()).append(translateComponent(": ").append(getCountString(count))));
         }
 
         if (paginate) {
@@ -223,7 +223,7 @@ public class MaterialListManenger {
                                 .withClickEvent(new ClickEvent.RunCommand("/syncmatica material missing " + (page + 1)))
                                 .withColor(ChatFormatting.AQUA)));
             }
-            player.displayClientMessage(pagination, false);
+            player.sendSystemMessage(pagination);
         }
     }
 

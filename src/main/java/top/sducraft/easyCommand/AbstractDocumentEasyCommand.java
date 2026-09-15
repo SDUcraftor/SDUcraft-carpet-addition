@@ -17,7 +17,7 @@ public abstract class AbstractDocumentEasyCommand implements IEasyCommand {
     @Override
     public final void showEasyCommandInterface(ServerPlayer player) {
         for (Component message : getMessages(player)) {
-            player.displayClientMessage(message, false);
+            player.sendSystemMessage(message);
         }
         afterMessages(player);
     }

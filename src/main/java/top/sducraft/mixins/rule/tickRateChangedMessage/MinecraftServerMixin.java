@@ -36,12 +36,12 @@ public abstract class MinecraftServerMixin {
                 if (changerName != null) {
                     for (ServerPlayer player : playerList.getPlayers()) {
                         if (player.getName().getString().equals(changerName)) {
-                            player.displayClientMessage(translateComponent("sducarpet.tickratechange.self")
+                            player.sendSystemMessage(translateComponent("sducarpet.tickratechange.self")
                                     .append(translateComponent("/leavemessage").withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withClickEvent(new ClickEvent.RunCommand("/leavemessage "))))
-                                    .append(translateComponent("sducarpet.tickratechange.selfSuffix")), false);
+                                    .append(translateComponent("sducarpet.tickratechange.selfSuffix")));
                         } else {
-                            player.displayClientMessage(Component.literal(changerName).withStyle(ChatFormatting.YELLOW)
-                                    .append(translateComponent("sducarpet.tickratechange.other").withStyle(ChatFormatting.WHITE)), false);
+                            player.sendSystemMessage(Component.literal(changerName).withStyle(ChatFormatting.YELLOW)
+                                    .append(translateComponent("sducarpet.tickratechange.other").withStyle(ChatFormatting.WHITE)));
                         }
                     }
                 }

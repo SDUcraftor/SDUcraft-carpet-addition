@@ -7,6 +7,7 @@ import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
@@ -35,11 +36,11 @@ public class HopperCooldownVisualizing {
             nbt.putString("text", textJson);
             entity.load(TagValueInput.create(scopedCollector, entity.registryAccess(), nbt.buildResult()));
         } else {
-            Display.TextDisplay entity = new Display.TextDisplay(EntityType.TEXT_DISPLAY, level);
+            Display.TextDisplay entity = new Display.TextDisplay(EntityTypes.TEXT_DISPLAY, level);
             entity.setInvisible(true);
             entity.setNoGravity(true);
             entity.setInvulnerable(true);
-            entity.setPos(pos.getCenter().x(), pos.getCenter().y(), pos.getCenter().z());
+            entity.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
             entity.addTag("hopperCooldownVisualizer");
             entity.addTag("noSave");
             level.addFreshEntity(entity);
@@ -75,8 +76,8 @@ public class HopperCooldownVisualizing {
     public static void clearLevelVisualizers(ServerLevel level) {
         if (level != null) {
             List<Display.TextDisplay> entities = new ArrayList<>();
-            Predicate<Display.TextDisplay> predicate = marker -> marker.getTags().contains("hopperCooldownVisualizer");
-            level.getEntities(EntityType.TEXT_DISPLAY,
+            Predicate<Display.TextDisplay> predicate = marker -> marker.entityTags().contains("hopperCooldownVisualizer");
+            level.getEntities(EntityTypes.TEXT_DISPLAY,
                     predicate,
                     entities);
             entities.forEach(Entity::discard);

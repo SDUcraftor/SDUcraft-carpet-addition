@@ -1,8 +1,8 @@
 package top.sducraft.mixins.rule.pearlTicketoptimization;
 
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
-import net.minecraft.world.entity.projectile.ThrownEnderpearl;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEnderpearl;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -105,7 +105,7 @@ public abstract class ThrownEnderpearlMixin extends ThrowableItemProjectile {
 ////                    PlayerList playerList = server.getPlayerList();
 ////                    for (ServerPlayer player : playerList.getPlayers()) {
 ////                        if (player != null) {
-////                            player.displayClientMessage(Component.literal("\ncurrPos:" + currPos + "\ncurrVelocity:" + currVelocity + "\nrealPos:" + realPos.toString() + "\nrealVelocity:" + realVelocity.toString() + "\nnextPos" + nextPos + "\nnextVelocity " + nextVelocity + sync), false);
+////                            player.sendSystemMessage(Component.literal("\ncurrPos:" + currPos + "\ncurrVelocity:" + currVelocity + "\nrealPos:" + realPos.toString() + "\nrealVelocity:" + realVelocity.toString() + "\nnextPos" + nextPos + "\nnextVelocity " + nextVelocity + sync));
 ////                        }
 ////                    }
 //                realPos = nextPos;

@@ -22,7 +22,7 @@ public class AllItemCommand {
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(Commands.literal("allitem")
                 .then(Commands.literal("data")
-                        .requires(source -> source.hasPermission(2))
+                        .requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
                         .then(Commands.literal("add")
                                 .then(Commands.argument("type", StringArgumentType.string())
                                         .suggests((context, builder) -> {

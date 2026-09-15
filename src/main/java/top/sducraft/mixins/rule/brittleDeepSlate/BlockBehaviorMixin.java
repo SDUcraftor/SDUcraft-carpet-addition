@@ -16,13 +16,14 @@ import top.sducraft.SDUcraftCarpetSettings;
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public abstract class BlockBehaviorMixin implements FeatureElement {
 
+    // 26.2 移除了 BlockStateBase#is(Block)，改用 getBlock() 比较
     @Shadow
-    public abstract boolean is(Block block);
+    public abstract Block getBlock();
 
     @Inject(method = "getDestroySpeed", at = @At("TAIL"), cancellable = true)
     public void getDestroySpeed(BlockGetter blockGetter, BlockPos blockPos, CallbackInfoReturnable<Float> cir) {
         if (SDUcraftCarpetSettings.brittleDeepSlate) {
-            if (this.is(Blocks.DEEPSLATE)) {
+            if (this.getBlock() == Blocks.DEEPSLATE) {
                 cir.setReturnValue(1.6F);
             }
         }

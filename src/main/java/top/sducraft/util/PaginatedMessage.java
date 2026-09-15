@@ -75,28 +75,28 @@ public class PaginatedMessage {
         int endIndex = paginate ? Math.min(startIndex + itemPerPage, totalItems) : totalItems;
 
         for (int i = startIndex; i < endIndex; i++) {
-            player.displayClientMessage(itemToComponent.apply(items.get(i)), false);
+            player.sendSystemMessage(itemToComponent.apply(items.get(i)));
         }
 
         if (paginate) {
             if (page > 1 && page < totalPages) {
-                player.displayClientMessage(Component.empty()
+                player.sendSystemMessage(Component.empty()
                         .append(translateComponent("<-").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand(commandTemplate + " " + (page - 1))).withColor(ChatFormatting.AQUA)))
                         .append(translateComponent("sducarpet.text.pagination.prefix").append(Component.literal(String.valueOf(page))).append(translateComponent("sducarpet.text.pagination.middle"))
                                 .append(Component.literal(String.valueOf(totalPages)).append(translateComponent("sducarpet.text.pagination.page_suffix")))
-                                .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand(commandTemplate + " " + (page + 1))).withColor(ChatFormatting.AQUA)))), false);
+                                .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand(commandTemplate + " " + (page + 1))).withColor(ChatFormatting.AQUA)))));
             } else if (page == 1) {
-                player.displayClientMessage(translateComponent("sducarpet.text.pagination.prefix")
+                player.sendSystemMessage(translateComponent("sducarpet.text.pagination.prefix")
                         .append(Component.literal(String.valueOf(page)))
                         .append(translateComponent("sducarpet.text.pagination.middle"))
                         .append(Component.literal(String.valueOf(totalPages)))
                         .append(translateComponent("sducarpet.text.pagination.page_suffix"))
-                        .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand(commandTemplate + " " + (page + 1))).withColor(ChatFormatting.AQUA))), false);
+                        .append(translateComponent("->").withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand(commandTemplate + " " + (page + 1))).withColor(ChatFormatting.AQUA))));
             } else {
-                player.displayClientMessage(Component.empty()
+                player.sendSystemMessage(Component.empty()
                         .append(translateComponent("<-").withColor(0x7EFCFC).withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand(commandTemplate + " " + (page - 1)))))
                         .append(translateComponent("sducarpet.text.pagination.prefix").append(Component.literal(String.valueOf(page))).append(translateComponent("sducarpet.text.pagination.middle"))
-                                .append(Component.literal(String.valueOf(totalPages))).append(translateComponent("sducarpet.text.pagination.page_suffix"))), false);
+                                .append(Component.literal(String.valueOf(totalPages))).append(translateComponent("sducarpet.text.pagination.page_suffix"))));
             }
         }
     }

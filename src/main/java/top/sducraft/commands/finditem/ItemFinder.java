@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -187,7 +187,7 @@ public class ItemFinder {
         if (depth <= 0) return 0;
 
         int count = 0;
-        for (ItemStack innerStack : contents.nonEmptyItems()) {
+        for (ItemStack innerStack : contents.nonEmptyItemCopyStream().toList()) {
             if (innerStack.is(targetItem)) {
                 count += innerStack.getCount();
             }
@@ -224,7 +224,7 @@ public class ItemFinder {
 
                     BlockEntity blockEntity = entry.getValue();
                     if (blockEntity instanceof Container container) {
-                        ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(blockEntity.getBlockState().getBlock());
+                        Identifier blockId = BuiltInRegistries.BLOCK.getKey(blockEntity.getBlockState().getBlock());
                         String containerId = blockId.getPath();
 
                         if (containerFilter.matches(containerId)) {
@@ -247,7 +247,7 @@ public class ItemFinder {
         );
 
         for (Entity entity : containerEntities) {
-            ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
+            Identifier entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
             if (containerFilter.matches(entityId.getPath())) {
                 Map<Item, Integer> foundItemsInContainer = new HashMap<>();
                 Container container = (Container) entity;
@@ -282,7 +282,7 @@ public class ItemFinder {
         // 2. If it has a container component, look inside
         ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
         if (contents != null) {
-            for (ItemStack innerStack : contents.nonEmptyItems()) {
+            for (ItemStack innerStack : contents.nonEmptyItemCopyStream().toList()) {
                 // Recursive call
                 findFilteredItemsInStack(innerStack, itemFilter, foundItems, depth - 1);
             }

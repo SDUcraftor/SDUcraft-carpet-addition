@@ -7,6 +7,8 @@ import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.TicketType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +32,7 @@ import static top.sducraft.util.DelayedEvents.START_SERVER_TICK;
 public class SDUcraftCarpetAdditionMod implements CarpetExtension, ModInitializer {
     public static String MOD_ID = "SDU-carpet";
     public final static Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final TicketType FAKE_PEACE_TICKET_TYPE = TicketType.register("fakepeace", 100L, false, TicketType.TicketUse.LOADING_AND_SIMULATION);
+    public static final TicketType FAKE_PEACE_TICKET_TYPE = Registry.register(BuiltInRegistries.TICKET_TYPE, "fakepeace", new TicketType(100L, TicketType.FLAG_LOADING | TicketType.FLAG_SIMULATION));
 
     static {
         CarpetServer.manageExtension(new SDUcraftCarpetAdditionMod());
