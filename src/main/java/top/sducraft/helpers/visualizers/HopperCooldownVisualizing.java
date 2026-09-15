@@ -39,7 +39,11 @@ public class HopperCooldownVisualizing {
             Display.TextDisplay entity = new Display.TextDisplay(EntityTypes.TEXT_DISPLAY, level);
             entity.setInvisible(true);
             entity.setNoGravity(true);
+            //#if MC >= 260300
+            //$$ entity.setPermanentlyInvulnerable(true);
+            //#else
             entity.setInvulnerable(true);
+            //#endif
             entity.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
             entity.addTag("hopperCooldownVisualizer");
             entity.addTag("noSave");

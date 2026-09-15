@@ -153,7 +153,11 @@ public class CreeperLogVisualizer {
         display.setInvisible(true);
         display.setNoGravity(true);
         display.addTag("noSave");
+        //#if MC >= 260300
+        //$$ display.setPermanentlyInvulnerable(true);
+        //#else
         display.setInvulnerable(true);
+        //#endif
         display.getEntityData().set(Display.DATA_GLOW_COLOR_OVERRIDE_ID, CreeperLogVisualizer.COLOR_TEXT);
         level.addFreshEntity(display);
 
