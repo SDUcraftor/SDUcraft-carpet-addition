@@ -119,7 +119,11 @@ public class WarningEasyCommand implements IEasyCommand {
                 for (ServerPlayer player : playerList.getPlayers()) {
                     for (WarningConfig.warning warning : warningList) {
                         if (warning.status) {
+                            //#if MC >= 260100
                             if (player.level().dimension().identifier().getPath().equals(warning.dimension) && Math.abs(player.getX() - warning.pos.getX()) <= 250 && Math.abs(player.getZ() - warning.pos.getZ()) <= 250) {
+                            //#else
+                            //$$ if (player.level().dimension().location().getPath().equals(warning.dimension) && Math.abs(player.getX() - warning.pos.getX()) <= 250 && Math.abs(player.getZ() - warning.pos.getZ()) <= 250) {
+                            //#endif
                                 ClientboundSetTitleTextPacket titleTextPacket = new ClientboundSetTitleTextPacket(translateComponent("sducarpet.easycommand.fakepeacewarn1").withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
                                 player.connection.send(titleTextPacket);
                                 player.sendSystemMessage(Component.literal(warning.text + " ").append(translateComponent("sducarpet.easycommand.warningcommand11").withColor(0xFF5555)).append(Component.literal("(" + warning.pos.toShortString() + ")")).append(Component.literal(warning.dimension).withColor(getDimensionColor(warning.dimension))), true);

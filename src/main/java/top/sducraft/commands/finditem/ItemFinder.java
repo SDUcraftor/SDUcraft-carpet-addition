@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -187,7 +186,11 @@ public class ItemFinder {
         if (depth <= 0) return 0;
 
         int count = 0;
+        //#if MC >= 260100
         for (ItemStack innerStack : contents.nonEmptyItemCopyStream().toList()) {
+        //#else
+        //$$ for (ItemStack innerStack : contents.nonEmptyStream().toList()) {
+        //#endif
             if (innerStack.is(targetItem)) {
                 count += innerStack.getCount();
             }
@@ -224,7 +227,7 @@ public class ItemFinder {
 
                     BlockEntity blockEntity = entry.getValue();
                     if (blockEntity instanceof Container container) {
-                        Identifier blockId = BuiltInRegistries.BLOCK.getKey(blockEntity.getBlockState().getBlock());
+                        var blockId = BuiltInRegistries.BLOCK.getKey(blockEntity.getBlockState().getBlock());
                         String containerId = blockId.getPath();
 
                         if (containerFilter.matches(containerId)) {
@@ -247,7 +250,7 @@ public class ItemFinder {
         );
 
         for (Entity entity : containerEntities) {
-            Identifier entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
+            var entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
             if (containerFilter.matches(entityId.getPath())) {
                 Map<Item, Integer> foundItemsInContainer = new HashMap<>();
                 Container container = (Container) entity;
@@ -282,7 +285,11 @@ public class ItemFinder {
         // 2. If it has a container component, look inside
         ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
         if (contents != null) {
+            //#if MC >= 260100
             for (ItemStack innerStack : contents.nonEmptyItemCopyStream().toList()) {
+            //#else
+            //$$ for (ItemStack innerStack : contents.nonEmptyStream().toList()) {
+            //#endif
                 // Recursive call
                 findFilteredItemsInStack(innerStack, itemFilter, foundItems, depth - 1);
             }

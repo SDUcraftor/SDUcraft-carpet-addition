@@ -34,7 +34,11 @@ public class TickRateChangeMessageCommandHelper {
                                 .withClickEvent(new ClickEvent.RunCommand(resetCommand))
                                 .withColor(ChatFormatting.AQUA)))
                 .append(translateComponent("sducarpet.tickrate.resetHint").withStyle(ChatFormatting.RESET));
+        //#if MC >= 260100
         player.sendSystemMessage(message);
+        //#else
+        //$$ player.displayClientMessage(message, false);
+        //#endif
 
         boolean hasCustomMessage = playername != null && tickRateChangeMessage != null;
         if (hasCustomMessage) {
@@ -42,7 +46,11 @@ public class TickRateChangeMessageCommandHelper {
                     .append(Component.literal(playername).withStyle(ChatFormatting.YELLOW))
                     .append(translateComponent("sducarpet.tickrate.messageSeparator").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(tickRateChangeMessage).withStyle(ChatFormatting.AQUA));
+            //#if MC >= 260100
             player.sendSystemMessage(customMessage);
+            //#else
+            //$$ player.displayClientMessage(customMessage, false);
+            //#endif
         }
     }
 

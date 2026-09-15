@@ -122,7 +122,11 @@ public class DebugAllitem {
                                 .executes(context -> {
                                     for (ServerLevel level : context.getSource().getServer().getAllLevels()) {
                                         for (Entity entity : level.getEntities().getAll()) {
+                                            //#if MC >= 260100
                                             if (entity != null && entity.entityTags().contains("allitem_debug")) {
+                                            //#else
+                                            //$$ if (entity != null && entity.getTags().contains("allitem_debug")) {
+                                            //#endif
                                                 DelayedEvents.START_SERVER_TICK.register(1, s -> entity.discard());
                                             }
                                         }

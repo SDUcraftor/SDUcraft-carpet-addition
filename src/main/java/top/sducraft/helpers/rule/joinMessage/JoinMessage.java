@@ -31,7 +31,11 @@ public abstract class JoinMessage {
             if (shouldShowDialog(player)) {
                 server.getCommands().performPrefixedCommand(
                         server.createCommandSourceStack(),
+                        //#if MC >= 260100
                         "dialog show " + player.getGameProfile().name() + " sdu:notice"
+                        //#else
+                        //$$ "dialog show " + player.getGameProfile().getName() + " sdu:notice"
+                        //#endif
                 );
                 markAsSeen(player);
             }

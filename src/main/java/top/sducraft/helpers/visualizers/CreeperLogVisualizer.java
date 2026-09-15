@@ -191,7 +191,11 @@ public class CreeperLogVisualizer {
     
     private static void clearPreviousVisualizations(ServerLevel level) {
         level.getAllEntities().forEach(entity -> {
+            //#if MC >= 260100
             if (entity instanceof Display && entity.entityTags().contains(TAG_CREEPER_LOG)) {
+            //#else
+            //$$             if (entity instanceof Display && entity.getTags().contains(TAG_CREEPER_LOG)) {
+            //#endif
                 DelayedEvents.START_SERVER_TICK.register(1, s -> {
                         entity.discard();
                 });

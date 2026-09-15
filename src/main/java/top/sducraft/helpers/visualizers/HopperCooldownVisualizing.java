@@ -88,7 +88,11 @@ public class HopperCooldownVisualizing {
     public static void clearLevelVisualizers(ServerLevel level) {
         if (level != null) {
             List<Display.TextDisplay> entities = new ArrayList<>();
+            //#if MC >= 260100
             Predicate<Display.TextDisplay> predicate = marker -> marker.entityTags().contains("hopperCooldownVisualizer");
+            //#else
+            //$$             Predicate<Display.TextDisplay> predicate = marker -> marker.getTags().contains("hopperCooldownVisualizer");
+            //#endif
             level.getEntities(TEXT_DISPLAY,
                     predicate,
                     entities);

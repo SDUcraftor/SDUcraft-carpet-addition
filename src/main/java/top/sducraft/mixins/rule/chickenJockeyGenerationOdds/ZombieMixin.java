@@ -1,7 +1,11 @@
 package top.sducraft.mixins.rule.chickenJockeyGenerationOdds;
 
 import net.minecraft.util.RandomSource;
+//#if MC >= 260100
 import net.minecraft.world.entity.monster.zombie.Zombie;
+//#else
+//$$ import net.minecraft.world.entity.monster.Zombie;
+//#endif
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;

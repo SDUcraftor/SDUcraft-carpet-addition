@@ -22,7 +22,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+//#if MC >= 260100
 import net.minecraft.world.item.ItemStackTemplate;
+//#endif
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 //#if MC >= 260200
@@ -125,7 +127,11 @@ public class FindItemCommand {
                     MinecraftServer server = context.getSource().getServer();
                     for (ServerLevel serverLevel : server.getAllLevels()) {
                         List<Display.BlockDisplay> blockDisplays = new ArrayList<>();
+                        //#if MC >= 260100
                         Predicate<Display.BlockDisplay> predicate = marker -> marker.entityTags().contains("finditem_highlight");
+                        //#else
+                        //$$                         Predicate<Display.BlockDisplay> predicate = marker -> marker.getTags().contains("finditem_highlight");
+                        //#endif
                         serverLevel.getEntities(BLOCK_DISPLAY, predicate, blockDisplays);
                         blockDisplays.forEach(Entity::discard);
                     }
@@ -140,7 +146,11 @@ public class FindItemCommand {
         long startTime = System.nanoTime();
         ItemFinder.FindResult result = ItemFinder.findItemsInArea(player, targetItemInput, radius);
 
+        //#if MC >= 260100
         String commandUser = player.getGameProfile().name();
+        //#else
+        //$$ String commandUser = player.getGameProfile().getName();
+        //#endif
 
         // 清除该玩家上一次的搜索结果缓存
         FindItemResultCache.clear(player.getUUID());
@@ -226,7 +236,11 @@ public class FindItemCommand {
         player.sendSystemMessage(translateComponent("sducarpet.command.finditem.groupDetails").withStyle(ChatFormatting.GOLD));
         group.sort(Comparator.comparingDouble(MergedResult::distanceSq));
         for (MergedResult res : group) {
+            //#if MC >= 260100
             player.sendSystemMessage(createSingleResultMessage(res, displayStack, player.getGameProfile().name()));
+            //#else
+            //$$ player.sendSystemMessage(createSingleResultMessage(res, displayStack, player.getGameProfile().getName()));
+            //#endif
         }
         return 1;
     }
@@ -281,7 +295,11 @@ public class FindItemCommand {
     }
 
     private static void processGroups(List<List<MergedResult>> groups, List<DisplayInfo> displayInfos, ItemStack displayStack, ServerPlayer player, String groupType) {
+        //#if MC >= 260100
         String commandUser = player.getGameProfile().name();
+        //#else
+        //$$ String commandUser = player.getGameProfile().getName();
+        //#endif
         for (List<MergedResult> group : groups) {
             if (group.size() == 1) {
                 MergedResult single = group.getFirst();
@@ -307,7 +325,7 @@ public class FindItemCommand {
                 .append(Component.literal("x" + res.count()) // x64
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.YELLOW)
-                                .withHoverEvent(new HoverEvent.ShowItem(ItemStackTemplate.fromNonEmptyStack(displayStack)))))
+                                .withHoverEvent(itemHoverEvent(displayStack))))
                 .append(translateComponent(" ").append(translateComponent("sducarpet.command.finditem.clickToLook")
                         .withStyle(Style.EMPTY
                                 .withHoverEvent(new HoverEvent.ShowText(translateComponent("sducarpet.command.finditem.clickToLookHover")))
@@ -375,7 +393,11 @@ public class FindItemCommand {
     private static Component createFilteredResultMessage(ServerPlayer player, ItemFinder.FoundFilteredItemInfo info) {
         double distance = Math.sqrt(info.distanceSq());
         BlockPos pos = info.containerPos();
+        //#if MC >= 260100
         String commandUser = player.getGameProfile().name();
+        //#else
+        //$$ String commandUser = player.getGameProfile().getName();
+        //#endif
         String command = String.format("/finditem action lookandhighlight %d %d %d", pos.getX(), pos.getY(), pos.getZ());
 
         MutableComponent message = translateComponent("- ")
@@ -398,9 +420,16 @@ public class FindItemCommand {
             message.append(translateComponent("\n  - ").withStyle(ChatFormatting.DARK_GRAY))
                     .append(Component.literal("x" + count + " ").withStyle(ChatFormatting.YELLOW))
                     .append(item.getName(displayStack).copy().withStyle(ChatFormatting.WHITE)
-                            .withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowItem(ItemStackTemplate.fromNonEmptyStack(displayStack))))
-                    );
+                            .withStyle(Style.EMPTY.withHoverEvent(itemHoverEvent(displayStack))));
         }
         return message;
+    }
+
+    private static HoverEvent itemHoverEvent(ItemStack stack) {
+        //#if MC >= 260100
+        return new HoverEvent.ShowItem(ItemStackTemplate.fromNonEmptyStack(stack));
+        //#else
+        //$$ return new HoverEvent.ShowItem(stack);
+        //#endif
     }
 }

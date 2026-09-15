@@ -17,7 +17,7 @@ apply plugin: 'com.replaymod.preprocess'
 apply plugin: 'maven-publish'
 
 loom {
-    accessWidenerPath = project.file("sdu-carpet.accesswidener")
+    accessWidenerPath = project.file("src/main/resources/sdu-carpet.accesswidener")
 }
 
 version = project.mod_version

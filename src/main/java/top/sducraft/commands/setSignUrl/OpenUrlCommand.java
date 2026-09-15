@@ -23,10 +23,15 @@ public class OpenUrlCommand {
                             Player player = context.getSource().getPlayer();
                             if (player != null) {
                                 try {
-                                    player.sendSystemMessage(translateComponent("sducarpet.command.openurl")
+                                    Component message = translateComponent("sducarpet.command.openurl")
                                             .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.OpenUrl(new URI(StringArgumentType.getString(context, "url"))))
                                             .withBold(true)
-                                            .withColor(ChatFormatting.AQUA)));
+                                            .withColor(ChatFormatting.AQUA));
+                                    //#if MC >= 260100
+                                    player.sendSystemMessage(message);
+                                    //#else
+                                    //$$ player.displayClientMessage(message, false);
+                                    //#endif
                                 } catch (URISyntaxException e) {
                                     throw new RuntimeException(e);
                                 }

@@ -23,7 +23,11 @@ public class MachineStatusCommand {
                         .then(Commands.argument("type", StringArgumentType.string())
                                 .suggests((context, builder) -> {
                                     builder.suggest("temp");
+                                    //#if MC >= 260100
                                     if (Commands.LEVEL_GAMEMASTERS.check(Objects.requireNonNull(context.getSource().getPlayer()).permissions())) {
+                                    //#else
+                                    //$$ if (Objects.requireNonNull(context.getSource().getPlayer()).getPermissionLevel() >= 2) {
+                                    //#endif
                                         builder.suggest("perm");
                                     }
                                     return builder.buildFuture();
@@ -32,11 +36,23 @@ public class MachineStatusCommand {
                                         .then(Commands.argument("dimension", DimensionArgument.dimension())
                                                 .then(Commands.argument("pos", BlockPosArgument.blockPos())
                                                         .executes(context -> {
+                                                                    //#if MC >= 260100
                                                                     if (StringArgumentType.getString(context, "type").equals("perm") && Commands.LEVEL_GAMEMASTERS.check(Objects.requireNonNull(context.getSource().getPlayer()).permissions())) {
+                                                                    //#else
+                                                                    //$$ if (StringArgumentType.getString(context, "type").equals("perm") && Objects.requireNonNull(context.getSource().getPlayer()).getPermissionLevel() >= 2) {
+                                                                    //#endif
+                                                                        //#if MC >= 260100
                                                                         addPermMachine(StringArgumentType.getString(context, "name"), BlockPosArgument.getBlockPos(context, "pos"), DimensionArgument.getDimension(context, "dimension").dimension().identifier().getPath());
+                                                                        //#else
+                                                                        //$$ addPermMachine(StringArgumentType.getString(context, "name"), BlockPosArgument.getBlockPos(context, "pos"), DimensionArgument.getDimension(context, "dimension").dimension().location().getPath());
+                                                                        //#endif
                                                                         context.getSource().sendSuccess(() -> translateComponent("sducarpet.command.machine.addedPerm").append(StringArgumentType.getString(context, "name")), false);
                                                                     } else if (StringArgumentType.getString(context, "type").equals("temp")) {
+                                                                        //#if MC >= 260100
                                                                         addTempMachine(StringArgumentType.getString(context, "name"), BlockPosArgument.getBlockPos(context, "pos"), DimensionArgument.getDimension(context, "dimension").dimension().identifier().getPath());
+                                                                        //#else
+                                                                        //$$ addTempMachine(StringArgumentType.getString(context, "name"), BlockPosArgument.getBlockPos(context, "pos"), DimensionArgument.getDimension(context, "dimension").dimension().location().getPath());
+                                                                        //#endif
                                                                         context.getSource().sendSuccess(() -> translateComponent("sducarpet.command.machine.addedTemp").append(StringArgumentType.getString(context, "name")), false);
                                                                     }
                                                                     return 1;
@@ -46,14 +62,22 @@ public class MachineStatusCommand {
                         .then(Commands.argument("type", StringArgumentType.string())
                                 .suggests((context, builder) -> {
                                     builder.suggest("temp");
+                                    //#if MC >= 260100
                                     if (Commands.LEVEL_GAMEMASTERS.check(Objects.requireNonNull(context.getSource().getPlayer()).permissions())) {
+                                    //#else
+                                    //$$ if (Objects.requireNonNull(context.getSource().getPlayer()).getPermissionLevel() >= 2) {
+                                    //#endif
                                         builder.suggest("perm");
                                     }
                                     return builder.buildFuture();
                                 })
                                 .then(Commands.argument("name", StringArgumentType.string())
                                         .suggests((context, builder) -> {
+                                            //#if MC >= 260100
                                             if (StringArgumentType.getString(context, "type").equals("perm") && Commands.LEVEL_GAMEMASTERS.check(Objects.requireNonNull(context.getSource().getPlayer()).permissions())) {
+                                            //#else
+                                            //$$ if (StringArgumentType.getString(context, "type").equals("perm") && Objects.requireNonNull(context.getSource().getPlayer()).getPermissionLevel() >= 2) {
+                                            //#endif
                                                 for (Machine machine : permMachineList) {
                                                     builder.suggest(machine.name);
                                                 }

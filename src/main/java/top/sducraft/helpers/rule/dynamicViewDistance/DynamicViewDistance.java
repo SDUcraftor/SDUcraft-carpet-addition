@@ -56,7 +56,11 @@ public class DynamicViewDistance {
             currentVD = newVD;
             lastUpdateTime = now;
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                //#if MC >= 260100
                 if (!Commands.LEVEL_GAMEMASTERS.check(player.permissions())) continue;
+                //#else
+                //$$ if (player.getPermissionLevel() < 2) continue;
+                //#endif
                 player.sendSystemMessage(translateComponent("sducarpet.viewdistance.changed")
                         .append(String.valueOf(newVD))
                         .append(translateComponent("sducarpet.viewdistance.msptPrefix"))

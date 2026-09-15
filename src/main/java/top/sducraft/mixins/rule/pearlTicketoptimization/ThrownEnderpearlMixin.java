@@ -1,8 +1,13 @@
 package top.sducraft.mixins.rule.pearlTicketoptimization;
 
 import net.minecraft.world.entity.EntityType;
+//#if MC >= 260100
 import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEnderpearl;
+//#else
+//$$ import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+//$$ import net.minecraft.world.entity.projectile.ThrownEnderpearl;
+//#endif
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 

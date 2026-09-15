@@ -12,12 +12,21 @@ import java.util.Set;
 
 @Mixin(Entity.class)
 public abstract class DisableVisualizerEntitySave {
+    //#if MC >= 260100
     @Shadow
     public abstract Set<String> entityTags();
+    //#else
+    //$$ @Shadow
+    //$$ public abstract Set<String> getTags();
+    //#endif
 
     @Inject(method = "saveAsPassenger", at = @At("HEAD"), cancellable = true)
     public void saveAsPassenger(ValueOutput valueOutput, CallbackInfoReturnable<Boolean> cir) {
+        //#if MC >= 260100
         Set<String> tags = this.entityTags();
+        //#else
+        //$$ Set<String> tags = this.getTags();
+        //#endif
         if (tags.contains("noSave")) {
             cir.setReturnValue(false);
         }

@@ -32,7 +32,11 @@ import static top.sducraft.util.DelayedEvents.START_SERVER_TICK;
 public class SDUcraftCarpetAdditionMod implements CarpetExtension, ModInitializer {
     public static String MOD_ID = "SDU-carpet";
     public final static Logger LOGGER = LogManager.getLogger(MOD_ID);
+    //#if MC >= 260100
     public static final TicketType FAKE_PEACE_TICKET_TYPE = Registry.register(BuiltInRegistries.TICKET_TYPE, "fakepeace", new TicketType(100L, TicketType.FLAG_LOADING | TicketType.FLAG_SIMULATION));
+    //#else
+    //$$ public static final TicketType FAKE_PEACE_TICKET_TYPE = Registry.register(BuiltInRegistries.TICKET_TYPE, "fakepeace", new TicketType(100L, false, TicketType.TicketUse.LOADING_AND_SIMULATION));
+    //#endif
 
     static {
         CarpetServer.manageExtension(new SDUcraftCarpetAdditionMod());

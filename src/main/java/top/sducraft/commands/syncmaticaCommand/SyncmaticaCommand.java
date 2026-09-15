@@ -77,7 +77,11 @@ public class SyncmaticaCommand {
                                         .executes(context -> {
                                             for (ServerLevel level : context.getSource().getServer().getAllLevels()) {
                                                 for (Entity entity : level.getEntities().getAll()) {
+                                                    //#if MC >= 260100
                                                     if (entity != null && entity.entityTags().contains("material")) {
+                                                    //#else
+                                                    //$$                                                     if (entity != null && entity.getTags().contains("material")) {
+                                                    //#endif
                                                         DelayedEvents.START_SERVER_TICK.register(1, s -> entity.discard());
                                                     }
                                                 }

@@ -49,7 +49,11 @@ public class EasyFakePeaceCommandHelper {
             return 1;
         }
         if (targetDimension != null) {
+            //#if MC >= 260100
             addFakepeaceTicket(targetDimension, ChunkPos.containing(pos));
+            //#else
+            //$$ addFakepeaceTicket(targetDimension, new ChunkPos(pos));
+            //#endif
         }
         if (source != null && targetDimension != null) {
             BlockState blockState = targetDimension.getBlockState(pos);

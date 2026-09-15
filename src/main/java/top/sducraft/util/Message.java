@@ -35,7 +35,11 @@ public abstract class Message {
         if (player instanceof EntityPlayerMPFake) return;
 
         String jsonString = dialogBuilder.build().toString();
+        //#if MC >= 260100
         String command = "dialog show " + player.getGameProfile().name() + " " + jsonString;
+        //#else
+        //$$ String command = "dialog show " + player.getGameProfile().getName() + " " + jsonString;
+        //#endif
         MinecraftServer server = player.level().getServer();
         if (server != null) {
             server.getCommands().performPrefixedCommand(

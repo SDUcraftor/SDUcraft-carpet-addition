@@ -86,7 +86,11 @@ public class SearchAllItem {
     public static void deleteAllItemDisplay(MinecraftServer server) {
         for (ServerLevel level : server.getAllLevels()) {
             for (Entity entity : level.getEntities().getAll()) {
+                //#if MC >= 260100
                 if (entity != null && entity.entityTags().contains("allitem_display")) {
+                //#else
+                //$$                 if (entity != null && entity.getTags().contains("allitem_display")) {
+                //#endif
                     entity.discard();
                 }
             }
