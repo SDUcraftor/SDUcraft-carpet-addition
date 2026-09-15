@@ -23,10 +23,11 @@ tasks.register('buildAndGather') {
     dependsOn(subprojects.collect { "${it.path}:build" })
     doLast {
         copy {
-            from subprojects.collect { "${it.path}/build/libs" }
+            from subprojects.collect { "${it.projectDir}/build/libs" }
             into "${rootProject.projectDir}/build/libs"
             include '*.jar'
             exclude '*-sources.jar', '*-dev.jar'
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
         }
     }
 }

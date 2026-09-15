@@ -16,15 +16,21 @@ apply plugin: UNOBFUSCATED ? 'net.fabricmc.fabric-loom' : 'net.fabricmc.fabric-l
 apply plugin: 'com.replaymod.preprocess'
 apply plugin: 'maven-publish'
 
+// mainProject（26.2）直接使用根 src/，其余节点用自己目录下的覆盖文件
+def awFile = project.file("src/main/resources/sdu-carpet.accesswidener")
+if (!awFile.exists()) {
+    awFile = rootProject.file("src/main/resources/sdu-carpet.accesswidener")
+}
+
 loom {
-    accessWidenerPath = project.file("src/main/resources/sdu-carpet.accesswidener")
+    accessWidenerPath = awFile
 }
 
 version = project.mod_version
 group = project.maven_group
 
 base {
-    archivesName = project.archives_base_name
+    archivesName = "${project.archives_base_name}-mc${project.minecraft_version}"
 }
 
 repositories {
