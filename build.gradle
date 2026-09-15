@@ -1,123 +1,32 @@
 plugins {
-    id 'net.fabricmc.fabric-loom' version '1.17.20'
-    id 'maven-publish'
+    id 'net.fabricmc.fabric-loom-remap' version '1.17.20' apply false
+    id 'net.fabricmc.fabric-loom'       version '1.17.20' apply false
+    id 'com.replaymod.preprocess'       version 'c5abb4fb12'
 }
 
-loom {
-    accessWidenerPath = file("src/main/resources/sdu-carpet.accesswidener")
-//    transitiveAccessWideners = true
+preprocess {
+    strictExtraMappings = false
+
+    def mc12107 = createNode('1.21.7',           1_21_07, '')
+    def mc26102 = createNode('26.1.2',           26_01_02, '')
+    def mc26200 = createNode('26.2',             26_02_00, '')
+    def mc26300 = createNode('26.3-snapshot-9',  26_03_00, '')
+
+    mc12107.link(mc26102, file('versions/mapping-1.21.7-26.1.2.txt'))
+    mc26102.link(mc26200, file('versions/mapping-26.1.2-26.2.txt'))
+    mc26200.link(mc26300, file('versions/mapping-26.2-26.3-snapshot-9.txt'))
 }
 
-version = project.mod_version
-group = project.maven_group
-
-base {
-    archivesName = project.archives_base_name
-}
-
-
-
-repositories {
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
-    maven {
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
+tasks.register('buildAndGather') {
+    group = 'build'
+    description = 'Build all version nodes and gather their jars into build/libs.'
+    dependsOn(subprojects.collect { "${it.path}:build" })
+    doLast {
+        copy {
+            from subprojects.collect { "${it.path}/build/libs" }
+            into "${rootProject.projectDir}/build/libs"
+            include '*.jar'
+            exclude '*-sources.jar', '*-dev.jar'
         }
     }
-    maven{
-        name("Modrinth Maven")
-        url("https://api.modrinth.com/maven")
-        content{
-            includeGroup("modrinth.maven")
-        }
-    }
-    maven {
-        url 'https://jitpack.io/'
-    }
-    mavenCentral()
-}
-
-dependencies {
-    // To change the versions see the gradle.properties file
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    // Minecraft 26.1+ 为非混淆版本: 无 mappings、mod 依赖直接用 implementation
-    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    implementation "curse.maven:carpet-349239:${project.carpet_core_version}"
-    implementation 'com.github.Querz:NBT:6.1'
-    include 'com.github.Querz:NBT:6.1'
-}
-
-processResources {
-    inputs.property "version", project.version
-    inputs.property "minecraft_version", project.minecraft_version
-    inputs.property "loader_version", project.loader_version
-    filteringCharset "UTF-8"
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version,
-                "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version
-    }
-}
-
-def targetJavaVersion = 25
-tasks.withType(JavaCompile).configureEach {
-    // ensure that the encoding is set to UTF-8, no matter what the system default is
-    // this fixes some edge cases with special characters not displaying correctly
-    // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-    // If Javadoc is generated, this must be specified in that task too.
-    it.options.encoding = "UTF-8"
-    it.options.compilerArgs += ['-Xmaxerrs', '2000', '-Xmaxwarns', '200']
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        it.options.release = targetJavaVersion
-    }
-}
-
-java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
-    withSourcesJar()
-}
-
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archives_base_name}"}
-    }
-}
-
-// configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
-    }
-}
-
-tasks.register('syncCarpetLang', JavaExec) {
-    group = 'i18n'
-    description = 'Scan @Rule fields and ensure zh_cn/en_us translations exist.'
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'top.sducraft.util.Translation'
-    workingDir = project.projectDir
-    standardInput = System.in
 }

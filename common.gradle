@@ -1,0 +1,153 @@
+def toMcVersion = { String version ->
+    def m = (version =~ /^(\d+)\.(\d+)(?:\.(\d+))?/)
+    if (!m.find()) {
+        return 0
+    }
+    int major = m.group(1) as int
+    int minor = (m.group(2) ?: '0') as int
+    int patch = (m.group(3) ?: '0') as int
+    return major * 10000 + minor * 100 + patch
+}
+
+final int MC_VERSION = toMcVersion(project.minecraft_version as String)
+final boolean UNOBFUSCATED = MC_VERSION >= 260100
+
+apply plugin: UNOBFUSCATED ? 'net.fabricmc.fabric-loom' : 'net.fabricmc.fabric-loom-remap'
+apply plugin: 'com.replaymod.preprocess'
+apply plugin: 'maven-publish'
+
+loom {
+    accessWidenerPath = project.file("sdu-carpet.accesswidener")
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    maven {
+        name = 'masa'
+        url = 'https://masa.dy.fi/maven'
+    }
+    maven {
+        name = 'FallenBreath'
+        url = 'https://maven.fallenbreath.me/releases'
+    }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven {
+        name("Modrinth Maven")
+        url("https://api.modrinth.com/maven")
+        content {
+            includeGroup("modrinth.maven")
+        }
+    }
+    maven {
+        url 'https://jitpack.io/'
+    }
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+
+    def autoImplementation = { Object... args ->
+        UNOBFUSCATED ? implementation(*args) : modImplementation(*args)
+    }
+
+    if (UNOBFUSCATED) {
+        implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    } else {
+        mappings loom.officialMojangMappings()
+        modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    }
+
+    autoImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") {
+        exclude group: 'net.fabricmc', module: 'fabric-loader'
+    }
+    autoImplementation("carpet:fabric-carpet:${project.carpet_core_version}") {
+        exclude group: 'net.fabricmc', module: 'fabric-loader'
+    }
+
+    // 运行期混入到 jar 内，供 mixin config plugin 做条件判定
+    include autoImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditionalmixin_version}")
+
+    implementation 'com.github.Querz:NBT:6.1'
+    include 'com.github.Querz:NBT:6.1'
+}
+
+JavaVersion JAVA_COMPATIBILITY = JavaVersion.VERSION_17
+if (MC_VERSION >= 260000) {
+    JAVA_COMPATIBILITY = JavaVersion.toVersion('25')
+} else if (MC_VERSION >= 12005) {
+    JAVA_COMPATIBILITY = JavaVersion.VERSION_21
+} else if (MC_VERSION >= 11800) {
+    JAVA_COMPATIBILITY = JavaVersion.VERSION_17
+}
+
+String MIXIN_COMPATIBILITY_LEVEL = "JAVA_${JAVA_COMPATIBILITY.majorVersion}"
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "minecraft_version", project.minecraft_version
+    inputs.property "loader_version", project.loader_version
+    inputs.property "minecraft_dependency", project.minecraft_dependency
+    inputs.property "mixin_compatibility_level", MIXIN_COMPATIBILITY_LEVEL
+    filteringCharset "UTF-8"
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version,
+                "minecraft_version": project.minecraft_version,
+                "loader_version": project.loader_version,
+                "minecraft_dependency": project.minecraft_dependency
+    }
+
+    filesMatching("*.mixins.json") {
+        expand "mixin_compatibility_level": MIXIN_COMPATIBILITY_LEVEL
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    it.options.compilerArgs += ['-Xmaxerrs', '2000', '-Xmaxwarns', '200']
+    it.options.release = JAVA_COMPATIBILITY.majorVersion as int
+}
+
+java {
+    if (JavaVersion.current() < JAVA_COMPATIBILITY) {
+        toolchain.languageVersion = JavaLanguageVersion.of(JAVA_COMPATIBILITY.majorVersion)
+    }
+    withSourcesJar()
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archives_base_name}" }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+    }
+}
+
+tasks.register('syncCarpetLang', JavaExec) {
+    group = 'i18n'
+    description = 'Scan @Rule fields and ensure zh_cn/en_us translations exist.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'top.sducraft.util.Translation'
+    workingDir = project.projectDir
+    standardInput = System.in
+}

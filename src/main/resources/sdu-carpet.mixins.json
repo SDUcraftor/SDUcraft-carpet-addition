@@ -2,7 +2,8 @@
   "required": true,
   "minVersion": "0.8",
   "package": "top.sducraft.mixins",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "${mixin_compatibility_level}",
+  "plugin": "top.sducraft.mixins.SDUCraftMixinConfigPlugin",
   "mixins": [
     "carpet.SettingsManagerMixin",
     "carpet.fix.EntityPlayerMPFakeMixin",

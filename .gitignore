@@ -117,3 +117,15 @@ run/
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
 /gradle/
+
+# preprocess 生成物
+versions/*/build/
+
+# 本地 Gradle 用户目录（沙箱绕过用）
+.gradle-home/
+
+# Agent 生成的迁移文档，不入库
+MIGRATION_*.md
+AGENT_PRESET_MOD_UPGRADE.md
+.codex/
+

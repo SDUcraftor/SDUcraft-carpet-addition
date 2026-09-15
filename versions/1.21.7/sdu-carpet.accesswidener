@@ -1,0 +1,18 @@
+accessWidener	v1	named
+accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
+accessible field net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity exitPortal Lnet/minecraft/core/BlockPos;
+accessible field net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity exactTeleport Z
+accessible method net/minecraft/world/level/block/entity/TheEndGatewayBlockEntity findExitPosition (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;
+accessible method net/minecraft/world/level/block/FaceAttachedHorizontalDirectionalBlock getConnectedDirection (Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/core/Direction;
+accessible field net/minecraft/world/level/block/entity/HopperBlockEntity cooldownTime I
+accessible method net/minecraft/server/ServerTickRateManager finishTickSprint ()V
+accessible method net/minecraft/world/entity/Display$BlockDisplay setBlockState (Lnet/minecraft/world/level/block/state/BlockState;)V
+accessible method net/minecraft/server/level/ServerLevel getEntities ()Lnet/minecraft/world/level/entity/LevelEntityGetter;
+accessible method net/minecraft/world/entity/Display$ItemDisplay setItemStack (Lnet/minecraft/world/item/ItemStack;)V
+accessible field net/minecraft/world/entity/Display DATA_GLOW_COLOR_OVERRIDE_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible field net/minecraft/world/entity/Display DATA_SCALE_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible method net/minecraft/world/entity/Display setTransformation (Lcom/mojang/math/Transformation;)V
+accessible method net/minecraft/world/entity/Display createTransformation (Lnet/minecraft/network/syncher/SynchedEntityData;)Lcom/mojang/math/Transformation;
+accessible method net/minecraft/server/level/TicketType register (Ljava/lang/String;JZLnet/minecraft/server/level/TicketType$TicketUse;)Lnet/minecraft/server/level/TicketType;
+accessible field net/minecraft/server/players/PlayerList viewDistance I
+accessible method net/minecraft/resources/ResourceLocation <init> (Ljava/lang/String;Ljava/lang/String;)V
