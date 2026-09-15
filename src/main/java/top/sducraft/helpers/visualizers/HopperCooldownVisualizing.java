@@ -7,10 +7,18 @@ import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
+//#if MC >= 260200
+import static net.minecraft.world.entity.EntityTypes.BLOCK_DISPLAY;
+import static net.minecraft.world.entity.EntityTypes.ITEM_DISPLAY;
+import static net.minecraft.world.entity.EntityTypes.TEXT_DISPLAY;
+//#else
+//$$ import static net.minecraft.world.entity.EntityType.BLOCK_DISPLAY;
+//$$ import static net.minecraft.world.entity.EntityType.ITEM_DISPLAY;
+//$$ import static net.minecraft.world.entity.EntityType.TEXT_DISPLAY;
+//#endif
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +44,7 @@ public class HopperCooldownVisualizing {
             nbt.putString("text", textJson);
             entity.load(TagValueInput.create(scopedCollector, entity.registryAccess(), nbt.buildResult()));
         } else {
-            Display.TextDisplay entity = new Display.TextDisplay(EntityTypes.TEXT_DISPLAY, level);
+            Display.TextDisplay entity = new Display.TextDisplay(TEXT_DISPLAY, level);
             entity.setInvisible(true);
             entity.setNoGravity(true);
             //#if MC >= 260300
@@ -81,7 +89,7 @@ public class HopperCooldownVisualizing {
         if (level != null) {
             List<Display.TextDisplay> entities = new ArrayList<>();
             Predicate<Display.TextDisplay> predicate = marker -> marker.entityTags().contains("hopperCooldownVisualizer");
-            level.getEntities(EntityTypes.TEXT_DISPLAY,
+            level.getEntities(TEXT_DISPLAY,
                     predicate,
                     entities);
             entities.forEach(Entity::discard);

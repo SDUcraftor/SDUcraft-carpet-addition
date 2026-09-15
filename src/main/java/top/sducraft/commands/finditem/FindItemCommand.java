@@ -20,12 +20,20 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+//#if MC >= 260200
+import static net.minecraft.world.entity.EntityTypes.BLOCK_DISPLAY;
+import static net.minecraft.world.entity.EntityTypes.ITEM_DISPLAY;
+import static net.minecraft.world.entity.EntityTypes.TEXT_DISPLAY;
+//#else
+//$$ import static net.minecraft.world.entity.EntityType.BLOCK_DISPLAY;
+//$$ import static net.minecraft.world.entity.EntityType.ITEM_DISPLAY;
+//$$ import static net.minecraft.world.entity.EntityType.TEXT_DISPLAY;
+//#endif
 import org.jetbrains.annotations.NotNull;
 import top.sducraft.helpers.commands.allItemCommand.SpawnDisplay;
 
@@ -118,7 +126,7 @@ public class FindItemCommand {
                     for (ServerLevel serverLevel : server.getAllLevels()) {
                         List<Display.BlockDisplay> blockDisplays = new ArrayList<>();
                         Predicate<Display.BlockDisplay> predicate = marker -> marker.entityTags().contains("finditem_highlight");
-                        serverLevel.getEntities(EntityTypes.BLOCK_DISPLAY, predicate, blockDisplays);
+                        serverLevel.getEntities(BLOCK_DISPLAY, predicate, blockDisplays);
                         blockDisplays.forEach(Entity::discard);
                     }
                     return 1;

@@ -6,12 +6,20 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.Vec3;
+//#if MC >= 260200
+import static net.minecraft.world.entity.EntityTypes.BLOCK_DISPLAY;
+import static net.minecraft.world.entity.EntityTypes.ITEM_DISPLAY;
+import static net.minecraft.world.entity.EntityTypes.TEXT_DISPLAY;
+//#else
+//$$ import static net.minecraft.world.entity.EntityType.BLOCK_DISPLAY;
+//$$ import static net.minecraft.world.entity.EntityType.ITEM_DISPLAY;
+//$$ import static net.minecraft.world.entity.EntityType.TEXT_DISPLAY;
+//#endif
 import org.joml.Vector3f;
 import top.sducraft.util.DelayedEvents;
 
@@ -67,8 +75,13 @@ public class CreeperLogVisualizer {
                         COLOR_SLIME, DISPLAY_SCALE);
 
                 if (entry.playerPos != null) {
+                    //#if MC >= 260200
                     spawnBlockDisplayAt(level, entry.playerPos, Blocks.WOOL.yellow().defaultBlockState(),
                             COLOR_WOOL, DISPLAY_SCALE);
+                    //#else
+                    //$$ spawnBlockDisplayAt(level, entry.playerPos, Blocks.YELLOW_WOOL.defaultBlockState(),
+                    //$$         COLOR_WOOL, DISPLAY_SCALE);
+                    //#endif
                 }
                 Vec3 textPos = entry.creeperPos.add(0, 0.5, 0);
                 spawnTextDisplayAt(level, textPos, String.valueOf(entry.sequence));
@@ -127,7 +140,7 @@ public class CreeperLogVisualizer {
     
     private static void spawnBlockDisplayAt(ServerLevel level, Vec3 pos, BlockState blockState, 
                                            int color, float scale) {
-        Display.BlockDisplay display = new Display.BlockDisplay(EntityTypes.BLOCK_DISPLAY, level);
+        Display.BlockDisplay display = new Display.BlockDisplay(BLOCK_DISPLAY, level);
         display.setBlockState(blockState);
         display.setPos(pos);
         display.setGlowingTag(true);
@@ -145,7 +158,7 @@ public class CreeperLogVisualizer {
     }
     
     private static void spawnTextDisplayAt(ServerLevel level, Vec3 pos, String text) {
-        Display.TextDisplay display = new Display.TextDisplay(EntityTypes.TEXT_DISPLAY, level);
+        Display.TextDisplay display = new Display.TextDisplay(TEXT_DISPLAY, level);
         display.setPos(pos);
         display.setText(Component.literal(text));
         display.setGlowingTag(true);

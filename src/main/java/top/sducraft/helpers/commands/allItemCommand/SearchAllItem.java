@@ -14,8 +14,16 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.phys.Vec3;
+//#if MC >= 260200
+import static net.minecraft.world.entity.EntityTypes.BLOCK_DISPLAY;
+import static net.minecraft.world.entity.EntityTypes.ITEM_DISPLAY;
+import static net.minecraft.world.entity.EntityTypes.TEXT_DISPLAY;
+//#else
+//$$ import static net.minecraft.world.entity.EntityType.BLOCK_DISPLAY;
+//$$ import static net.minecraft.world.entity.EntityType.ITEM_DISPLAY;
+//$$ import static net.minecraft.world.entity.EntityType.TEXT_DISPLAY;
+//#endif
 import top.sducraft.util.DelayedEvents;
 
 import java.util.ArrayList;
@@ -39,7 +47,7 @@ public class SearchAllItem {
             if (data != null && !data.storePos.isEmpty()) {
                 for (BlockPos pos : data.chestPos) {
                     ServerLevel level = player.level();
-                    Display.BlockDisplay entity = new Display.BlockDisplay(EntityTypes.BLOCK_DISPLAY, level);
+                    Display.BlockDisplay entity = new Display.BlockDisplay(BLOCK_DISPLAY, level);
                     entity.setBlockState(source.getLevel().getBlockState(pos));
                     entity.setGlowingTag(true);
                     entity.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));

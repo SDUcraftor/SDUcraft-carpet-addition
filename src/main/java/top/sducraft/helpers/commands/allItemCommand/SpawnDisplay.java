@@ -9,12 +9,20 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+//#if MC >= 260200
+import static net.minecraft.world.entity.EntityTypes.BLOCK_DISPLAY;
+import static net.minecraft.world.entity.EntityTypes.ITEM_DISPLAY;
+import static net.minecraft.world.entity.EntityTypes.TEXT_DISPLAY;
+//#else
+//$$ import static net.minecraft.world.entity.EntityType.BLOCK_DISPLAY;
+//$$ import static net.minecraft.world.entity.EntityType.ITEM_DISPLAY;
+//$$ import static net.minecraft.world.entity.EntityType.TEXT_DISPLAY;
+//#endif
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import top.sducraft.config.allItemData.AllItemData;
@@ -122,7 +130,7 @@ public class SpawnDisplay {
     }
 
     private static void spawnItemDisplay(ServerLevel level, BlockPos pos, Item item, int color, DisplayType type, String tag) {
-        Display.ItemDisplay display = new Display.ItemDisplay(EntityTypes.ITEM_DISPLAY, level);
+        Display.ItemDisplay display = new Display.ItemDisplay(ITEM_DISPLAY, level);
         display.setPos(Vec3.atCenterOf(pos));
         display.setItemStack(new ItemStack(item));
         display.setGlowingTag(true);
@@ -184,7 +192,7 @@ public class SpawnDisplay {
     }
 
     public static void spawnBlockDisplay(ServerLevel level, BlockPos pos, BlockState blockState, int color, String tag) {
-        Display.BlockDisplay display = new Display.BlockDisplay(EntityTypes.BLOCK_DISPLAY, level);
+        Display.BlockDisplay display = new Display.BlockDisplay(BLOCK_DISPLAY, level);
         display.setBlockState(blockState);
         display.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
         display.setGlowingTag(true);
@@ -194,7 +202,7 @@ public class SpawnDisplay {
     }
 
     public static void spawnTempBlockDisplay(ServerLevel level, BlockPos pos, BlockState blockState, int color, String tag, int durationTicks) {
-        Display.BlockDisplay display = new Display.BlockDisplay(EntityTypes.BLOCK_DISPLAY, level);
+        Display.BlockDisplay display = new Display.BlockDisplay(BLOCK_DISPLAY, level);
         display.setBlockState(blockState);
         display.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
         display.setGlowingTag(true);

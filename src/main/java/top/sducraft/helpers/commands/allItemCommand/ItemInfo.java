@@ -14,11 +14,19 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.Vec3;
+//#if MC >= 260200
+import static net.minecraft.world.entity.EntityTypes.BLOCK_DISPLAY;
+import static net.minecraft.world.entity.EntityTypes.ITEM_DISPLAY;
+import static net.minecraft.world.entity.EntityTypes.TEXT_DISPLAY;
+//#else
+//$$ import static net.minecraft.world.entity.EntityType.BLOCK_DISPLAY;
+//$$ import static net.minecraft.world.entity.EntityType.ITEM_DISPLAY;
+//$$ import static net.minecraft.world.entity.EntityType.TEXT_DISPLAY;
+//#endif
 import top.sducraft.config.allItemData.AllItemData;
 import top.sducraft.util.DelayedEvents;
 
@@ -66,7 +74,7 @@ public class ItemInfo {
         for (BlockPos pos : allPositions) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof Container) {
-                Display.BlockDisplay entity = new Display.BlockDisplay(EntityTypes.BLOCK_DISPLAY, level);
+                Display.BlockDisplay entity = new Display.BlockDisplay(BLOCK_DISPLAY, level);
                 entity.setBlockState(player.level().getBlockState(pos));
                 entity.setGlowingTag(true);
                 entity.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
