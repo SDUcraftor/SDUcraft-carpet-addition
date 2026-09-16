@@ -78,8 +78,16 @@ dependencies {
     autoImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") {
         exclude group: 'net.fabricmc', module: 'fabric-loader'
     }
-    autoImplementation("carpet:fabric-carpet:${project.carpet_core_version}") {
-        exclude group: 'net.fabricmc', module: 'fabric-loader'
+
+    // carpet 26.3 正式版尚未同步到 masa maven，暂用 libs/ 下的 release jar。
+    // 用 implementation/files 引入不会打进本模组产物（只有 include 才会 JiJ）。
+    def carpetLocalJar = rootProject.file("libs/fabric-carpet-${project.carpet_core_version}.jar")
+    if (carpetLocalJar.exists()) {
+        autoImplementation(files(carpetLocalJar))
+    } else {
+        autoImplementation("carpet:fabric-carpet:${project.carpet_core_version}") {
+            exclude group: 'net.fabricmc', module: 'fabric-loader'
+        }
     }
 
     // 运行期混入到 jar 内，供 mixin config plugin 做条件判定
