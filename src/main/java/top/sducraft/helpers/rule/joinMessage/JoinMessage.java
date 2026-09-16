@@ -2,10 +2,10 @@ package top.sducraft.helpers.rule.joinMessage;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
+import top.sducraft.util.Compat;
 import top.sducraft.util.DelayedEvents;
 
 import java.net.URI;
@@ -31,11 +31,7 @@ public abstract class JoinMessage {
             if (shouldShowDialog(player)) {
                 server.getCommands().performPrefixedCommand(
                         server.createCommandSourceStack(),
-                        //#if MC >= 260100
-                        "dialog show " + player.getGameProfile().name() + " sdu:notice"
-                        //#else
-                        //$$ "dialog show " + player.getGameProfile().getName() + " sdu:notice"
-                        //#endif
+                        "dialog show " + Compat.gameProfileName(player.getGameProfile()) + " sdu:notice"
                 );
                 markAsSeen(player);
             }

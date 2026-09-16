@@ -31,13 +31,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import top.sducraft.util.Compat;
+import top.sducraft.util.EntityTagConstants;
 
 import static com.mojang.text2speech.Narrator.LOGGER;
 import static top.sducraft.util.Message.translateComponent;
 
 public class CreeperLogVisualizer {
     
-    private static final String TAG_CREEPER_LOG = "creeper_log_visualization";
     private static final int DURATION_TICKS = 1200; // 60秒
     private static final float DISPLAY_SCALE = 0.3f;
     private static final int COLOR_SLIME = 0x00FF00; // 绿色（史莱姆方块）
@@ -146,8 +147,8 @@ public class CreeperLogVisualizer {
         display.setGlowingTag(true);
         display.getEntityData().set(Display.DATA_GLOW_COLOR_OVERRIDE_ID, color);
         display.getEntityData().set(Display.DATA_SCALE_ID, new Vector3f(scale));
-        display.addTag("noSave");
-        display.addTag(TAG_CREEPER_LOG);
+        display.addTag(EntityTagConstants.NO_SAVE);
+        display.addTag(EntityTagConstants.CREEPER_LOG_VISUALIZATION);
         level.addFreshEntity(display);
 
         DelayedEvents.START_SERVER_TICK.register(DURATION_TICKS, s -> {
@@ -162,10 +163,10 @@ public class CreeperLogVisualizer {
         display.setPos(pos);
         display.setText(Component.literal(text));
         display.setGlowingTag(true);
-        display.addTag(TAG_CREEPER_LOG);
+        display.addTag(EntityTagConstants.CREEPER_LOG_VISUALIZATION);
         display.setInvisible(true);
         display.setNoGravity(true);
-        display.addTag("noSave");
+        display.addTag(EntityTagConstants.NO_SAVE);
         //#if MC >= 260300
         //$$ display.setPermanentlyInvulnerable(true);
         //#else
@@ -191,11 +192,7 @@ public class CreeperLogVisualizer {
     
     private static void clearPreviousVisualizations(ServerLevel level) {
         level.getAllEntities().forEach(entity -> {
-            //#if MC >= 260100
-            if (entity instanceof Display && entity.entityTags().contains(TAG_CREEPER_LOG)) {
-            //#else
-            //$$             if (entity instanceof Display && entity.getTags().contains(TAG_CREEPER_LOG)) {
-            //#endif
+            if (entity instanceof Display && Compat.hasTag(entity, EntityTagConstants.CREEPER_LOG_VISUALIZATION)) {
                 DelayedEvents.START_SERVER_TICK.register(1, s -> {
                         entity.discard();
                 });

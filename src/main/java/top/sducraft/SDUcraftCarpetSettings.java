@@ -91,12 +91,6 @@ public class SDUcraftCarpetSettings {
     )
     public static boolean hopperCooldownVisualize = false;
 
-//    @Rule(
-//            validators = UpdateVisualizer.class,
-//            categories = {Visualize, FEATURE}
-//    )
-//    public static boolean BlockEventVisualize = false;
-
     @Rule(
             categories = {sdu, FEATURE}
     )

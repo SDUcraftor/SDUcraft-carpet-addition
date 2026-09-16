@@ -31,6 +31,7 @@ import top.sducraft.config.allItemData.AllItemData;
 import top.sducraft.util.DelayedEvents;
 
 import java.util.*;
+import top.sducraft.util.EntityTagConstants;
 
 import static carpet.utils.Translations.tr;
 import static top.sducraft.util.Message.translateComponent;
@@ -78,7 +79,7 @@ public class ItemInfo {
                 entity.setBlockState(player.level().getBlockState(pos));
                 entity.setGlowingTag(true);
                 entity.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
-                entity.addTag("allitem_display");
+                entity.addTag(EntityTagConstants.ALLITEM_DISPLAY);
                 level.addFreshEntity(entity);
                 DelayedEvents.START_SERVER_TICK.register(200, s -> entity.discard());
                 player.lookAt(source.getAnchor(), entity.position().add(0.5, -1.5, 0.5));

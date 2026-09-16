@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import top.sducraft.util.Compat;
+import top.sducraft.util.EntityTagConstants;
 
 import static com.mojang.text2speech.Narrator.LOGGER;
 
@@ -53,8 +55,8 @@ public class HopperCooldownVisualizing {
             entity.setInvulnerable(true);
             //#endif
             entity.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
-            entity.addTag("hopperCooldownVisualizer");
-            entity.addTag("noSave");
+            entity.addTag(EntityTagConstants.HOPPER_COOLDOWN_VISUALIZER);
+            entity.addTag(EntityTagConstants.NO_SAVE);
             level.addFreshEntity(entity);
             ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(entity.problemPath(), LOGGER);
             TagValueOutput nbt = TagValueOutput.createWithContext(scopedCollector, entity.registryAccess());
@@ -88,11 +90,8 @@ public class HopperCooldownVisualizing {
     public static void clearLevelVisualizers(ServerLevel level) {
         if (level != null) {
             List<Display.TextDisplay> entities = new ArrayList<>();
-            //#if MC >= 260100
-            Predicate<Display.TextDisplay> predicate = marker -> marker.entityTags().contains("hopperCooldownVisualizer");
-            //#else
-            //$$             Predicate<Display.TextDisplay> predicate = marker -> marker.getTags().contains("hopperCooldownVisualizer");
-            //#endif
+            Predicate<Display.TextDisplay> predicate =
+                    marker -> Compat.hasTag(marker, EntityTagConstants.HOPPER_COOLDOWN_VISUALIZER);
             level.getEntities(TEXT_DISPLAY,
                     predicate,
                     entities);

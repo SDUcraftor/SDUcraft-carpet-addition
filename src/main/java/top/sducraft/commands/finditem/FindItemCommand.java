@@ -22,9 +22,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-//#if MC >= 260100
-import net.minecraft.world.item.ItemStackTemplate;
-//#endif
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 //#if MC >= 260200
@@ -38,6 +35,8 @@ import static net.minecraft.world.entity.EntityTypes.TEXT_DISPLAY;
 //#endif
 import org.jetbrains.annotations.NotNull;
 import top.sducraft.helpers.commands.allItemCommand.SpawnDisplay;
+import top.sducraft.util.Compat;
+import top.sducraft.util.EntityTagConstants;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -127,11 +126,8 @@ public class FindItemCommand {
                     MinecraftServer server = context.getSource().getServer();
                     for (ServerLevel serverLevel : server.getAllLevels()) {
                         List<Display.BlockDisplay> blockDisplays = new ArrayList<>();
-                        //#if MC >= 260100
-                        Predicate<Display.BlockDisplay> predicate = marker -> marker.entityTags().contains("finditem_highlight");
-                        //#else
-                        //$$                         Predicate<Display.BlockDisplay> predicate = marker -> marker.getTags().contains("finditem_highlight");
-                        //#endif
+                        Predicate<Display.BlockDisplay> predicate =
+                                marker -> Compat.hasTag(marker, EntityTagConstants.FINDITEM_HIGHLIGHT);
                         serverLevel.getEntities(BLOCK_DISPLAY, predicate, blockDisplays);
                         blockDisplays.forEach(Entity::discard);
                     }
@@ -146,61 +142,13 @@ public class FindItemCommand {
         long startTime = System.nanoTime();
         ItemFinder.FindResult result = ItemFinder.findItemsInArea(player, targetItemInput, radius);
 
-        //#if MC >= 260100
-        String commandUser = player.getGameProfile().name();
-        //#else
-        //$$ String commandUser = player.getGameProfile().getName();
-        //#endif
+        String commandUser = Compat.gameProfileName(player.getGameProfile());
 
         // 清除该玩家上一次的搜索结果缓存
         FindItemResultCache.clear(player.getUUID());
 
-        // 1. 将所有找到的物品（玩家、容器、掉落物）转换成一个统一的流
-        Stream<FoundInfo> rawResultsStream = Stream.of(
-                result.players().stream()
-                        .map(info -> new FoundInfo(info.areaName(), info.pos(), info.distanceSq(), info.playerName().copy().withStyle(ChatFormatting.AQUA), info.itemCount(), "player")),
-                result.containers().stream()
-                        .map(info -> new FoundInfo(info.areaName(), info.pos(), info.distanceSq(), info.containerName().copy().withStyle(ChatFormatting.AQUA), info.itemCount(), "container")),
-                result.droppedItems().stream()
-                        .map(info -> new FoundInfo(info.areaName(), info.pos(), info.distanceSq(), translateComponent("sducarpet.command.finditem.droppedItem").withStyle(ChatFormatting.AQUA), info.itemCount(), "dropped_item"))
-        ).flatMap(s -> s);
-
-        // 2. 按位置、名称和类型对结果进行分组，合并区域名称
-        List<MergedResult> mergedResults = new ArrayList<>(rawResultsStream.collect(
-                Collectors.groupingBy(
-                        res -> new GroupingKey(res.pos(), res.name().getString(), res.type()),
-                        Collectors.collectingAndThen(
-                                Collectors.toList(),
-                                list -> {
-                                    FoundInfo first = list.get(0);
-                                    List<String> areaNames = list.stream().map(FoundInfo::areaName).distinct().sorted().toList();
-                                    return new MergedResult(areaNames, first.pos(), first.distanceSq(), first.name(), first.count(), first.type());
-                                }
-                        )
-                )
-        ).values());
-
-        // 3. 将结果分类
-        List<MergedResult> playerResults = mergedResults.stream().filter(r -> r.type().equals("player")).toList();
-        List<MergedResult> containerResults = mergedResults.stream().filter(r -> r.type().equals("container")).toList();
-        List<MergedResult> droppedItemResults = mergedResults.stream().filter(r -> r.type().equals("dropped_item")).toList();
-
-        // 4. 对容器和掉落物进行二次分组 (聚类)
-        final double GROUPING_DISTANCE_SQ = 25.0; // 5格范围
-        List<List<MergedResult>> containerGroups = clusterResults(containerResults, GROUPING_DISTANCE_SQ);
-        List<List<MergedResult>> droppedItemGroups = clusterResults(droppedItemResults, GROUPING_DISTANCE_SQ);
-
-        // 5. 创建最终的显示列表
-        List<DisplayInfo> displayInfos = new ArrayList<>();
-
-        // 添加玩家 (不分组)
-        playerResults.forEach(res -> displayInfos.add(new DisplayInfo(createSingleResultMessage(res, displayStack, commandUser), res.distanceSq())));
-
-        // 添加容器群组
-        processGroups(containerGroups, displayInfos, displayStack, player, "container");
-
-        // 添加掉落物群组
-        processGroups(droppedItemGroups, displayInfos, displayStack, player, "dropped_item");
+        List<MergedResult> mergedResults = mergeResults(result);
+        List<DisplayInfo> displayInfos = buildDisplayInfos(mergedResults, displayStack, player, commandUser);
 
         if (displayInfos.isEmpty()) {
             source.sendSuccess(() -> translateComponent("sducarpet.command.finditem.notFound").append(translateComponent(" '")).append(displayStack.getHoverName()).append(translateComponent("'")), false);
@@ -221,6 +169,52 @@ public class FindItemCommand {
         source.sendSuccess(() -> translateComponent("sducarpet.command.finditem.searchComplete").append(String.format(" %.2f ", durationMs)).append(translateComponent("sducarpet.command.finditem.milliseconds")), false);
     }
 
+    private static List<MergedResult> mergeResults(ItemFinder.FindResult result) {
+        Stream<FoundInfo> rawResultsStream = Stream.of(
+                result.players().stream()
+                        .map(info -> new FoundInfo(info.areaName(), info.pos(), info.distanceSq(), info.playerName().copy().withStyle(ChatFormatting.AQUA), info.itemCount(), "player")),
+                result.containers().stream()
+                        .map(info -> new FoundInfo(info.areaName(), info.pos(), info.distanceSq(), info.containerName().copy().withStyle(ChatFormatting.AQUA), info.itemCount(), "container")),
+                result.droppedItems().stream()
+                        .map(info -> new FoundInfo(info.areaName(), info.pos(), info.distanceSq(), translateComponent("sducarpet.command.finditem.droppedItem").withStyle(ChatFormatting.AQUA), info.itemCount(), "dropped_item"))
+        ).flatMap(s -> s);
+
+        return new ArrayList<>(rawResultsStream.collect(
+                Collectors.groupingBy(
+                        res -> new GroupingKey(res.pos(), res.name().getString(), res.type()),
+                        Collectors.collectingAndThen(
+                                Collectors.toList(),
+                                list -> {
+                                    FoundInfo first = list.get(0);
+                                    List<String> areaNames = list.stream().map(FoundInfo::areaName).distinct().sorted().toList();
+                                    return new MergedResult(areaNames, first.pos(), first.distanceSq(), first.name(), first.count(), first.type());
+                                }
+                        )
+                )
+        ).values());
+    }
+
+    private static List<DisplayInfo> buildDisplayInfos(List<MergedResult> mergedResults, ItemStack displayStack,
+                                                       ServerPlayer player, String commandUser) {
+        List<MergedResult> playerResults = mergedResults.stream().filter(r -> r.type().equals("player")).toList();
+        List<MergedResult> containerResults = mergedResults.stream().filter(r -> r.type().equals("container")).toList();
+        List<MergedResult> droppedItemResults = mergedResults.stream().filter(r -> r.type().equals("dropped_item")).toList();
+
+        final double GROUPING_DISTANCE_SQ = 25.0; // 5格范围
+        List<List<MergedResult>> containerGroups = clusterResults(containerResults, GROUPING_DISTANCE_SQ);
+        List<List<MergedResult>> droppedItemGroups = clusterResults(droppedItemResults, GROUPING_DISTANCE_SQ);
+
+        List<DisplayInfo> displayInfos = new ArrayList<>();
+
+        // 添加玩家 (不分组)
+        playerResults.forEach(res -> displayInfos.add(new DisplayInfo(createSingleResultMessage(res, displayStack, commandUser), res.distanceSq())));
+
+        processGroups(containerGroups, displayInfos, displayStack, player, "container");
+        processGroups(droppedItemGroups, displayInfos, displayStack, player, "dropped_item");
+
+        return displayInfos;
+    }
+
     private static int executeDetail(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
         UUID groupId = context.getArgument("group_id", UUID.class);
@@ -236,11 +230,7 @@ public class FindItemCommand {
         player.sendSystemMessage(translateComponent("sducarpet.command.finditem.groupDetails").withStyle(ChatFormatting.GOLD));
         group.sort(Comparator.comparingDouble(MergedResult::distanceSq));
         for (MergedResult res : group) {
-            //#if MC >= 260100
-            player.sendSystemMessage(createSingleResultMessage(res, displayStack, player.getGameProfile().name()));
-            //#else
-            //$$ player.sendSystemMessage(createSingleResultMessage(res, displayStack, player.getGameProfile().getName()));
-            //#endif
+            player.sendSystemMessage(createSingleResultMessage(res, displayStack, Compat.gameProfileName(player.getGameProfile())));
         }
         return 1;
     }
@@ -272,22 +262,24 @@ public class FindItemCommand {
         List<MergedResult> remaining = new ArrayList<>(results);
         while (!remaining.isEmpty()) {
             List<MergedResult> newGroup = new ArrayList<>();
-            LinkedList<MergedResult> toProcess = new LinkedList<>();
+            Deque<MergedResult> toProcess = new ArrayDeque<>();
 
-            MergedResult first = remaining.removeFirst();
+            MergedResult first = remaining.remove(0);
             newGroup.add(first);
             toProcess.add(first);
 
             while (!toProcess.isEmpty()) {
                 MergedResult current = toProcess.poll();
-                remaining.removeIf(other -> {
+                for (int i = 0; i < remaining.size(); ) {
+                    MergedResult other = remaining.get(i);
                     if (current.pos().distSqr(other.pos()) <= groupingDistanceSq) {
                         newGroup.add(other);
                         toProcess.add(other);
-                        return true;
+                        remaining.remove(i);
+                    } else {
+                        i++;
                     }
-                    return false;
-                });
+                }
             }
             groups.add(newGroup);
         }
@@ -295,11 +287,7 @@ public class FindItemCommand {
     }
 
     private static void processGroups(List<List<MergedResult>> groups, List<DisplayInfo> displayInfos, ItemStack displayStack, ServerPlayer player, String groupType) {
-        //#if MC >= 260100
-        String commandUser = player.getGameProfile().name();
-        //#else
-        //$$ String commandUser = player.getGameProfile().getName();
-        //#endif
+        String commandUser = Compat.gameProfileName(player.getGameProfile());
         for (List<MergedResult> group : groups) {
             if (group.size() == 1) {
                 MergedResult single = group.getFirst();
@@ -318,10 +306,12 @@ public class FindItemCommand {
         String command = String.format("/finditem action lookandhighlight %d %d %d", pos.getX(), pos.getY(), pos.getZ());
         String areaString = String.join(", ", res.areaNames());
 
-        return Component.literal("- [" + areaString + "] ").withStyle(ChatFormatting.AQUA)
+        return translateComponent("sducarpet.command.finditem.listPrefix").withStyle(ChatFormatting.AQUA)
+                .append(Component.literal(areaString).withStyle(ChatFormatting.AQUA))
+                .append(translateComponent("sducarpet.command.finditem.listPrefixEnd").withStyle(ChatFormatting.AQUA))
                 .append(Component.literal(String.format("(%.1fm) ", distance)).withStyle(ChatFormatting.GRAY))
                 .append(res.name())
-                .append(Component.literal(" at [" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "] ").withStyle(ChatFormatting.GRAY))
+                .append(Component.literal(String.format(" at [%d, %d, %d] ", pos.getX(), pos.getY(), pos.getZ())).withStyle(ChatFormatting.GRAY))
                 .append(Component.literal("x" + res.count()) // x64
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.YELLOW)
@@ -379,7 +369,7 @@ public class FindItemCommand {
                     .append(translateComponent("sducarpet.command.finditem.filteredContainers"))
                     .withStyle(ChatFormatting.GOLD));
             for (ItemFinder.FoundFilteredItemInfo info : results) {
-                player.sendSystemMessage(createFilteredResultMessage(player, info));
+                player.sendSystemMessage(createFilteredResultMessage(info));
             }
         }
 
@@ -390,14 +380,9 @@ public class FindItemCommand {
         return results.size();
     }
 
-    private static Component createFilteredResultMessage(ServerPlayer player, ItemFinder.FoundFilteredItemInfo info) {
+    private static Component createFilteredResultMessage(ItemFinder.FoundFilteredItemInfo info) {
         double distance = Math.sqrt(info.distanceSq());
         BlockPos pos = info.containerPos();
-        //#if MC >= 260100
-        String commandUser = player.getGameProfile().name();
-        //#else
-        //$$ String commandUser = player.getGameProfile().getName();
-        //#endif
         String command = String.format("/finditem action lookandhighlight %d %d %d", pos.getX(), pos.getY(), pos.getZ());
 
         MutableComponent message = translateComponent("- ")
@@ -417,7 +402,7 @@ public class FindItemCommand {
             int count = entry.getValue();
             ItemStack displayStack = new ItemStack(item);
 
-            message.append(translateComponent("\n  - ").withStyle(ChatFormatting.DARK_GRAY))
+            message.append(translateComponent("sducarpet.command.finditem.detailIndent").withStyle(ChatFormatting.DARK_GRAY))
                     .append(Component.literal("x" + count + " ").withStyle(ChatFormatting.YELLOW))
                     .append(item.getName(displayStack).copy().withStyle(ChatFormatting.WHITE)
                             .withStyle(Style.EMPTY.withHoverEvent(itemHoverEvent(displayStack))));
@@ -426,10 +411,6 @@ public class FindItemCommand {
     }
 
     private static HoverEvent itemHoverEvent(ItemStack stack) {
-        //#if MC >= 260100
-        return new HoverEvent.ShowItem(ItemStackTemplate.fromNonEmptyStack(stack));
-        //#else
-        //$$ return new HoverEvent.ShowItem(stack);
-        //#endif
+        return Compat.itemHover(stack);
     }
 }

@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import top.sducraft.util.EntityTagConstants;
 
 import static top.sducraft.config.allItemData.AllItemData.dataList;
 
@@ -208,7 +209,7 @@ public class SpawnDisplay {
         display.setGlowingTag(true);
         display.getEntityData().set(Display.DATA_GLOW_COLOR_OVERRIDE_ID, color);
         display.addTag(tag);
-        display.addTag("noSave");
+        display.addTag(EntityTagConstants.NO_SAVE);
         level.addFreshEntity(display);
         if (durationTicks > 0) {
             DelayedEvents.START_SERVER_TICK.register(durationTicks, s -> {

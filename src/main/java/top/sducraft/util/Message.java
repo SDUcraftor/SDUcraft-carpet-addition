@@ -35,11 +35,7 @@ public abstract class Message {
         if (player instanceof EntityPlayerMPFake) return;
 
         String jsonString = dialogBuilder.build().toString();
-        //#if MC >= 260100
-        String command = "dialog show " + player.getGameProfile().name() + " " + jsonString;
-        //#else
-        //$$ String command = "dialog show " + player.getGameProfile().getName() + " " + jsonString;
-        //#endif
+        String command = "dialog show " + Compat.gameProfileName(player.getGameProfile()) + " " + jsonString;
         MinecraftServer server = player.level().getServer();
         if (server != null) {
             server.getCommands().performPrefixedCommand(
@@ -52,9 +48,4 @@ public abstract class Message {
     public static MutableComponent translateComponent(String text) {
         return Component.literal(tr(text));
     }
-
-//    public static void sandPlayerCustomMessage(ServerPlayer player, List component,String changeCommand ,int page) {
-//
-//
-//    }
 }

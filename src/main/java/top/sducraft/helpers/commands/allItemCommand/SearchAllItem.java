@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
+import top.sducraft.util.Compat;
+import top.sducraft.util.EntityTagConstants;
 
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.allItemData.AllItemData.*;
@@ -51,7 +53,7 @@ public class SearchAllItem {
                     entity.setBlockState(source.getLevel().getBlockState(pos));
                     entity.setGlowingTag(true);
                     entity.setPos(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
-                    entity.addTag("allitem_display");
+                    entity.addTag(EntityTagConstants.ALLITEM_DISPLAY);
                     level.addFreshEntity(entity);
                     DelayedEvents.START_SERVER_TICK.register(600, server -> entity.discard());
                     player.lookAt(source.getAnchor(), entity.position().add(0.5, -1.5, 0.5));
@@ -86,11 +88,7 @@ public class SearchAllItem {
     public static void deleteAllItemDisplay(MinecraftServer server) {
         for (ServerLevel level : server.getAllLevels()) {
             for (Entity entity : level.getEntities().getAll()) {
-                //#if MC >= 260100
-                if (entity != null && entity.entityTags().contains("allitem_display")) {
-                //#else
-                //$$                 if (entity != null && entity.getTags().contains("allitem_display")) {
-                //#endif
+                if (entity != null && Compat.hasTag(entity, EntityTagConstants.ALLITEM_DISPLAY)) {
                     entity.discard();
                 }
             }

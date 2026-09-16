@@ -6,7 +6,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -20,6 +19,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import top.sducraft.util.Compat;
+import top.sducraft.util.EntityTagConstants;
 
 import static carpet.utils.Translations.tr;
 import static top.sducraft.config.allItemData.AllItemData.dataList;
@@ -122,11 +123,7 @@ public class DebugAllitem {
                                 .executes(context -> {
                                     for (ServerLevel level : context.getSource().getServer().getAllLevels()) {
                                         for (Entity entity : level.getEntities().getAll()) {
-                                            //#if MC >= 260100
-                                            if (entity != null && entity.entityTags().contains("allitem_debug")) {
-                                            //#else
-                                            //$$ if (entity != null && entity.getTags().contains("allitem_debug")) {
-                                            //#endif
+                                            if (entity != null && Compat.hasTag(entity, EntityTagConstants.ALLITEM_DEBUG)) {
                                                 DelayedEvents.START_SERVER_TICK.register(1, s -> entity.discard());
                                             }
                                         }

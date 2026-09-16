@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Set;
+import top.sducraft.util.EntityTagConstants;
 
 @Mixin(Entity.class)
 public abstract class DisableVisualizerEntitySave {
@@ -27,7 +28,7 @@ public abstract class DisableVisualizerEntitySave {
         //#else
         //$$ Set<String> tags = this.getTags();
         //#endif
-        if (tags.contains("noSave")) {
+        if (tags.contains(EntityTagConstants.NO_SAVE)) {
             cir.setReturnValue(false);
         }
     }
