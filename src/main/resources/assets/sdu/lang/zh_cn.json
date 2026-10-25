@@ -35,6 +35,8 @@
   "carpet.rule.projectileDeflectLog.name": "记录玩家反射投掷物到日志中",
   "carpet.rule.projectileRaycastLength.desc": "当投掷物碰撞检测的raycast超过此选项值时，将其替换为选项值",
   "carpet.rule.projectileRaycastLength.name": "投掷物raycast长度上限",
+  "carpet.rule.standingOnAirSpamFix.desc": "MC 26.3+ 会把登录后站立不动的玩家、站在船等实体上的玩家误判为'站在空气上'，导致日志每 10 秒刷屏并无意义地强发脚下方块包。启用后，服务端会先复查脚下是否确有支撑再决定是否记录；真正的幽灵方块失步仍按原版机制修复",
+  "carpet.rule.standingOnAirSpamFix.name": "悬空误报修复",
   "carpet.rule.tickRateChangedMessage.desc": "如果启用此选项，游戏速度改变时将允许玩家留言",
   "carpet.rule.tickRateChangedMessage.name": "游戏速度改变提示",
   "carpet.rule.tntTeleportThroughNetherPortal.desc": "如果启用此选项,被点燃的TNT将可以通过地狱门传送",

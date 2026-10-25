@@ -116,7 +116,9 @@ run/
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
-/gradle/
+
+# carpet 26.3 本地依赖（masa maven 无 v260915 构建，需随仓库分发）
+!libs/*.jar
 
 # preprocess 生成物
 versions/*/build/

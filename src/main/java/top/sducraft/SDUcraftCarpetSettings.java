@@ -116,6 +116,14 @@ public class SDUcraftCarpetSettings {
     )
     public static boolean ignoreFakePlayerPacket = false;
 
+    //#if MC >= 260300
+    //$$ @Rule(
+    //$$         categories = {sdu},
+    //$$         options = {"true", "false"}
+    //$$ )
+    //$$ public static boolean standingOnAirSpamFix = true;
+    //#endif
+
     @Rule(
             categories = {sdu}
     )

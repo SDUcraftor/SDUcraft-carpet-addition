@@ -23,6 +23,7 @@
     "rule.pearlTicketoptimization.ThrownEnderpearlMixin",
     "rule.projectileDeflectLog.ProjectileMixin",
     "rule.projectileRaycastLength.ProjectileUtilMixin",
+    "rule.standingOnAirSpamFix.ServerGamePacketListenerImplMixin",
     "rule.tickRateChangedMessage.CommandsMixin",
     "rule.tickRateChangedMessage.MinecraftServerMixin",
     "rule.tickRateChangedMessage.ServerTickRateManagerMixin",

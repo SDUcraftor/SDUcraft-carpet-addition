@@ -35,6 +35,8 @@
   "carpet.rule.projectileDeflectLog.name": "Projectile Deflection Logging",
   "carpet.rule.projectileRaycastLength.desc": "Projectile raycast length maximums ",
   "carpet.rule.projectileRaycastLength.name": "Projectile raycast length maximums",
+  "carpet.rule.standingOnAirSpamFix.desc": "MC 26.3+ misjudges players standing still after login or standing on entities (e.g. boats) as 'standing on air', spamming the log and force-sending redundant block updates every 10 seconds. When enabled, the server double-checks for real support below the player before logging; genuine ghost block desyncs are still repaired as in vanilla.",
+  "carpet.rule.standingOnAirSpamFix.name": "Standing On Air Spam Fix",
   "carpet.rule.tickRateChangedMessage.desc": "If enable,players will be allowed to leave messages when the game speed changes.",
   "carpet.rule.tickRateChangedMessage.name": "Message for game speed changes",
   "carpet.rule.tntTeleportThroughNetherPortal.desc": "If enable,Primed TNT can teleport through a nether portal",
