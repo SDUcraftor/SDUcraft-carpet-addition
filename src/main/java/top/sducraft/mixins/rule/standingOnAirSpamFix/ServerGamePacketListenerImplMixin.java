@@ -30,25 +30,10 @@ public abstract class ServerGamePacketListenerImplMixin {
     //$$
     //$$ @Inject(method = "forceSendPlayerSupportBlocks", at = @At("HEAD"), cancellable = true)
     //$$ private void skipFalseStandingOnAir(CallbackInfo ci) {
-    //$$     if (SDUcraftCarpetSettings.standingOnAirSpamFix && this.hasServerSideSupport()) {
+    //$$     if (SDUcraftCarpetSettings.standingOnAirSpamFix) {
     //$$         ci.cancel();
     //$$     }
     //$$ }
     //$$
-    //$$ private boolean hasServerSideSupport() {
-    //$$     AABB box = this.player.getBoundingBox();
-    //$$     // 与原版 force-send 相同的 1e-5 误差, 只检查脚底薄片, 避免身体与墙壁/天花板的接触被误算作支撑
-    //$$     AABB feet = new AABB(box.minX, box.minY - 1.0E-5F, box.minZ, box.maxX, box.minY, box.maxZ);
-    //$$     if (!this.player.level().noCollision(this.player, feet)) {
-    //$$         return true;
-    //$$     }
-    //$$     // 船/潜影贝等可碰撞实体不参与方块碰撞, 单独检查脚下方 0.1 格内的支撑实体
-    //$$     AABB entityZone = feet.expandTowards(0.0, -0.1, 0.0);
-    //$$     for (Entity entity : this.player.level().getEntities(this.player, entityZone,
-    //$$             other -> other != this.player && other.isAlive() && other.canBeCollidedWith(this.player))) {
-    //$$         return true;
-    //$$     }
-    //$$     return false;
-    //$$ }
     //#endif
 }
